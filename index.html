@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RicoGT Portfolio">
+<title>Tyrek Brunson — IT Portfolio & Home Lab</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230d1117'/><text x='4' y='22' font-size='18' font-family='monospace' fill='%2339d353'>%3E_</text></svg>">
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║       TYREK BRUNSON — HOME LAB DOCS + PORTFOLIO              ║
+  ║  ── HOW TO UPDATE ──────────────────────────────────────── ║
+  ║  • Search "HOW TO UPDATE" to jump to any editable section  ║
+  ║  • Cert images:  images/A+-png.png, Network+-png.png, etc  ║
+  ║  • Cert PDFs:    images/CompTIA *.pdf                      ║
+  ║  • Lab photos:   images/homelab/                           ║
+  ║  • Project imgs: images/projects/                          ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<title>Tyrek Brunson // Home Lab & Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:          #0d1117;
+  --bg-2:        #161b22;
+  --bg-3:        #1c2333;
+  --sidebar-bg:  #0d1117;
+  --border:      rgba(255,255,255,.08);
+  --border-hi:   rgba(255,255,255,.14);
+  --accent:      #39d353;
+  --accent-2:    #f0c040;
+  --accent-3:    #58a6ff;
+  --red:         #f85149;
+  --orange:      #e3b341;
+  --text:        #e6edf3;
+  --text-2:      #8b949e;
+  --text-3:      #6e7681;
+  --font-mono:   'JetBrains Mono', monospace;
+  --font-display:'Syne', sans-serif;
+  --sidebar-w:   240px;
+  --top-h:       52px;
+  --radius:      6px;
+  --transition:  .18s ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--top-h);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  z-index: 100; backdrop-filter: blur(8px);
+}
+.topbar-logo {
+  width: var(--sidebar-w); flex-shrink: 0;
+  padding: 0 20px;
+  font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+  letter-spacing: .03em; color: var(--text);
+  display: flex; align-items: center; gap: 8px; text-decoration: none;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(.7); }
+}
+.tab-switcher {
+  display: flex; align-items: stretch; height: 100%;
+  padding-left: 8px; border-left: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 0 22px;
+  font-family: var(--font-mono); font-size: .78rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-2); background: transparent; border: none;
+  cursor: pointer; position: relative; transition: color var(--transition);
+}
+.tab-btn::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--accent);
+  transform: scaleX(0); transition: transform var(--transition);
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); }
+.tab-btn.active::after { transform: scaleX(1); }
+.topbar-right {
+  margin-left: auto; padding: 0 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.topbar-tag {
+  font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--text-3);
+}
+
+/* ── LAYOUT ── */
+.shell { display: flex; margin-top: var(--top-h); min-height: calc(100vh - var(--top-h)); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--sidebar-bg); border-right: 1px solid var(--border);
+  position: sticky; top: var(--top-h); height: calc(100vh - var(--top-h));
+  overflow-y: auto; overflow-x: hidden;
+  padding: 20px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent;
+}
+.nav-panel { display: none; }
+.nav-panel.active { display: block; }
+.nav-group-label {
+  display: block; padding: 6px 16px 4px;
+  font-size: .65rem; font-weight: 600; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-3); margin-top: 14px;
+}
+.nav-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 16px 6px 24px;
+  font-size: .78rem; color: var(--text-2); text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+  cursor: pointer;
+}
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.nav-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(57,211,83,.06); }
+.nav-link .nav-icon { font-size: .8em; opacity: .7; }
+.nav-link-top { padding-left: 16px; font-weight: 500; font-size: .8rem; color: var(--text); }
+
+/* ── CONTENT ── */
+.content { flex: 1; min-width: 0; padding: 40px 48px 80px; max-width: 860px; }
+.page-panel { display: none; animation: fadeIn .25s ease both; }
+.page-panel.active { display: block; }
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.section-title { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; color: var(--text); margin-bottom: 6px; line-height: 1.15; }
+.section-sub { font-size: .8rem; color: var(--text-2); margin-bottom: 28px; line-height: 1.7; }
+.content-section { margin-bottom: 52px; scroll-margin-top: calc(var(--top-h) + 20px); }
+.content-section h2 {
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;
+  color: var(--text); margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.content-section h2 .h2-icon { font-size: .9rem; color: var(--accent); }
+.content-section h3 { font-family: var(--font-display); font-size: .95rem; font-weight: 600; color: var(--text); margin: 20px 0 10px; }
+.content-section p { font-size: .83rem; line-height: 1.8; color: #c1cad4; margin-bottom: 10px; }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: var(--radius); padding: 14px 18px;
+  margin: 16px 0 24px; font-size: .8rem; line-height: 1.7; border-left: 3px solid;
+}
+.callout-note { background: rgba(58,160,250,.08); border-color: var(--accent-3); color: #a0c4f0; }
+.callout-warn { background: rgba(243,177,65,.08);  border-color: var(--orange);   color: #e8c87c; }
+.callout-tip  { background: rgba(57,211,83,.08);   border-color: var(--accent);   color: #7ee89a; }
+.callout strong { display: block; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; font-size: .7rem; letter-spacing: .12em; }
+
+/* ── IMAGE GRIDS / LIGHTBOX ── */
+.img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+.img-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+  cursor: pointer;
+}
+.img-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+.img-card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
+/* Broken/missing image fallback — shown automatically when src file is absent */
+.img-card img[src], .project-img-strip img[src] { display: block; }
+.img-card img::before,
+.img-card img:not([src]), .img-card img[src=""] {
+  content: ''; display: block;
+}
+/* Universal missing-image shell — applied via JS onerror */
+.img-missing {
+  width: 100%; aspect-ratio: 16/10;
+  background: var(--bg-3); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+  color: var(--text-3); font-size: .72rem; text-align: center; padding: 8px;
+}
+.img-missing-sm {
+  width: 140px; height: 80px; flex-shrink: 0;
+  background: var(--bg-3); border: 1px solid var(--border); border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); font-size: .65rem; text-align: center; padding: 4px;
+}
+.img-missing .ph-icon { font-size: 1.4rem; }
+.img-card-caption { padding: 8px 12px; font-size: .72rem; color: var(--text-2); border-top: 1px solid var(--border); }
+
+/* ── CERT GRID ── */
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; margin: 16px 0; }
+.cert-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-align: center; position: relative;
+}
+.cert-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(57,211,83,.08); }
+.cert-img-wrap {
+  position: relative; cursor: zoom-in;
+  width: 90px; height: 90px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cert-img-wrap img { width: 90px; height: 90px; object-fit: contain; border-radius: 4px; display: block; }
+.cert-badge-placeholder {
+  width: 80px; height: 80px;
+  background: var(--bg-3); border: 1px dashed var(--border-hi);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+.cert-img-hint {
+  position: absolute; inset: 0; border-radius: 4px;
+  background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; color: #fff; opacity: 0;
+  transition: opacity .18s; pointer-events: none; text-align: center; padding: 4px;
+}
+.cert-img-wrap:hover .cert-img-hint { opacity: 1; }
+.cert-pdf-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .68rem; color: var(--accent-3); text-decoration: none;
+  border: 1px solid rgba(88,166,255,.25); border-radius: 3px;
+  padding: 3px 9px; background: rgba(88,166,255,.06);
+  transition: background var(--transition), color var(--transition);
+  cursor: pointer;
+}
+.cert-pdf-btn:hover { background: rgba(88,166,255,.14); color: #fff; }
+.cert-name { font-size: .75rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+.cert-issuer { font-size: .68rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.cert-desc { font-size: .72rem; color: var(--text-2); line-height: 1.5; margin: 4px 0 8px; }
+
+/* ── PROJECT CARDS ── */
+.project-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 22px; margin-bottom: 16px;
+  transition: border-color var(--transition);
+}
+.project-card:hover { border-color: var(--border-hi); }
+.project-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.project-title { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--text); }
+.project-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: .65rem; font-weight: 500; padding: 2px 8px; border-radius: 20px; letter-spacing: .06em; text-transform: uppercase; }
+.tag-green  { background: rgba(57,211,83,.12);  color: var(--accent);   border: 1px solid rgba(57,211,83,.25); }
+.tag-blue   { background: rgba(88,166,255,.12); color: var(--accent-3); border: 1px solid rgba(88,166,255,.25); }
+.tag-amber  { background: rgba(240,192,64,.12); color: var(--accent-2); border: 1px solid rgba(240,192,64,.25); }
+.tag-red    { background: rgba(248,81,73,.12);  color: var(--red);      border: 1px solid rgba(248,81,73,.25); }
+.tag-purple { background: rgba(163,113,247,.12);color: #c084fc;         border: 1px solid rgba(163,113,247,.25); }
+.tag-teal   { background: rgba(20,184,166,.12); color: #2dd4bf;          border: 1px solid rgba(20,184,166,.25); }
+.project-desc { font-size: .8rem; line-height: 1.75; color: var(--text-2); margin-bottom: 12px; }
+.project-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.proj-link { font-size: .72rem; color: var(--accent-3); text-decoration: none; display: flex; align-items: center; gap: 4px; transition: color var(--transition); }
+.proj-link:hover { color: var(--text); }
+.nav-sub { padding-left: 28px !important; font-size: .72rem; opacity: .8; }
+.project-img-strip { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
+.project-img-strip img, .project-img-strip .img-placeholder-sm {
+  width: 140px; height: 80px; object-fit: cover;
+  border-radius: 4px; flex-shrink: 0; border: 1px solid var(--border);
+}
+
+
+/* ── SPEC TABLE ── */
+.spec-table { width: 100%; border-collapse: collapse; font-size: .8rem; margin: 12px 0 20px; }
+.spec-table tr { border-bottom: 1px solid var(--border); }
+.spec-table tr:last-child { border-bottom: none; }
+.spec-table td { padding: 9px 12px; color: var(--text-2); vertical-align: top; line-height: 1.5; }
+.spec-table td:first-child { color: var(--accent); font-weight: 500; white-space: nowrap; width: 200px; }
+.spec-table tr:hover td { background: rgba(255,255,255,.02); }
+code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-3); padding: 1px 5px; border-radius: 3px; color: var(--accent-2); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 20px; }
+.timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--border); }
+.tl-item { position: relative; margin-bottom: 28px; padding-left: 18px; }
+.tl-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+.tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+.tl-title { font-family: var(--font-display); font-weight: 700; font-size: .92rem; color: var(--text); }
+.tl-dates { font-size: .72rem; color: var(--text-3); white-space: nowrap; }
+.tl-org { font-size: .74rem; color: var(--accent); margin-bottom: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.tl-bullets { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.tl-bullets li { font-size: .79rem; line-height: 1.7; color: var(--text-2); padding-left: 14px; position: relative; }
+.tl-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: .7rem; }
+
+/* ── SKILLS ── */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.skill-group { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+.skill-group-title { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 10px; }
+.skill-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.skill-chip { font-size: .7rem; background: var(--bg-3); border: 1px solid var(--border); color: var(--text-2); padding: 3px 8px; border-radius: 3px; }
+
+/* ── TROUBLESHOOTING BLOCK ── */
+.tshoot-block {
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: rgba(248,81,73,.05);
+  border: 1px solid rgba(248,81,73,.2);
+  border-left: 3px solid var(--red);
+  border-radius: var(--radius);
+}
+.tshoot-title {
+  font-family: var(--font-display); font-size: .82rem; font-weight: 700;
+  color: var(--red); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ── AD LAB PARTS ── */
+.ad-part {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.ad-part:first-of-type { margin-top: 8px; }
+.ad-part-label {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-size: .82rem; font-weight: 700;
+  color: var(--text); margin-bottom: 10px;
+}
+.part-badge {
+  font-size: .62rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+  background: rgba(88,166,255,.15); color: var(--accent-3);
+  border: 1px solid rgba(88,166,255,.3); white-space: nowrap;
+}
+.part-badge-2 {
+  background: rgba(163,113,247,.15); color: #c084fc;
+  border-color: rgba(163,113,247,.3);
+}
+.part-badge-3 {
+  background: rgba(57,211,83,.12); color: var(--accent);
+  border-color: rgba(57,211,83,.3);
+}
+.part-badge-4 {
+  background: rgba(243,177,65,.12); color: var(--orange);
+  border-color: rgba(243,177,65,.3);
+}
+.part-badge-5 {
+  background: rgba(248,81,73,.1); color: #ff8080;
+  border-color: rgba(248,81,73,.3);
+}
+.part-badge-6 {
+  background: rgba(139,92,246,.12); color: #a78bfa;
+  border-color: rgba(139,92,246,.3);
+}
+.part-badge-7 {
+  background: rgba(20,184,166,.12); color: #2dd4bf;
+  border-color: rgba(20,184,166,.3);
+}
+.part-badge-8 {
+  background: rgba(236,72,153,.12); color: #f472b6;
+  border-color: rgba(236,72,153,.3);
+}
+.part-badge-9 {
+  background: rgba(96,165,250,.12); color: #93c5fd;
+  border-color: rgba(96,165,250,.3);
+}
+
+/* ── PROJECT SUMMARY / CONCLUSION ── */
+.ad-summary {
+  margin-top: 24px;
+  padding: 20px 22px;
+  background: linear-gradient(135deg, rgba(57,211,83,.06), rgba(88,166,255,.05));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.ad-summary-title {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+  color: var(--text); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.ad-summary-title .h2-icon { color: var(--accent); }
+.ad-summary p {
+  font-size: .82rem; line-height: 1.8; color: #c1cad4; margin-bottom: 14px;
+}
+.skills-learned-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px; margin-top: 14px;
+}
+.skills-learned-group {
+  background: rgba(0,0,0,.15); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 14px;
+}
+.skills-learned-title {
+  font-size: .66rem; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent-2); margin-bottom: 8px;
+}
+.skills-learned-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.skills-learned-list li {
+  font-size: .76rem; line-height: 1.6; color: var(--text-2);
+  padding-left: 14px; position: relative;
+}
+.skills-learned-list li::before {
+  content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700;
+}
+
+/* ── PROJECT GROUP LABEL ── */
+.project-group-label {
+  font-size: .65rem; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-3);
+  padding: 8px 0 10px; margin-top: 8px; margin-bottom: 2px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.project-group-label::before {
+  content: ''; width: 3px; height: 14px;
+  background: var(--accent); border-radius: 2px; flex-shrink: 0;
+}
+.project-group-spacer { margin-top: 28px; }
+
+/* ── GLOBAL IMAGE ZOOM ── */
+.project-img-strip img { cursor: zoom-in; }
+.img-card img          { cursor: zoom-in; }
+.img-grid .img-card    { cursor: zoom-in; }
+
+/* ── SERVICE CARDS ── */
+.service-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 22px; margin-bottom: 14px;
+}
+.service-card-header {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  font-family: var(--font-display); font-weight: 700; font-size: .9rem;
+  color: var(--text); margin-bottom: 10px;
+}
+.service-card p {
+  font-size: .8rem; line-height: 1.75; color: var(--text-2); margin-bottom: 12px;
+}
+.service-img {
+  width: 100%; max-width: 560px; border-radius: var(--radius);
+  border: 1px solid var(--border); display: block;
+  cursor: zoom-in; margin-top: 10px;
+  transition: border-color var(--transition);
+}
+.service-img:hover { border-color: var(--border-hi); }
+
+/* ── PORTRAIT ── */
+.about-hero {
+  display: flex; align-items: flex-start; gap: 28px; margin-bottom: 28px; flex-wrap: wrap;
+}
+.portrait-wrap {
+  flex-shrink: 0; width: 130px; height: 155px;
+  border-radius: var(--radius);
+  border: 2px solid var(--accent);
+  overflow: hidden;
+  box-shadow: 0 0 0 4px rgba(57,211,83,.12), 0 8px 28px rgba(0,0,0,.4);
+}
+.portrait-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.about-hero-text { flex: 1; min-width: 220px; }
+
+/* ── PDF CERT EMBED ── */
+.cert-pdf-embed-wrap {
+  width: 90px; height: 90px; border-radius: 4px;
+  overflow: hidden; border: 1px solid var(--border);
+  cursor: pointer; position: relative;
+}
+.cert-pdf-embed-wrap iframe {
+  width: 500%; height: 500%;
+  transform: scale(0.2); transform-origin: top left;
+  pointer-events: none; border: none;
+}
+.cert-pdf-embed-wrap .cert-img-hint {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; color: #fff; opacity: 0;
+  transition: opacity .18s; text-align: center; padding: 4px;
+}
+.cert-pdf-embed-wrap:hover .cert-img-hint { opacity: 1; }
+
+/* ── SUMMARY CARD ── */
+.summary-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: var(--radius);
+  padding: 20px 22px; font-size: .83rem; line-height: 1.8; color: #c1cad4; margin-bottom: 32px;
+}
+
+/* ── HW CARD ── */
+.hw-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 14px; }
+.hw-card-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: .9rem; color: var(--text); margin-bottom: 12px; flex-wrap: wrap; }
+.hw-badge { font-size: .65rem; padding: 2px 7px; border-radius: 3px; font-weight: 500; }
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.88); z-index: 9999;
+  align-items: center; justify-content: center; cursor: zoom-out;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.lightbox-close {
+  position: fixed; top: 20px; right: 24px;
+  font-size: 1.4rem; color: #fff; cursor: pointer;
+  background: rgba(255,255,255,.1); border: none;
+  border-radius: 50%; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.2); }
+
+/* ── MISC ── */
+a { color: var(--accent-3); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.page-updated { font-size: .7rem; color: var(--text-3); margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+/* ── COPY TO CLIPBOARD TOAST ── */
+#copy-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--accent); color: #000; font-size: .78rem; font-weight: 700;
+  padding: 8px 20px; border-radius: 20px; pointer-events: none;
+  opacity: 0; transition: opacity .25s, transform .25s; z-index: 9999;
+}
+#copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.copy-trigger { cursor: pointer; }
+.copy-trigger:hover { text-decoration: underline; }
+
+/* ── HAMBURGER BUTTON (mobile only) ── */
+#nav-toggle {
+  display: none; background: none; border: 1px solid var(--border);
+  color: var(--text-2); border-radius: 6px; padding: 6px 10px;
+  font-size: 1rem; cursor: pointer; align-items: center; gap: 6px;
+  font-family: var(--font-body);
+}
+#nav-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 149; backdrop-filter: blur(2px);
+}
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+  /* Show hamburger, hide desktop sidebar */
+  #nav-toggle { display: flex; }
+
+  .sidebar {
+    position: fixed; left: -260px; top: 0; height: 100vh;
+    width: 260px; z-index: 150; transition: left .28s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,.5);
+    overflow-y: auto;
+  }
+  .sidebar.open { left: 0; }
+  #nav-overlay.open { display: block; }
+
+  /* Layout */
+  .layout { flex-direction: column; }
+  .content { padding: 16px 14px 80px; }
+
+  /* Topbar */
+  .topbar { padding: 0 14px; gap: 10px; }
+  .topbar-logo span:not(.logo-dot):not(.logo-text) { display: none; }
+  .topbar-right { gap: 6px; flex-wrap: nowrap; }
+  .topbar-tag { font-size: .62rem; padding: 3px 8px; }
+  .tab-btn { font-size: .7rem; padding: 4px 10px; }
+
+  /* Cards & tables */
+  .spec-table td { display: block; padding: 5px 0; }
+  .spec-table td:first-child { color: var(--accent-2); padding-top: 10px; border-bottom: none; }
+  .spec-table tr:last-child td:last-child { border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .hw-card { padding: 14px 16px; }
+
+  /* Project cards */
+  .project-card { padding: 16px; }
+  .project-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .project-img-strip { gap: 8px; }
+  .project-img-strip img { min-width: 220px; max-width: 90vw; }
+  .ad-part { padding: 12px 14px; }
+  .ad-part-label { flex-wrap: wrap; gap: 6px; font-size: .78rem; }
+
+  /* Skills & cert grids */
+  .skills-grid { grid-template-columns: 1fr; }
+  .skills-learned-grid { grid-template-columns: 1fr; }
+  .cert-grid { grid-template-columns: repeat(2, 1fr); }
+  .img-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* About me */
+  .about-hero { flex-direction: column; gap: 16px; }
+  .about-portrait { width: 90px; height: 90px; }
+
+  /* Summary block */
+  .summary-card { font-size: .82rem; }
+
+  /* Timeline */
+  .tl-header { flex-direction: column; gap: 2px; }
+  .tl-dates { font-size: .68rem; }
+
+  /* Lightbox */
+  .lightbox-img-wrap img { max-width: 95vw; max-height: 80vh; }
+
+  /* AD summary */
+  .skills-learned-group { padding: 10px 12px; }
+
+  /* Service cards */
+  .service-card { padding: 14px 16px; }
+  .service-img { max-width: 100%; }
+
+  /* Page updated */
+  .page-updated { margin-top: 24px; }
+}
+
+@media (max-width: 480px) {
+  .cert-grid { grid-template-columns: 1fr 1fr; }
+  .topbar-right .topbar-tag:not(.tab-btn) { display: none; }
+  h2 { font-size: 1rem; }
+  .project-title { font-size: .88rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<header class="topbar">
+  <button id="nav-toggle" aria-label="Toggle navigation" onclick="toggleNav()">☰ Menu</button>
+  <a class="topbar-logo" href="#">
+    <span class="logo-dot"></span>
+    Tyrek Brunson
+  </a>
+  <nav class="tab-switcher">
+    <button class="tab-btn active" data-tab="homelab">⚙ Home Lab &amp; Projects</button>
+    <button class="tab-btn"        data-tab="about">  ◈ About Me</button>
+  </nav>
+  <div class="topbar-right">
+    <!-- ══ HOW TO UPDATE: Add your GitHub URL ══ -->
+    <a class="topbar-tag" href="https://github.com/TyrekBrunson" target="_blank">github ↗</a>
+  </div>
+</header>
+
+<!-- ═══════════ SHELL ═══════════ -->
+<div class="shell">
+
+  <!-- ════════ SIDEBAR ════════ -->
+<div id="nav-overlay" onclick="toggleNav()"></div>
+  <nav class="sidebar">
+
+    <!-- HOME LAB NAV -->
+    <div class="nav-panel active" id="nav-homelab">
+      <a class="nav-link nav-link-top" data-section="hl-overview">Home</a>
+
+      <span class="nav-group-label">Hardware</span>
+      <a class="nav-link" data-section="hl-main-pc">    <span class="nav-icon">▸</span> Main PC</a>
+      <a class="nav-link" data-section="hl-alienware">  <span class="nav-icon">▸</span> Alienware Alpha R1</a>
+      <a class="nav-link" data-section="hl-network">    <span class="nav-icon">▸</span> Network</a>
+      <a class="nav-link" data-section="hl-photos">     <span class="nav-icon">▸</span> Lab Photos</a>
+
+      <span class="nav-group-label">Self-Hosted</span>
+      <a class="nav-link" data-section="hl-services">   <span class="nav-icon">▸</span> Services</a>
+      <a class="nav-link" data-section="hl-ai-stack">   <span class="nav-icon">▸</span> AI Stack</a>
+
+      <span class="nav-group-label">Projects</span>
+      <a class="nav-link" data-section="hl-projects">   <span class="nav-icon">▸</span> All Projects</a>
+      <a class="nav-link nav-sub" data-section="proj-report-gen">   <span class="nav-icon">·</span> Report Generator</a>
+      <a class="nav-link nav-sub" data-section="proj-ad-lab">       <span class="nav-icon">·</span> AD Home Lab</a>
+      <a class="nav-link nav-sub" data-section="proj-ai-stack">     <span class="nav-icon">·</span> AI Stack</a>
+      <a class="nav-link nav-sub" data-section="proj-hytale">       <span class="nav-icon">·</span> Hytale Server</a>
+    </div>
+
+    <!-- ABOUT NAV -->
+    <div class="nav-panel" id="nav-about">
+      <a class="nav-link nav-link-top" data-section="ab-top">Overview</a>
+
+      <span class="nav-group-label">Background</span>
+      <a class="nav-link" data-section="ab-experience"><span class="nav-icon">▸</span> Experience</a>
+      <a class="nav-link" data-section="ab-skills">    <span class="nav-icon">▸</span> Skills</a>
+      <a class="nav-link" data-section="ab-education"> <span class="nav-icon">▸</span> Education</a>
+      <a class="nav-link" data-section="ab-certs">     <span class="nav-icon">▸</span> Certifications</a>
+    </div>
+
+  </nav>
+
+  <!-- ════════ CONTENT ════════ -->
+  <main class="content">
+
+    <!-- ══════════════════════════════════
+         TAB 1: HOME LAB & PROJECTS
+         ══════════════════════════════════ -->
+    <div class="page-panel active" id="tab-homelab">
+
+      <!-- Overview -->
+      <div class="content-section" id="hl-overview">
+        <h1 class="section-title">Home Lab Documentation</h1>
+        <!-- ══ HOW TO UPDATE: Edit intro blurb ══ -->
+        <p class="section-sub">
+          A living document of my self-hosted infrastructure, virtualization environment, AI stack, and personal projects.
+          Built for reference and to demonstrate hands-on technical skills to anyone reviewing this portfolio.
+        </p>
+        <div class="callout callout-note">
+          <strong>📌 Note</strong>
+          This is a living document. Pages may be incomplete or evolving as the lab grows.
+        </div>
+        <div class="callout callout-warn">
+          <strong>⚠ Disclaimer</strong>
+          Configurations shown are my personal setup. Security and safety is your own responsibility when referencing these docs.
+        </div>
+      </div>
+
+      <!-- Main PC -->
+      <div class="content-section" id="hl-main-pc">
+        <h2><span class="h2-icon">🖥</span> Main PC — CachyOS</h2>
+        <!-- ══ HOW TO UPDATE: Edit hardware rows ══ -->
+        <div class="hw-card">
+          <div class="hw-card-title">
+            Primary Workstation
+            <span class="tag tag-green hw-badge">Primary</span>
+            <span class="tag tag-blue hw-badge">CachyOS</span>
+          </div>
+          <table class="spec-table">
+            <tr><td>CPU</td>        <td>AMD Ryzen 7 9800X3D</td></tr>
+            <tr><td>GPU</td>        <td>AMD RX 9070 XT — 16GB VRAM — ROCm enabled</td></tr>
+            <tr><td>OS</td>         <td>CachyOS (Arch-based)</td></tr>
+            <tr><td>Ollama</td>     <td>Port 11434 — ROCm GPU inference</td></tr>
+            <tr><td>Open WebUI</td> <td>Port 8080</td></tr>
+            <tr><td>SearXNG</td>    <td>Port 8081</td></tr>
+            <tr><td>Storage</td>    <td>Samsung 4TB — model storage at <code>/run/media/Samsung 4TB/</code></td></tr>
+          </table>
+        </div>
+
+        <h3>Photos</h3>
+        <div class="img-grid">
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/pc-front.jpg" alt="PC — Front View"
+                 onerror="this.replaceWith(missingImg('🖥', 'images/homelab/pc-front.jpg'))">
+            <div class="img-card-caption">PC — Front View</div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/pc-inside.jpg" alt="PC — Internal Build"
+                 onerror="this.replaceWith(missingImg('💡', 'images/homelab/pc-inside.jpg'))">
+            <div class="img-card-caption">PC — Internal Build</div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/desk-setup.jpg" alt="Desk Setup"
+                 onerror="this.replaceWith(missingImg('🖱', 'images/homelab/desk-setup.jpg'))">
+            <div class="img-card-caption">Desk Setup</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alienware Alpha R1 -->
+      <div class="content-section" id="hl-alienware">
+        <h2><span class="h2-icon">🖧</span> Alienware Alpha R1 — Proxmox Server</h2>
+        <div class="hw-card">
+          <div class="hw-card-title">
+            Homelab Virtualization &amp; Network Services Server
+            <span class="tag tag-amber hw-badge">Proxmox VE</span>
+            <span class="tag tag-purple hw-badge">Hypervisor</span>
+          </div>
+          <table class="spec-table">
+            <tr><td>OS</td>          <td>Proxmox VE (Debian-based Hypervisor)</td></tr>
+            <tr><td>CPU</td>         <td>Intel Core i3-4130T — Dual-Core / 4 Threads @ 2.90GHz — 35W TDP</td></tr>
+            <tr><td>GPU</td>         <td>NVIDIA GeForce GTX 860M — 2GB GDDR5 — Proprietary driver passthrough enabled</td></tr>
+            <tr><td>RAM</td>         <td>16GB DDR3L Dual-Channel @ 1600MHz (Upgraded)</td></tr>
+            <tr><td>Storage</td>     <td>2.5" SATA III SSD — Local VM/Container storage pool</td></tr>
+            <tr><td>Network</td>     <td>Gigabit Ethernet (RJ-45) / Integrated Intel Dual-Band Wireless</td></tr>
+            <tr><td>Proxmox WebUI</td><td>Port 8006 — HTTPS management dashboard</td></tr>
+            <tr><td>Primary Function</td><td>Homelab virtualization host — VMs and LXC containers for network services, AD lab, and testing</td></tr>
+          </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <strong>💡 Use Case</strong>
+          This machine serves as the dedicated virtualization host for spinning up Windows Server VMs (Active Directory lab),
+          network service containers, and isolated test environments — keeping all lab workloads off the main workstation.
+        </div>
+
+        <h3>Photos</h3>
+        <div class="img-grid">
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/alienware-front.jpg" alt="Alienware Alpha R1"
+                 onerror="this.replaceWith(missingImg('🖥', 'images/homelab/alienware-front.jpg'))">
+            <div class="img-card-caption">Alienware Alpha R1</div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/proxmox-ui.png" alt="Proxmox Dashboard"
+                 onerror="this.replaceWith(missingImg('⚙', 'images/homelab/proxmox-ui.png'))">
+            <div class="img-card-caption">Proxmox Dashboard</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Network -->
+      <div class="content-section" id="hl-network">
+        <h2><span class="h2-icon">🌐</span> Network</h2>
+
+        <div class="img-card" style="max-width:560px; margin-bottom:20px;" onclick="openLightbox(this)">
+          <img src="images/homelab/network-diagram.png" alt="Network Topology Diagram"
+               style="aspect-ratio:16/9; object-fit:contain; background:var(--bg-3);"
+               onerror="this.replaceWith(missingImg('🗺', 'images/homelab/network-diagram.png', '16/9'))">
+          <div class="img-card-caption">Network Topology Diagram</div>
+        </div>
+
+        <!-- ══ HOW TO UPDATE: Fill in your network details ══ -->
+        <div class="hw-card">
+          <div class="hw-card-title">Network Overview</div>
+          <table class="spec-table">
+            <tr><td>Router / FW</td> <td><!-- e.g. OPNsense, pfSense, TP-Link --></td></tr>
+            <tr><td>Switch</td>      <td><!-- Add your switch model --></td></tr>
+            <tr><td>ISP Speed</td>   <td><!-- e.g. 500Mbps down / 100Mbps up --></td></tr>
+            <tr><td>VLANs</td>       <td><!-- e.g. VLAN 10 — LAN, VLAN 20 — Lab, VLAN 30 — IoT --></td></tr>
+            <tr><td>DNS</td>         <td><!-- e.g. Pi-hole / Unbound --></td></tr>
+            <tr><td>Proxmox Host</td><td>Alienware Alpha R1 — Gigabit Ethernet</td></tr>
+          </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <strong>💡 Fix Script</strong>
+          A startup script <code>~/fix-ollama.sh</code> re-applies drive permissions and iptables rules that reset on reboot on the main workstation.
+        </div>
+      </div>
+
+      <!-- Lab Photos -->
+      <div class="content-section" id="hl-photos">
+        <h2><span class="h2-icon">📸</span> Lab Photos</h2>
+        <div class="img-grid">
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo1.jpg" alt="Lab Photo 1"
+                 onerror="this.replaceWith(missingImg('🖥', 'images/homelab/photo1.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo2.jpg" alt="Lab Photo 2"
+                 onerror="this.replaceWith(missingImg('📡', 'images/homelab/photo2.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo3.jpg" alt="Lab Photo 3"
+                 onerror="this.replaceWith(missingImg('🔌', 'images/homelab/photo3.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo4.jpg" alt="Lab Photo 4"
+                 onerror="this.replaceWith(missingImg('💾', 'images/homelab/photo4.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div class="content-section" id="hl-services">
+        <h2><span class="h2-icon">⚡</span> Self-Hosted Services</h2>
+        <!-- Quick reference table -->
+        <table class="spec-table" style="margin:0 0 24px;">
+          <tr><td>Ollama</td>      <td>:11434 — Local LLM inference (ROCm / RX 9070 XT) — Main PC</td></tr>
+          <tr><td>Open WebUI</td>  <td>:8080  — Browser chat UI for Ollama — Main PC</td></tr>
+          <tr><td>SearXNG</td>     <td>:8081  — Self-hosted search engine — Main PC</td></tr>
+          <tr><td>Proxmox VE</td>  <td>:8006  — Virtualization management dashboard — Alienware Alpha R1</td></tr>
+          <tr><td>Jellyfin</td>    <td>:8096  — Self-hosted media server — Main PC</td></tr>
+          <tr><td>Pi-hole</td>     <td>:80    — Network-wide DNS ad blocker — HP Pavilion laptop</td></tr>
+          <tr><td>OpenClaw</td>    <td>Burner laptop (AnduinOS) — remote Ollama client</td></tr>
+        </table>
+
+        <!-- Jellyfin -->
+        <div class="service-card">
+          <div class="service-card-header">
+            <span>🎬 Jellyfin Media Server</span>
+            <span class="tag tag-blue hw-badge">Port 8096</span>
+            <span class="tag tag-green hw-badge">Self-Hosted</span>
+          </div>
+          <p>
+            Jellyfin is an open-source, self-hosted media server providing a fully private alternative to
+            commercial streaming platforms. All media is personally owned and stored locally — no subscriptions,
+            no licensing fees, and no third-party data collection. The server indexes, transcodes, and streams
+            content on demand to any device on the network via a clean browser interface or native client apps.
+          </p>
+          <p>
+            Served at <code>http://localhost:8096/web/index.html#!/home</code> on the main workstation.
+            Demonstrates practical self-hosted service deployment, port management, media transcoding pipeline
+            configuration, and local network access control — skills directly transferable to enterprise
+            application hosting and intranet service management.
+          </p>
+          <!-- ══ HOW TO UPDATE: Drop screenshot → images/homelab/jellyfin-ui.png ══ -->
+          <img src="images/homelab/jellyfin-ui.png" alt="Jellyfin Media Server Interface"
+               class="service-img" onclick="openLightboxImg(this)"
+               onerror="this.style.display='none'">
+        </div>
+
+        <!-- Pi-hole -->
+        <div class="service-card">
+          <div class="service-card-header">
+            <span>🛡 Pi-hole — Network-Wide DNS Ad Blocker</span>
+            <span class="tag tag-amber hw-badge">DNS Proxy</span>
+            <span class="tag tag-red hw-badge">Network-Wide</span>
+          </div>
+          <p>
+            Pi-hole is a self-hosted, network-level DNS sinkhole that intercepts and blocks advertisements,
+            trackers, and malicious domains before they ever reach a device on the network. Unlike browser-based
+            ad blockers that only protect a single device, Pi-hole operates at the DNS layer — every device
+            on the local network routes its queries through it, providing blanket protection across phones,
+            laptops, smart TVs, and IoT devices with zero per-device configuration required.
+          </p>
+          <p>
+            Hosted on an HP Pavilion TS-15 at <code>192.168.1.161</code> and serving as the primary DNS
+            resolver for the home network. Currently blocking <strong>41.8%</strong> of all DNS queries
+            (27,550 of 65,865 total) across 21 active clients, backed by 1,569,793 domains on block lists.
+            Demonstrates network infrastructure management, DNS architecture, DHCP/DNS integration, and a
+            proactive security posture — directly relevant to network security and sysadmin roles.
+          </p>
+          <img src="images/pihole-dashboard.png" alt="Pi-hole Dashboard"
+               class="service-img" onclick="openLightboxImg(this)"
+               onerror="this.style.display='none'">
+        </div>
+      </div>
+
+      <!-- AI Stack -->
+      <div class="content-section" id="hl-ai-stack">
+        <h2><span class="h2-icon">🤖</span> AI Stack</h2>
+        <p>Fully local AI inference stack running on the RX 9070 XT via ROCm. All models stored on the Samsung 4TB drive. A secondary client on AnduinOS connects remotely to the main Ollama instance.</p>
+        <div class="callout callout-tip">
+          <strong>✓ Stack Overview</strong>
+          ROCm-enabled Ollama handles GPU inference. Open WebUI provides a browser chat interface. SearXNG enables search-augmented generation locally.
+        </div>
+        <h3>Active Models</h3>
+        <table class="spec-table">
+          <tr><td>Model Storage</td><td><code>/run/media/Samsung 4TB/</code></td></tr>
+          <tr><td>Inference Engine</td><td>Ollama with ROCm — AMD RX 9070 XT (16GB VRAM)</td></tr>
+          <tr><td>Chat Interface</td><td>Open WebUI — <code>localhost:8080</code></td></tr>
+          <tr><td>Search Augmentation</td><td>SearXNG — <code>localhost:8081</code></td></tr>
+        </table>
+      </div>
+
+      <!-- Projects -->
+      <div class="content-section" id="hl-projects">
+        <h2><span class="h2-icon">🛠</span> Projects</h2>
+
+        <!-- ── GROUP: Professional Tools ── -->
+        <div class="project-group-label">Professional Tools</div>
+
+        <!-- PROJECT: Computer Repair Report Generator -->
+        <div class="project-card" id="proj-report-gen">
+          <div class="project-card-header">
+            <span class="project-title">Computer Repair Report Generator</span>
+            <div class="project-tags">
+              <span class="tag tag-green">HTML / JS</span>
+              <span class="tag tag-blue">Internal Tool</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            A single-file web-based diagnostic and quality assurance tool built for eBryIT Inc. to standardize
+            repair ticket documentation across all technicians. Features ADP/NON-ADP checkbox sections, on-hold
+            status tracking, copy buttons with prefix-stripping logic, a hamburger menu with feature toggles,
+            and a full clear-all function. Significantly reduced reporting inconsistencies and improved QA
+            review workflow across all service records.
+          </p>
+          <div class="project-links">
+            <a class="proj-link" href="https://github.com/TyrekBrunson/Computer-Repair-Report-Generator" target="_blank">↗ GitHub Repo</a>
+            <a class="proj-link" href="https://tyrekbrunson.github.io/Computer-Repair-Report-Generator/ebryit_web_center.html" target="_blank">↗ Live Demo</a>
+          </div>
+          <div class="project-img-strip">
+            <img src="images/projects/report-gen-1.png" alt="Report Generator UI"
+                 onerror="this.replaceWith(missingImgSm('images/projects/report-gen-1.png'))">
+            <img src="images/projects/report-gen-2.png" alt="Report Generator View 2"
+                 onerror="this.replaceWith(missingImgSm('images/projects/report-gen-2.png'))">
+          </div>
+        </div>
+
+        <!-- ── GROUP: Home Lab Series ── -->
+        <div class="project-group-label project-group-spacer">Windows Server Home Lab Series</div>
+
+        <!-- PROJECT: Active Directory Home Lab -->
+        <div class="project-card" id="proj-ad-lab">
+          <div class="project-card-header">
+            <span class="project-title">Active Directory Home Lab — Windows Server 2022</span>
+            <div class="project-tags">
+              <span class="tag tag-amber">Proxmox VE</span>
+              <span class="tag tag-blue">Windows Server</span>
+              <span class="tag tag-purple">Active Directory</span>
+              <span class="tag tag-green">GPO</span>
+              <span class="tag tag-red">Security</span>
+              <span class="tag tag-teal">File Services</span>
+            </div>
+          </div>
+
+          <!-- ── Part 1 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge">Part 1</span>
+              AD DS Setup &amp; Organizational Structure
+            </div>
+            <p class="project-desc">
+              Deployed a full Active Directory environment from scratch on a Windows Server 2022 VM hosted on the
+              Proxmox VE hypervisor (Alienware Alpha R1). Installed and configured Active Directory Domain Services (AD DS),
+              promoted the server to a Domain Controller, and established a local domain. Built out a realistic
+              organizational structure with multiple Organizational Units (OUs) modeled after enterprise environments —
+              including geographic containers (USA, Europe, Asia) with nested OUs for Users, Computers, and Servers.
+              Created Security Groups (both built-in and custom) with appropriate group scopes (Global / Universal / Domain Local)
+              and group types (Security and Distribution) to reflect real-world IAM practices. Created and managed
+              user accounts and assigned group memberships across multiple departments (IT, Finance, HR).
+            </p>
+            <div class="project-img-strip">
+              <img src="images/projects/ad-lab-1.png" alt="AD Lab — OU Structure"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-lab-1.png'))">
+              <img src="images/projects/ad-lab-2.png" alt="AD Lab — User Management"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-lab-2.png'))">
+              <img src="images/projects/ad-lab-3.png" alt="AD Lab — Domain Controller"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-lab-3.png'))">
+            </div>
+          </div>
+
+          <!-- ── Part 2 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-2">Part 2</span>
+              Group Policy Management (GPO)
+            </div>
+            <p class="project-desc">
+              Extended the lab by implementing Group Policy Objects (GPOs) using the Group Policy Management Console (GPMC).
+              Applied the correct configuration type (Computer vs. User) and setting type (Policies vs. Preferences) for each
+              scenario — reinforcing the real-world decision-making process used by enterprise IT administrators daily.
+            </p>
+
+            <!-- GPO table -->
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Password Policy</td>
+                <td>Computer Config → Policies. Enforced minimum 12-character length, complexity requirements, and 90-day password expiration. Non-modifiable by users.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Drive Mapping</td>
+                <td>User Config → Preferences. Mapped a network share to a consistent drive letter at login. Users retain ability to add additional drives.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Desktop Wallpaper</td>
+                <td>User Config → Policies. Enforced a standardized corporate desktop wallpaper via UNC path. Users cannot override.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Restrict Control Panel</td>
+                <td>User Config → Policies. Fully prohibited user access to Control Panel across all machines in scope.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Disable USB Storage</td>
+                <td>Computer Config → Policies. Blocked all removable storage classes at the system level — enforced and non-overridable by users.</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-gpo-1.png" alt="GPMC Console"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-1.png'))">
+              <img src="images/projects/ad-gpo-2.png" alt="Password Policy GPO"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-2.png'))">
+              <img src="images/projects/ad-gpo-3.png" alt="Drive Mapping GPO"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-3.png'))">
+              <img src="images/projects/ad-gpo-4.png" alt="USB Restriction GPO"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-4.png'))">
+            </div>
+          </div>
+
+          <!-- ── Part 3 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-3">Part 3</span>
+              GPO Implementation, Domain Join &amp; Testing
+            </div>
+            <p class="project-desc">
+              Extended the lab by spinning up a Windows 10 Enterprise VM (via VMware Workstation Pro) as a client machine
+              and joining it to the Active Directory domain. Configured the Windows Server with a static IP address and set
+              the loopback address (127.0.0.1) as the primary DNS server — following real-world best practices for domain
+              controllers. Pointed the client VM's DNS to the domain controller's static IP, verified connectivity via
+              <code>ping</code> and <code>nslookup</code>, and successfully joined the client to the domain. Logged in
+              using domain user accounts created in Part 1, confirming AD authentication worked end-to-end.
+            </p>
+            <p class="project-desc">
+              Implemented all five GPOs from Part 2 by dragging them from the Group Policy Objects container into their
+              respective OUs — user-scoped GPOs (Drive Mapping, Desktop Wallpaper, Restrict Control Panel) under the Users
+              OU, and computer-scoped GPOs (Password Policy, Disable USB Storage) under the Computers OU. Moved the newly
+              joined client machine from the default Computers container into the correct geographic OU and added a
+              machine description per best practice. Forced immediate GPO application using <code>gpupdate /force</code>
+              from the command line rather than waiting for the default 90-minute refresh cycle, then verified each policy
+              was enforced on the client — confirmed by the Control Panel restriction error message appearing on the
+              domain-joined machine.
+            </p>
+
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Client VM Setup</td>
+                <td>Windows 10 Enterprise (free trial) — VMware Workstation Pro — joined to AD domain</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Static IP (Server)</td>
+                <td>Assigned existing DHCP IP as static on the domain controller — loopback (127.0.0.1) set as primary DNS, Google (8.8.8.8) as secondary</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">DNS (Client)</td>
+                <td>Pointed to domain controller's static IP — verified with <code>ping</code> and <code>nslookup &lt;domain&gt;</code></td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Domain Join</td>
+                <td>File Explorer → This PC → Properties → Rename PC (Advanced) → Change → Domain — authenticated with admin credentials</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">GPO Deployment</td>
+                <td>Drag-and-drop GPOs from Group Policy Objects container into correct OUs in GPMC</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">OU Management</td>
+                <td>Moved domain-joined computer from default Computers container to USA → Computers OU; added machine description</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Force GPO Apply</td>
+                <td><code>gpupdate /force</code> — bypasses 90-minute default refresh; confirmed Control Panel block active on client</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-gpo-join-1.png" alt="Domain Join — System Properties"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-join-1.png'))">
+              <img src="images/projects/ad-gpo-join-2.png" alt="Domain Join — Welcome Message"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-join-2.png'))">
+              <img src="images/projects/ad-gpo-test-1.png" alt="gpupdate /force"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-test-1.png'))">
+              <img src="images/projects/ad-gpo-test-2.png" alt="Control Panel Blocked"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-gpo-test-2.png'))">
+            </div>
+
+            <!-- Troubleshooting block -->
+            <div class="tshoot-block">
+              <div class="tshoot-title">⚠ Troubleshooting — Settings App Crash</div>
+              <p class="project-desc" style="margin-bottom:10px;">
+                During Part 3, the Windows Settings app would open briefly and immediately close, blocking the
+                network configuration step required to join the client VM to the domain. After investigating
+                DCOM errors (Event ID 10010), the AppX package, and the VM display adapter — the actual root
+                cause was the <strong>Restrict Control Panel</strong> GPO created in Part 2. On Windows Server,
+                this policy blocks both Control Panel <em>and</em> the Settings app, including for the Administrator account.
+                While troubleshooting, the static IP and DNS were configured via PowerShell as a workaround.
+              </p>
+              <table class="spec-table" style="margin:0 0 14px;">
+                <tr>
+                  <td style="color:var(--red); width:180px;">Symptom</td>
+                  <td>Settings flashes open and immediately closes; network config step unreachable</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--red);">Red herrings</td>
+                  <td>DCOM Event ID 10010, Basic Display Adapter, missing AppX package — all investigated and ruled out</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent);">Root cause</td>
+                  <td><code>NoControlPanel: 1</code> in <code>HKCU\...\Policies\Explorer</code> — Restrict Control Panel GPO applied to all users including Administrator</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent);">Immediate fix</td>
+                  <td><code>Remove-ItemProperty -Path "HKCU:\...\Policies\Explorer" -Name "NoControlPanel"</code></td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent);">Proper fix</td>
+                  <td>GPMC → Security Filtering: removed <em>Authenticated Users</em>, added <em>Domain Users</em> only — Domain Admins now exempt, users still restricted. Ran <code>gpupdate /force</code> to confirm</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent-3);">Workaround</td>
+                  <td>Configured static IP and DNS via <code>New-NetIPAddress</code> and <code>Set-DnsClientServerAddress</code> while Settings was inaccessible</td>
+                </tr>
+              </table>
+              <div class="project-img-strip">
+                <img src="images/projects/ts-settings-crash.png" alt="Settings crash"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts-settings-crash.png'))">
+                <img src="images/projects/ts-event-viewer.png" alt="Event Viewer DCOM error"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts-event-viewer.png'))">
+                <img src="images/projects/ts-gpresult.png" alt="gpresult showing NoControlPanel"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts-gpresult.png'))">
+                <img src="images/projects/ts-gpo-security-filter.png" alt="GPO Security Filtering fix"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts-gpo-security-filter.png'))">
+                <img src="images/projects/ts-settings-fixed.png" alt="Settings working after fix"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts-settings-fixed.png'))">
+              </div>
+            </div>
+
+            <!-- Troubleshooting block 2 -->
+            <div class="tshoot-block">
+              <div class="tshoot-title">⚠ Troubleshooting — Client Could Not Contact Domain Controller</div>
+              <p class="project-desc" style="margin-bottom:10px;">
+                After configuring the server, the client VM failed to join the domain with the error
+                <em>"An Active Directory Domain Controller for domain ProxMox.local could not be contacted."</em>
+                The client could ping the DC (192.168.1.240) successfully, meaning the network path was fine —
+                the issue was purely DNS. The client's DNS was pointing to the AT&amp;T router (192.168.1.254)
+                instead of the domain controller, so <code>ProxMox.local</code> couldn't be resolved. An
+                IPv6 router address was also interfering before it was disabled via the registry.
+              </p>
+              <table class="spec-table" style="margin:0 0 14px;">
+                <tr>
+                  <td style="color:var(--red); width:180px;">Symptom</td>
+                  <td>"AD DC for domain ProxMox.local could not be contacted" when attempting to join domain</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--red);">Red herring</td>
+                  <td>IPv6 DNS from router (<code>2600:1700:...</code>) initially intercepting lookups — disabled via registry (<code>DisabledComponents = 255</code>), but root cause was still IPv4 DNS misconfiguration</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent);">Root cause</td>
+                  <td>Client DNS Servers pointed to <code>192.168.1.254</code> (AT&amp;T router via DHCP) — router has no knowledge of <code>ProxMox.local</code>. DC was never consulted.</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent);">Fix</td>
+                  <td>Manually set client DNS to DC: <code>netsh interface ipv4 set dnsservers "Ethernet" static 192.168.1.240 primary</code> + Google as secondary. Verified with <code>nslookup ProxMox.local</code> resolving through DC.</td>
+                </tr>
+                <tr>
+                  <td style="color:var(--accent-3);">Domain join</td>
+                  <td>Used <code>sysdm.cpl</code> to open Computer Name/Domain Changes directly — bypassed Settings entirely. Entered <code>ProxMox.local</code> and admin credentials. Domain join succeeded.</td>
+                </tr>
+              </table>
+              <div class="project-img-strip">
+                <img src="images/projects/ts2-domain-error.png" alt="Domain contact error"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts2-domain-error.png'))">
+                <img src="images/projects/ts2-wrong-dns.png" alt="ipconfig showing router DNS"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts2-wrong-dns.png'))">
+                <img src="images/projects/ts2-nslookup-fail.png" alt="nslookup failing via router"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts2-nslookup-fail.png'))">
+                <img src="images/projects/ts2-nslookup-fixed.png" alt="nslookup resolving via DC"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts2-nslookup-fixed.png'))">
+                <img src="images/projects/ts2-domain-joined.png" alt="Welcome to domain message"
+                     onerror="this.replaceWith(missingImgSm('images/projects/ts2-domain-joined.png'))">
+              </div>
+            </div>
+          </div><!-- /Part 3 -->
+
+          <!-- ── Part 4 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-4">Part 4</span>
+              File Services, Network Sharing &amp; FSRM
+            </div>
+            <p class="project-desc">
+              Configured file sharing and storage management on the Windows Server domain. Created a shared
+              folder on the local disk, set both Share permissions and NTFS permissions to control domain user
+              access, and tested access from the client VM. Demonstrated the difference between manual drive
+              mapping (non-persistent) and GPO-automated drive mapping (persistent across reboots). Then
+              installed and configured File Server Resource Manager (FSRM) to enforce storage quotas and
+              file type restrictions on the shared folder.
+            </p>
+
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Share Permissions</td>
+                <td>Folder-level only — granted Domain Users read access via Advanced Sharing → Permissions</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">NTFS Permissions</td>
+                <td>Granular per-file/subfolder permissions set via Security tab — more detailed than share permissions; applied down the full folder tree</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Manual Drive Map</td>
+                <td>Mapped via File Explorer → This PC → Map Network Drive (<code>\\ServerName\shared</code>, drive letter S:) — does not persist after reboot</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">GPO Drive Map</td>
+                <td>Created <em>Map Drives</em> GPO under User Config → Preferences → Windows Settings → Drive Maps; linked to Users OU — persistent, auto-mapped at every login</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">FSRM — Quota</td>
+                <td>Installed via Server Manager → File and Storage Services → FSRM. Created custom quota on the shared folder with an 80% notification threshold to alert IT admins via email before storage is exhausted</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">FSRM — File Screen</td>
+                <td>Created custom file screen restricting shared folder to text/document files only — blocked audio, video, compressed, executable, image, and web page file types to prevent storage bloat</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-fs-share-perms.png" alt="Share Permissions setup"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs-share-perms.png'))">
+              <img src="images/projects/ad-fs-ntfs-perms.png" alt="NTFS Permissions setup"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs-ntfs-perms.png'))">
+              <img src="images/projects/ad-fs-map-drive.png" alt="Map Network Drive dialog"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs-map-drive.png'))">
+              <img src="images/projects/ad-fs-gpo-map.png" alt="GPO Drive Map preferences"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs-gpo-map.png'))">
+              <img src="images/projects/ad-fs-quota.png" alt="FSRM Quota config"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs-quota.png'))">
+              <img src="images/projects/ad-fs-filescreen.png" alt="FSRM File Screen config"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs-filescreen.png'))">
+            </div>
+          </div><!-- /Part 4 -->
+
+          <!-- ── Part 5 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-5">Part 5</span>
+              Security Policies — Passwords, Lockout, User Rights &amp; Fine-Grained PSOs
+            </div>
+            <p class="project-desc">
+              Implemented a full suite of essential security policies across the Active Directory environment
+              using Group Policy and the Active Directory Administrative Center. Covered strong password
+              enforcement, brute-force protection via account lockout, role-based access restrictions through
+              user rights assignment, and fine-grained password policies (PSOs) to apply different password
+              requirements to different user groups — mirroring real-world enterprise security configurations.
+            </p>
+
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Password Policy</td>
+                <td>Edited Default Domain Policy — Computer Config → Policies → Windows Settings → Security Settings → Account Policies → Password Policy. Configured: enforce history, max age (90 days), minimum length (12+), complexity requirements enabled. Tested by attempting weak password on a new user — policy rejected it.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Account Lockout</td>
+                <td>Configured via Default Domain Policy → Account Lockout Policy. Set lockout threshold to 3 invalid attempts, lockout duration to 30 minutes, reset counter after 30 minutes. Verified by triggering failed logins until lockout message appeared.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">User Rights Assignment</td>
+                <td>Created <em>User Rights</em> GPO — Computer Config → Policies → Windows Settings → Security Settings → Local Policies → User Rights Assignment. Applied <strong>Deny log on locally</strong> to HR group (blocks direct server login) and <strong>Allow log on through Remote Desktop Services</strong> to IT Admins only. Both policies verified on client.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Fine-Grained Passwords (PSO)</td>
+                <td>Used <strong>Active Directory Administrative Center</strong> (not GPMC) — Domain → System → Password Settings Container → New → Password Settings. Created two PSOs: <em>Admin Password Policy</em> (Precedence 1, 15-char min, enforced history, applied to IT Admins group) and <em>User Password Policy</em> (Precedence 2, less strict, applied to Domain Users). Lower precedence number = higher priority when multiple PSOs apply.</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-sec-password-policy.png" alt="Password Policy GPO settings"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-password-policy.png'))">
+              <img src="images/projects/ad-sec-complexity-fail.png" alt="Weak password rejected"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-complexity-fail.png'))">
+              <img src="images/projects/ad-sec-lockout-policy.png" alt="Account Lockout Policy"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-lockout-policy.png'))">
+              <img src="images/projects/ad-sec-lockout-test.png" alt="Account locked out message"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-lockout-test.png'))">
+              <img src="images/projects/ad-sec-user-rights.png" alt="User Rights Assignment GPO"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-user-rights.png'))">
+              <img src="images/projects/ad-sec-deny-local.png" alt="Deny logon locally enforced"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-deny-local.png'))">
+              <img src="images/projects/ad-sec-pso-admin.png" alt="Admin PSO in AD Admin Center"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-pso-admin.png'))">
+              <img src="images/projects/ad-sec-pso-users.png" alt="User PSO in AD Admin Center"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-sec-pso-users.png'))">
+            </div>
+          </div><!-- /Part 5 -->
+
+          <!-- ── Part 6 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-6">Part 6</span>
+              Service Accounts &amp; Single-Purpose Computer Configuration
+            </div>
+            <p class="project-desc">
+              Implemented a practical service account use case modeled after real enterprise environments —
+              configuring a domain-joined Windows client to operate as an unattended, single-purpose display
+              machine using a dedicated service account. Unlike user accounts which are tied to individual
+              people, service accounts run assigned tasks autonomously without human credential entry. This
+              is the same concept behind kiosk terminals, digital signage, and automated process runners
+              found throughout enterprise IT environments.
+            </p>
+
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Service Account Setup</td>
+                <td>Created dedicated service account in ADUC under a separate Service Accounts OU. Named with a prefix convention (<code>$website-login</code>) for easy identification among thousands of AD objects. Configured with a non-expiring password and the "Password never expires" flag.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Auto Logon</td>
+                <td>Used <strong>Sysinternals Autologon</strong> tool on the client VM — entered service account credentials to configure automatic login on reboot. Eliminates manual credential entry; the machine comes back online and logs itself in after any restart or power event.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Browser Auto-Start</td>
+                <td>Configured Google Chrome to open a specific URL on startup — set to <a href="https://github.com/TyrekBrunson" target="_blank" style="color:var(--accent-3);">github.com/TyrekBrunson</a> as a shameless plug (demonstrating the concept applies to any URL — digital signage, dashboards, internal portals, etc.). Added <code>--start-fullscreen</code> flag to the Chrome desktop shortcut target path. Moved the shortcut to <code>shell:startup</code> so it launches automatically on every login with no user interaction.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Display / Sleep</td>
+                <td>Set screen sleep to <strong>Never</strong> via Power &amp; Sleep settings — ensures the display stays active indefinitely for kiosk-style continuous operation.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">GPO — Restrict Logon</td>
+                <td>Created <em>Restrict Logon to Service Account</em> GPO — Computer Config → Policies → Windows Settings → Security Settings → Local Policies → User Rights Assignment → <strong>Deny log on locally</strong>. Applied to the All Employees group and linked to the Computers OU. Verified: standard domain users receive an access denied error when attempting to log in locally; only the service account is permitted.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Tool Used</td>
+                <td>Sysinternals Suite (Microsoft) — downloaded and deployed to the network share for team-wide access. Used Autologon utility specifically; suite also used for general AD and system troubleshooting.</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-svc-account-aduc.png" alt="Service account in ADUC"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-svc-account-aduc.png'))">
+              <img src="images/projects/ad-svc-autologon.png" alt="Sysinternals Autologon tool"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-svc-autologon.png'))">
+              <img src="images/projects/ad-svc-startup-folder.png" alt="shell:startup folder with Chrome"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-svc-startup-folder.png'))">
+              <img src="images/projects/ad-svc-fullscreen.png" alt="Browser in fullscreen kiosk mode — GitHub"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-svc-fullscreen.png'))">
+              <img src="images/projects/ad-svc-gpo-restrict.png" alt="Restrict logon GPO"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-svc-gpo-restrict.png'))">
+              <img src="images/projects/ad-svc-deny-test.png" alt="Logon denied for standard user"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-svc-deny-test.png'))">
+            </div>
+          </div><!-- /Part 6 -->
+
+          <!-- ── Part 7 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-7">Part 7</span>
+              Windows File Sharing — NTFS, Share Permissions &amp; Inheritance
+            </div>
+            <p class="project-desc">
+              Implemented real-world file sharing scenarios on the Windows Server domain, covering both share
+              permissions and NTFS permissions — the two independent permission layers that govern network
+              resource access in enterprise environments. Worked through four hands-on activities modeled
+              after actual workplace access control requests, applying the principle of least privilege
+              throughout. Also covered explicit vs. inherited permissions and how to break inheritance on
+              subfolders for granular access control.
+            </p>
+
+            <div class="callout callout-tip" style="margin:10px 0 14px; font-size:.78rem;">
+              <strong>⚠ Key Rule</strong>
+              When NTFS and Share permissions are combined, the <strong>most restrictive</strong> applies.
+              A user with Share Full Control but NTFS Read-Only gets Read-Only over the network.
+            </div>
+
+            <table class="spec-table" style="margin:0 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Share Permissions</td>
+                <td>Network-level only (3 options: Read, Change, Full Control). Applied at the folder level via Advanced Sharing → Permissions. Does not cascade to subfolders or apply to local access.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">NTFS Permissions</td>
+                <td>File-system level (granular: Full Control, Modify, Read &amp; Execute, List Folder Contents, Read, Write, Special). Applies to both local and network access, cascades to all subfolders and files.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Activity 1 — Marketing</td>
+                <td>Marketing intern needs read-only access to the Marketing folder. Share permissions already had Everyone → Read. Added Marketing Interns group to NTFS with Read only — removed default permissions to enforce least privilege.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Activity 2 — HR</td>
+                <td>HR Group folder must be invisible to all non-HR staff. Removed Everyone from Share permissions, added HR Staff with Full Control. Added HR Staff to NTFS with Full Control — without both layers, subfolder access would still be restricted.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Activity 3 — Vendor</td>
+                <td>Third-party vendor can upload to Vendor Files folder but cannot read existing files. Share: Full Control for Vendor group. NTFS: Write only — removed Read, Read &amp; Execute, and List Folder Contents to prevent the vendor from viewing other files.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Activity 4 — IT / Licenses</td>
+                <td>All IT staff access the Software folder (Full Control via Share + NTFS). Only Senior IT accesses the Licenses subfolder. Disabled inheritance on Licenses subfolder, explicitly granted Senior IT Full Control — breaking the parent's inherited permissions to enforce isolation.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Inherited vs. Explicit</td>
+                <td>Demonstrated that child folders automatically inherit parent NTFS permissions. Used Advanced Security Settings → Disable Inheritance to break the chain on the Licenses subfolder, then applied explicit permissions for Senior IT only.</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-fs2-share-perms.png" alt="Share Permissions — HR activity"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs2-share-perms.png'))">
+              <img src="images/projects/ad-fs2-ntfs-perms.png" alt="NTFS Permissions — Vendor write-only"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs2-ntfs-perms.png'))">
+              <img src="images/projects/ad-fs2-disable-inherit.png" alt="Disable Inheritance on Licenses subfolder"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs2-disable-inherit.png'))">
+              <img src="images/projects/ad-fs2-explicit-seniorit.png" alt="Explicit Senior IT permissions"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs2-explicit-seniorit.png'))">
+            </div>
+          </div><!-- /Part 7 -->
+
+          <!-- ── Part 8 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-8">Part 8</span>
+              Advanced NTFS Permissions — Inheritance &amp; Effective Permissions
+            </div>
+            <p class="project-desc">
+              Extended the file permissions work from Part 7 into advanced NTFS concepts: effective
+              permissions, inheritance behavior, and explicit deny. Effective permissions are the actual
+              combined result of explicit permissions, inherited permissions, group memberships, and deny
+              rules — with explicit deny always overriding any inherited or allowed access. Built two
+              hands-on labs from scratch on a Windows Server domain with a Windows 11 client, replicating
+              enterprise access-control scenarios involving nested folder structures and per-user restrictions.
+            </p>
+
+            <div class="callout callout-tip" style="margin:10px 0 14px; font-size:.78rem;">
+              <strong>⚠ Key Rule</strong>
+              Explicit Deny always wins. If a user belongs to a group with Allow access but also has an
+              explicit Deny (directly or via another group), the Deny takes precedence — no exceptions.
+            </div>
+
+            <table class="spec-table" style="margin:0 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">Effective Permissions</td>
+                <td>The actual resulting access a user has, combining explicit permissions, inherited permissions from parent folders, group membership permissions, and deny rules (which override everything else).</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Disable Inheritance — Convert</td>
+                <td><em>Convert inherited permissions to explicit:</em> preserves all currently inherited permissions as standalone explicit entries on the object, but the object no longer receives future changes from the parent. Used when keeping existing access but cutting the inheritance link.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Disable Inheritance — Remove</td>
+                <td><em>Remove all inherited permissions:</em> wipes every inherited entry, leaving a clean slate that requires manually re-adding all access. Used when starting a subfolder's permissions from scratch.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Lab 1 — Project Subfolder Isolation</td>
+                <td>Created <code>Common\</code> with subfolders <code>Project\</code> and <code>Events\</code>, plus a nested <code>Project\Contracts\</code>. Set Common to Full Control for Everyone (Share + NTFS) — confirmed inheritance cascades automatically to all subfolders and new nested folders. Created a <em>Project</em> security group (Global scope). On <code>Project\</code>: disabled inheritance using <strong>Convert</strong>, removed Everyone, and granted the Project group Full Control — isolating that one subfolder while <code>Events\</code> retained Everyone's inherited access.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Lab 2 — Explicit Deny (John Doe)</td>
+                <td>Created <code>Project\</code> with Read/Write for Everyone, plus subfolders <code>Confidential\</code> and <code>Materials\</code> — both inherited Everyone's Read/Write. Created user <strong>John Doe</strong> (member of Employees group). On <code>Confidential\</code>, added John explicitly and set <strong>Deny: Read</strong> — verified Everyone (including other employees) retained full access while John alone was blocked, and <code>Materials\</code> remained completely unaffected.</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-fs3-common-inherit.png" alt="Common folder inheritance cascading to subfolders"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs3-common-inherit.png'))">
+              <img src="images/projects/ad-fs3-disable-convert.png" alt="Disable Inheritance — Convert dialog"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs3-disable-convert.png'))">
+              <img src="images/projects/ad-fs3-project-group.png" alt="Project group with Full Control on subfolder"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs3-project-group.png'))">
+              <img src="images/projects/ad-fs3-explicit-deny-john.png" alt="Explicit Deny Read for John Doe"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs3-explicit-deny-john.png'))">
+              <img src="images/projects/ad-fs3-deny-warning.png" alt="Deny precedence warning dialog"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-fs3-deny-warning.png'))">
+            </div>
+          </div><!-- /Part 8 -->
+
+          <!-- ── Part 9 ── -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge part-badge-9">Part 9</span>
+              Access-Based Enumeration (ABE)
+            </div>
+            <p class="project-desc">
+              Implemented Access-Based Enumeration (ABE) — a Windows Server feature that hides shared files
+              and folders from users who lack permission to access them, so users only ever see what they're
+              authorized to open. ABE is purely a visibility filter layered on top of existing NTFS and Share
+              permissions; it does not grant or change access, it simply prevents permission-less folders from
+              appearing in the directory listing at all. Built a realistic two-department file server scenario
+              for HR and IT, configured NTFS and Share permissions per department, then enabled ABE and verified
+              that each department's users see only their own folder.
+            </p>
+
+            <div class="callout callout-tip" style="margin:10px 0 14px; font-size:.78rem;">
+              <strong>💡 Why It Matters</strong>
+              ABE enhances security (users can't probe for folders they can't open), reduces confusion and
+              help desk tickets, and enforces privacy for sensitive departments like HR and Finance — even
+              users who know the exact path can't see or browse to a folder ABE has hidden from them.
+            </div>
+
+            <table class="spec-table" style="margin:0 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:220px;">ABE Requirements</td>
+                <td>NTFS volumes only — ABE does not function on FAT32/exFAT. Relies entirely on correctly configured NTFS and Share permissions; misconfigured permissions are not corrected by ABE, only hidden behavior is affected.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">AD Setup</td>
+                <td>Created two security groups (Global scope): <strong>HR Department</strong> and <strong>IT Department</strong>. Created test users — Conan Doyle (added to HR Department) and Lacos (added to IT Department) — via both the "Member Of" tab and group "Members" tab methods.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Shared Folder Structure</td>
+                <td>Created <code>Department Shares\</code> on the server with subfolders <code>HR\</code> and <code>IT\</code> — a single shared root containing department-segregated content.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">NTFS Permissions</td>
+                <td>On both <code>HR\</code> and <code>IT\</code>: disabled inheritance (Convert), removed default Users/Authenticated Users entries, and granted Full Control to the respective department group only — HR Department on <code>HR\</code>, IT Department on <code>IT\</code>.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Share Permissions</td>
+                <td>On <code>Department Shares\</code> (the parent): removed Everyone, added both HR Department and IT Department groups with Read access — granting entry into the share so users can reach their respective subfolders.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Enabling ABE</td>
+                <td>Server Manager → File and Storage Services → Shares → right-click <code>Department Shares</code> → Properties → Settings → enabled <strong>Access-Based Enumeration</strong>.</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-3);">Verification</td>
+                <td>Logged in as Conan (HR) on a Windows 11 client joined to the domain via <code>\\ServerName\Department Shares</code> — only the <strong>HR</strong> folder was visible, IT was completely hidden. Logged in as Lacos (IT) — only the <strong>IT</strong> folder was visible, HR was hidden. Confirmed new subfolders created under HR correctly inherited HR-only permissions.</td>
+              </tr>
+            </table>
+
+            <div class="project-img-strip">
+              <img src="images/projects/ad-abe-groups-users.png" alt="HR and IT groups with test users in ADUC"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-abe-groups-users.png'))">
+              <img src="images/projects/ad-abe-ntfs-hr.png" alt="HR folder NTFS permissions — HR Department only"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-abe-ntfs-hr.png'))">
+              <img src="images/projects/ad-abe-share-perms.png" alt="Department Shares — Share permissions"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-abe-share-perms.png'))">
+              <img src="images/projects/ad-abe-enable-setting.png" alt="Enabling Access-Based Enumeration in Server Manager"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-abe-enable-setting.png'))">
+              <img src="images/projects/ad-abe-hr-view.png" alt="HR user view — only HR folder visible"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-abe-hr-view.png'))">
+              <img src="images/projects/ad-abe-it-view.png" alt="IT user view — only IT folder visible"
+                   onerror="this.replaceWith(missingImgSm('images/projects/ad-abe-it-view.png'))">
+            </div>
+          </div><!-- /Part 9 -->
+
+          <!-- ── Project Summary ── -->
+          <div class="ad-summary">
+            <div class="ad-summary-title"><span class="h2-icon">🏁</span> Project Summary — Active Directory Home Lab</div>
+            <p>
+              Over the course of this multi-week, nine-part home lab series, a complete Active Directory
+              environment was built from a bare hypervisor up through enterprise-grade security, file
+              services, and access control — entirely self-hosted on Proxmox VE running on the Alienware
+              Alpha R1. The project progressed from initial domain controller deployment through Group
+              Policy management, client domain-joining, file sharing and storage management, layered
+              security policies, service account automation, and advanced NTFS permission models including
+              access-based enumeration. Real troubleshooting issues encountered along the way — DCOM/Settings
+              crashes, DNS misconfiguration, and GPO lockout edge cases — were diagnosed and resolved using
+              the same methodology used in production environments: isolating variables, checking event logs,
+              and verifying fixes with reproducible tests.
+            </p>
+            <div class="skills-learned-grid">
+              <div class="skills-learned-group">
+                <div class="skills-learned-title">Infrastructure</div>
+                <ul class="skills-learned-list">
+                  <li>Proxmox VE hypervisor deployment</li>
+                  <li>Windows Server 2022 installation &amp; configuration</li>
+                  <li>VM provisioning (Windows 10/11 clients)</li>
+                  <li>Static IP &amp; DNS configuration</li>
+                </ul>
+              </div>
+              <div class="skills-learned-group">
+                <div class="skills-learned-title">Active Directory</div>
+                <ul class="skills-learned-list">
+                  <li>AD DS installation &amp; domain controller promotion</li>
+                  <li>OU design &amp; organizational structure</li>
+                  <li>Security &amp; distribution groups, group scopes</li>
+                  <li>User &amp; service account management</li>
+                  <li>Domain join &amp; client troubleshooting</li>
+                </ul>
+              </div>
+              <div class="skills-learned-group">
+                <div class="skills-learned-title">Group Policy</div>
+                <ul class="skills-learned-list">
+                  <li>GPO creation, linking &amp; security filtering</li>
+                  <li>Computer vs. User configuration</li>
+                  <li>Policies vs. Preferences</li>
+                  <li>gpupdate /force &amp; policy verification</li>
+                </ul>
+              </div>
+              <div class="skills-learned-group">
+                <div class="skills-learned-title">File Services</div>
+                <ul class="skills-learned-list">
+                  <li>Share vs. NTFS permissions</li>
+                  <li>Inheritance, explicit deny &amp; effective permissions</li>
+                  <li>FSRM — quotas &amp; file screening</li>
+                  <li>Access-Based Enumeration (ABE)</li>
+                  <li>GPO-based drive mapping</li>
+                </ul>
+              </div>
+              <div class="skills-learned-group">
+                <div class="skills-learned-title">Security</div>
+                <ul class="skills-learned-list">
+                  <li>Password &amp; account lockout policies</li>
+                  <li>Fine-grained password policies (PSOs)</li>
+                  <li>User rights assignment / RBAC</li>
+                  <li>Service account hardening</li>
+                </ul>
+              </div>
+              <div class="skills-learned-group">
+                <div class="skills-learned-title">Troubleshooting</div>
+                <ul class="skills-learned-list">
+                  <li>Event Viewer &amp; log analysis</li>
+                  <li>DCOM &amp; UWP app diagnostics</li>
+                  <li>DNS resolution debugging</li>
+                  <li>GPO conflict isolation</li>
+                  <li>PowerShell-based remediation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-links" style="margin-top:14px;">
+            <a class="proj-link" href="https://github.com/TyrekBrunson" target="_blank">↗ GitHub</a>
+          </div>
+        </div>
+
+        <!-- ── GROUP: Infrastructure ── -->
+        <div class="project-group-label project-group-spacer">Self-Hosted Infrastructure</div>
+
+        <!-- PROJECT: Self-Hosted AI Infrastructure -->
+        <div class="project-card" id="proj-ai-stack">
+          <div class="project-card-header">
+            <span class="project-title">Self-Hosted AI Inference Stack</span>
+            <div class="project-tags">
+              <span class="tag tag-amber">Linux</span>
+              <span class="tag tag-red">ROCm</span>
+              <span class="tag tag-blue">Self-Hosted</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Full local AI inference stack on CachyOS using ROCm-enabled Ollama with an AMD RX 9070 XT (16GB VRAM).
+            Paired with Open WebUI for a browser chat interface and SearXNG for local search augmentation.
+            Includes a remote client configuration on a secondary machine (AnduinOS + OpenClaw) connected
+            to the main Ollama instance over the local network.
+          </p>
+          <div class="project-links">
+            <a class="proj-link" href="https://github.com/TyrekBrunson" target="_blank">↗ GitHub</a>
+          </div>
+          <div class="project-img-strip">
+            <img src="images/projects/ai-stack-1.png" alt="AI Stack — Open WebUI"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ai-stack-1.png'))">
+            <img src="images/projects/ai-stack-2.png" alt="AI Stack — Ollama/ROCm"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ai-stack-2.png'))">
+          </div>
+        </div>
+
+        <!-- ── GROUP: Game Server Hosting ── -->
+        <div class="project-group-label project-group-spacer">Game Server Hosting</div>
+
+        <!-- PROJECT: Hytale Dedicated Server -->
+        <div class="project-card" id="proj-hytale">
+          <div class="project-card-header">
+            <span class="project-title">Self-Hosted Hytale Dedicated Game Server</span>
+            <div class="project-tags">
+              <span class="tag tag-amber">Java 25</span>
+              <span class="tag tag-blue">Windows</span>
+              <span class="tag tag-teal">Self-Hosted</span>
+              <span class="tag tag-green">Networking</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Set up a fully self-hosted, persistent Hytale dedicated server on the home network the same week
+            the game went live. This covered Java runtime management, OAuth2-based server authentication,
+            configuration-as-code via JSON, startup automation with scheduled backups, Windows Firewall rule
+            creation, and router-level port forwarding. The same NAT and port-forwarding infrastructure already
+            used to expose Jellyfin, Emby, and Sunshine on the home network was extended to support this new
+            service, demonstrating a repeatable process for bringing any self-hosted application online.
+          </p>
+
+          <!-- Stage 1 -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge" style="background:rgba(243,177,65,.12); color:var(--orange); border-color:rgba(243,177,65,.3);">Stage 1</span>
+              Runtime Environment — Java 25 (Eclipse Temurin)
+            </div>
+            <p class="project-desc">
+              Installed the Eclipse Temurin JDK 25 distribution (Windows x64 MSI) — the minimum runtime required
+              to host a Hytale server, with both x64 and ARM64 builds supported. Verified the installation and
+              associated <code>.jar</code> file handling so the server binary would launch correctly via Java.
+            </p>
+          </div>
+
+          <!-- Stage 2 -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge" style="background:rgba(88,166,255,.12); color:var(--accent-3); border-color:rgba(88,166,255,.3);">Stage 2</span>
+              Server Provisioning &amp; OAuth2 Authentication
+            </div>
+            <p class="project-desc">
+              Used the official Hytale Downloader CLI to fetch the dedicated server binaries and the ~3.3GB
+              <code>Assets.zip</code> game asset package — avoiding the need to manually copy files out of the
+              game client installation. On first launch, the server prompted for authentication via an
+              <strong>OAuth2 device authorization flow</strong>: a device code was generated, approved through
+              a browser sign-in, and the session was linked to the hosting account. Configured
+              <code>/auth persistence encrypted</code> so credentials are stored encrypted on disk
+              (<code>auth.enc</code>) and survive server restarts without re-authentication.
+            </p>
+            <div class="project-img-strip">
+              <img src="images/projects/hytale-01-boot-auth.png" alt="Hytale server boot and device authorization prompt"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-01-boot-auth.png'))">
+              <img src="images/projects/hytale-02-auth-success.png" alt="OAuth2 authentication successful, encrypted credentials saved"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-02-auth-success.png'))">
+            </div>
+          </div>
+
+          <!-- Stage 3 -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge" style="background:rgba(57,211,83,.12); color:var(--accent); border-color:rgba(57,211,83,.3);">Stage 3</span>
+              Configuration &amp; Startup Automation
+            </div>
+            <p class="project-desc">
+              Built a <code>Start.bat</code> launch script that enables an AOT (Ahead-of-Time) compilation cache
+              for faster startup, points to the server JAR and asset package, and schedules automated backups
+              to a local <code>backup/</code> directory every 30 minutes. Customized <code>config.json</code> to
+              set the server name, message-of-the-day, max player count (100), view radius (32), and default
+              game mode (Adventure) — keeping server identity and behavior fully version-controllable as plain JSON.
+            </p>
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:200px;">Launch Command</td>
+                <td><code>java -XX:AOTCache=HytaleServer.aot -jar HytaleServer.jar --assets Assets.zip --backup --backup-dir backup --backup-frequency 30</code></td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Server Identity</td>
+                <td>Name: "Rico GT's Hytale Server" &middot; MOTD: "Hello World!" &middot; Max Players: 100 &middot; View Radius: 32 &middot; Default Mode: Adventure</td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Backups</td>
+                <td>Automated, scheduled every 30 minutes to a local <code>backup/</code> folder alongside the server JAR</td>
+              </tr>
+            </table>
+            <div class="project-img-strip">
+              <img src="images/projects/hytale-03-files-initial.png" alt="Initial Hytale server directory structure"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-03-files-initial.png'))">
+              <img src="images/projects/hytale-04-files-backup.png" alt="Server directory with backup folder created"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-04-files-backup.png'))">
+              <img src="images/projects/hytale-05-startbat.png" alt="Start.bat launch script with AOT cache and backup flags"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-05-startbat.png'))">
+              <img src="images/projects/hytale-06-config-json.png" alt="config.json server configuration"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-06-config-json.png'))">
+            </div>
+          </div>
+
+          <!-- Stage 4 -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge" style="background:rgba(163,113,247,.12); color:#c084fc; border-color:rgba(163,113,247,.3);">Stage 4</span>
+              Network Configuration — Firewall &amp; Port Forwarding
+            </div>
+            <p class="project-desc">
+              Identified the host machine via <code>hostname</code> and local IP via <code>ipconfig</code>.
+              Created an inbound Windows Firewall rule with PowerShell's <code>New-NetFirewallRule</code> to
+              allow UDP traffic on Hytale's default port (5520). On the AT&amp;T router's NAT/Gaming
+              configuration page, added a custom <strong>Hytale</strong> service forwarding UDP 5520 to the
+              host's local IP — the same page already hosting port-forward rules for Jellyfin, Emby, Palworld,
+              and Sunshine, extending the existing self-hosted services infrastructure to a new application.
+            </p>
+            <table class="spec-table" style="margin:10px 0 14px;">
+              <tr>
+                <td style="color:var(--accent-2); width:200px;">Host</td>
+                <td><code>DESKTOP-EGCFO7U</code> — local IP <code>192.168.1.238</code></td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Firewall Rule</td>
+                <td><code>New-NetFirewallRule -DisplayName "Hytale Server" -Direction Inbound -Protocol UDP -LocalPort 5520 -Action Allow</code></td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent-2);">Port Forward</td>
+                <td>UDP 5520 → <code>DESKTOP-EGCFO7U</code> via AT&amp;T router NAT/Gaming — alongside existing Jellyfin (8096), Emby (8920), Palworld, and Sunshine remote-play rules</td>
+              </tr>
+            </table>
+            <div class="project-img-strip">
+              <img src="images/projects/hytale-07-hostname.png" alt="hostname command identifying the host machine"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-07-hostname.png'))">
+              <img src="images/projects/hytale-08-firewall-rule.png" alt="PowerShell New-NetFirewallRule for Hytale UDP 5520"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-08-firewall-rule.png'))">
+              <img src="images/projects/hytale-09-ipconfig.png" alt="ipconfig showing local IP address"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-09-ipconfig.png'))">
+              <img src="images/projects/hytale-17-router-portforward.png" alt="AT&T router NAT/Gaming port forwarding including Hytale, Jellyfin, Emby, Sunshine"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-17-router-portforward.png'))">
+            </div>
+          </div>
+
+          <!-- Stage 5 -->
+          <div class="ad-part">
+            <div class="ad-part-label">
+              <span class="part-badge" style="background:rgba(248,81,73,.1); color:#ff8080; border-color:rgba(248,81,73,.3);">Stage 5</span>
+              Client Connection &amp; Server Administration
+            </div>
+            <p class="project-desc">
+              Added the server in the Hytale launcher's Private Servers list using its local IP, connected,
+              and verified two-way functionality by sending a chat message that appeared both in-game and in
+              the server console log in real time. Granted operator permissions via the server console with
+              <code>/op add RicoGT</code> — confirmed by both the console log entry and an in-game
+              "You have been made an operator" notification, demonstrating console-based RBAC management
+              for a live multiplayer service.
+            </p>
+            <div class="project-img-strip">
+              <img src="images/projects/hytale-19-connecting.png" alt="Connecting to the Hytale server"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-19-connecting.png'))">
+              <img src="images/projects/hytale-10-launcher-private.png" alt="Hytale launcher Private Servers list"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-10-launcher-private.png'))">
+              <img src="images/projects/hytale-11-edit-server.png" alt="Edit Server dialog with local IP connection address"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-11-edit-server.png'))">
+              <img src="images/projects/hytale-12-ingame-dungeon.png" alt="In-game view of the Hytale world"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-12-ingame-dungeon.png'))">
+              <img src="images/projects/hytale-13-ingame-chat.png" alt="In-game chat message sent to the server"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-13-ingame-chat.png'))">
+              <img src="images/projects/hytale-14-server-log-chat.png" alt="Server console log showing chat message received"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-14-server-log-chat.png'))">
+              <img src="images/projects/hytale-15-server-log-op.png" alt="Server console log showing op add command and operator grant"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-15-server-log-op.png'))">
+              <img src="images/projects/hytale-16-ingame-operator.png" alt="In-game notification confirming operator status"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-16-ingame-operator.png'))">
+              <img src="images/projects/hytale-18-launcher-both-servers.png" alt="Hytale launcher showing both public and private server entries"
+                   onerror="this.replaceWith(missingImgSm('images/projects/hytale-18-launcher-both-servers.png'))">
+            </div>
+          </div>
+
+          <div class="callout callout-tip" style="margin:6px 0 0; font-size:.78rem;">
+            <strong>🛠 Skills Demonstrated</strong>
+            Java runtime/JDK management &middot; CLI-based provisioning &amp; OAuth2 device authorization &middot;
+            JSON configuration management &middot; Windows batch scripting &amp; task automation &middot;
+            PowerShell &amp; Windows Firewall administration &middot; Router NAT/port-forwarding &middot;
+            Live service administration and RBAC via console commands
+          </div>
+
+          <div class="project-links" style="margin-top:10px;">
+            <a class="proj-link" href="https://adoptium.net" target="_blank">↗ Eclipse Temurin JDK 25</a>
+            <a class="proj-link" href="https://support.hytale.com/hc/en-us" target="_blank">↗ Hytale Support Center</a>
+          </div>
+        </div>
+
+      </div><!-- /projects -->
+
+      <p class="page-updated">Last updated: June 2026</p>
+
+    </div><!-- /tab-homelab -->
+
+
+    <!-- ══════════════════════════════════
+         TAB 2: ABOUT ME (MINI RESUME)
+         ══════════════════════════════════ -->
+    <div class="page-panel" id="tab-about">
+
+      <!-- Top / Summary -->
+      <div class="content-section" id="ab-top">
+
+        <div class="about-hero">
+          <!-- Portrait — file: images/Picture of me.jpg -->
+          <div class="portrait-wrap">
+            <img src="images/Picture of me.jpg" alt="Tyrek Brunson">
+          </div>
+          <div class="about-hero-text">
+            <h1 class="section-title">Tyrek Brunson</h1>
+            <p class="section-sub" style="margin-bottom:14px;">IT Support &amp; Systems Professional &bull; CompTIA Certified &bull; Self-Hosted Infrastructure</p>
+            <!-- ══ HOW TO UPDATE: Update contact links ══ -->
+            <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:.78rem;">
+              <span class="copy-trigger" onclick="copyToClipboard('tyrekbrunson@aol.com','Email copied!')">✉ tyrekbrunson@aol.com</span>
+              <span class="copy-trigger" onclick="copyToClipboard('803-587-9502','Phone copied!')">☏ 803-587-9502</span>
+              <a href="https://www.linkedin.com/in/tyrek-brunson-0381a3267/" target="_blank">⟐ LinkedIn ↗</a>
+              <a href="https://github.com/TyrekBrunson" target="_blank">⌥ GitHub ↗</a>
+              <a href="resume/Tyrek_Brunson_Resume.docx" target="_blank">↓ Full Resume</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ HOW TO UPDATE: Edit your professional summary ══ -->
+        <div class="summary-card">
+          CompTIA-certified IT professional with hands-on experience in technical support, hardware diagnostics,
+          network infrastructure, and systems administration. Holds A+, Network+, and Security+ (SY0-701, scored
+          772/900) certifications along with the CIOS and CSIS stackable credentials. Proven track record of
+          resolving complex technical issues quickly, building documentation systems that reduce errors and
+          improve team efficiency, and maintaining stable, well-monitored infrastructure. Backed by a strong
+          Computer Science academic foundation at the University of South Carolina and independently developed
+          expertise in Windows and Linux environments, virtualization, scripting, and security operations through
+          an extensive home lab. Actively pursuing roles in IT support, help desk administration, systems
+          administration, and cybersecurity.
+        </div>
+
+      </div>
+
+      <!-- Experience -->
+      <div class="content-section" id="ab-experience">
+        <h2><span class="h2-icon">💼</span> Work Experience</h2>
+        <div class="timeline">
+
+          <!-- ══ HOW TO UPDATE: Edit/add tl-item blocks ══ -->
+
+          <div class="tl-item">
+            <div class="tl-header">
+              <span class="tl-title">Break/Fix Technician</span>
+              <span class="tl-dates">May 2025 – Present</span>
+            </div>
+            <div class="tl-org">eBryIT Inc. &bull; Columbia, SC</div>
+            <ul class="tl-bullets">
+              <li>Resolve hardware and software issues across desktops, laptops, printers, and mobile devices for K-12 school clients, maintaining accurate records of every repair to support asset tracking and recurring issue analysis.</li>
+              <li>Designed and deployed an internal JavaScript/HTML/CSS QA diagnostic tool that standardized ticket terminology across the team, reducing documentation inconsistencies and streamlining the QA review process for all incoming devices.</li>
+              <li>Diagnosed an intermittent network outage traced to damaged cabling between a wireless access point and the main server; performed full cable replacement, re-termination, and reconnection, restoring full network access with zero escalation.</li>
+              <li>Support Android and iOS mobile devices including configuration, troubleshooting, and data migration across repaired and refurbished units.</li>
+              <li>Maintain chain-of-custody integrity by transferring asset IDs and system data between devices, ensuring accurate inventory records throughout the repair lifecycle.</li>
+            </ul>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-header">
+              <span class="tl-title">IT Assistant</span>
+              <span class="tl-dates">Summer 2024</span>
+            </div>
+            <div class="tl-org">Richland County Recreation Commission &bull; Columbia, SC</div>
+            <ul class="tl-bullets">
+              <li>Delivered Tier 1/2 technical support across multiple department locations, resolving hardware and software issues for staff and escalating complex cases with thorough documentation.</li>
+              <li>Reimaged and deployed new workstations to a consistent, tested configuration, reducing setup variability and minimizing post-deployment support requests.</li>
+              <li>Recovered data from damaged devices and transferred assets to replacement hardware with minimal disruption to end users.</li>
+              <li>Installed and configured networking and server equipment at a branch department, including physical cabling, device setup, and IP camera systems.</li>
+            </ul>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-header">
+              <span class="tl-title">Administrative Assistant</span>
+              <span class="tl-dates">Jan 2020 – Mar 2020</span>
+            </div>
+            <div class="tl-org">Midlands Technical College &bull; Columbia, SC</div>
+            <ul class="tl-bullets">
+              <li>Processed student applications and maintained accurate records including sensitive PII in compliance with institutional data standards.</li>
+              <li>Updated student data in the college records system with consistent accuracy, supporting department workflows and audit readiness.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="content-section" id="ab-skills">
+        <h2><span class="h2-icon">⚙</span> Technical Skills</h2>
+        <!-- ══ HOW TO UPDATE: Add/remove skill chips ══ -->
+        <div class="skills-grid">
+          <div class="skill-group">
+            <div class="skill-group-title">Support &amp; Help Desk</div>
+            <div class="skill-chips">
+              <span class="skill-chip">Tier 1/2 Troubleshooting</span>
+              <span class="skill-chip">Ticket Documentation</span>
+              <span class="skill-chip">Escalation Workflows</span>
+              <span class="skill-chip">Asset Management</span>
+              <span class="skill-chip">End-User Training</span>
+              <span class="skill-chip">SLA Adherence</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Operating Systems</div>
+            <div class="skill-chips">
+              <span class="skill-chip">CachyOS</span>
+              <span class="skill-chip">Linux</span>
+              <span class="skill-chip">Windows 10/11</span>
+              <span class="skill-chip">Windows Server 2022</span>
+              <span class="skill-chip">Proxmox VE</span>
+              <span class="skill-chip">AnduinOS</span>
+              <span class="skill-chip">Android</span>
+              <span class="skill-chip">iOS</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Networking</div>
+            <div class="skill-chips">
+              <span class="skill-chip">TCP/IP</span>
+              <span class="skill-chip">DNS</span>
+              <span class="skill-chip">DHCP</span>
+              <span class="skill-chip">VPNs</span>
+              <span class="skill-chip">VLANs</span>
+              <span class="skill-chip">iptables</span>
+              <span class="skill-chip">802.1X</span>
+              <span class="skill-chip">RADIUS</span>
+              <span class="skill-chip">Cable Termination</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Server &amp; Infrastructure</div>
+            <div class="skill-chips">
+              <span class="skill-chip">AD DS</span>
+              <span class="skill-chip">Group Policy (GPO)</span>
+              <span class="skill-chip">OUs &amp; Group Scopes</span>
+              <span class="skill-chip">Security Groups</span>
+              <span class="skill-chip">Domain Controller</span>
+              <span class="skill-chip">LDAP</span>
+              <span class="skill-chip">FSRM</span>
+              <span class="skill-chip">Docker</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Security</div>
+            <div class="skill-chips">
+              <span class="skill-chip">PKI / TLS</span>
+              <span class="skill-chip">IAM</span>
+              <span class="skill-chip">Incident Response</span>
+              <span class="skill-chip">Vulnerability Mgmt</span>
+              <span class="skill-chip">SIEM Concepts</span>
+              <span class="skill-chip">HIPAA Compliance</span>
+              <span class="skill-chip">GPO Enforcement</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Virtualization</div>
+            <div class="skill-chips">
+              <span class="skill-chip">Proxmox VE</span>
+              <span class="skill-chip">VMware</span>
+              <span class="skill-chip">VirtualBox</span>
+              <span class="skill-chip">Docker</span>
+              <span class="skill-chip">Ollama</span>
+              <span class="skill-chip">ROCm</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Scripting &amp; Development</div>
+            <div class="skill-chips">
+              <span class="skill-chip">Bash</span>
+              <span class="skill-chip">Python</span>
+              <span class="skill-chip">PowerShell</span>
+              <span class="skill-chip">HTML</span>
+              <span class="skill-chip">CSS</span>
+              <span class="skill-chip">JavaScript</span>
+              <span class="skill-chip">Java</span>
+              <span class="skill-chip">ReactJS</span>
+              <span class="skill-chip">Assembly</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Monitoring &amp; Logging</div>
+            <div class="skill-chips">
+              <span class="skill-chip">Pi-hole DNS Logging</span>
+              <span class="skill-chip">SIEM Concepts</span>
+              <span class="skill-chip">Docker Service Monitoring</span>
+              <span class="skill-chip">Startup Automation</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Hardware</div>
+            <div class="skill-chips">
+              <span class="skill-chip">PC Repair</span>
+              <span class="skill-chip">Component Replacement</span>
+              <span class="skill-chip">Camera Systems</span>
+              <span class="skill-chip">Cable Termination</span>
+              <span class="skill-chip">Data Recovery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="content-section" id="ab-education">
+        <h2><span class="h2-icon">🎓</span> Education</h2>
+
+        <!-- ══ HOW TO UPDATE: Edit degree / school ══ -->
+        <div class="hw-card">
+          <div class="hw-card-title">B.S. Computer Science — Coursework Completed</div>
+          <table class="spec-table">
+            <tr><td>Institution</td><td>University of South Carolina — Columbia, SC</td></tr>
+            <tr><td>Years</td><td>2020 – 2024</td></tr>
+          </table>
+        </div>
+
+        <div class="hw-card" style="margin-top:14px;">
+          <div class="hw-card-title">Associate in Science</div>
+          <table class="spec-table">
+            <tr><td>Institution</td><td>Midlands Technical College — Columbia, SC</td></tr>
+            <tr><td>Completed</td><td>August 2021</td></tr>
+          </table>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════════
+             HOW TO UPDATE: education certificate images live in images/.
+             Add these files:
+               images/associate-degree-certificate.jpg
+               images/usc-comptia-certificate.jpg
+             ══════════════════════════════════════════════════════════════ -->
+        <div class="cert-grid" style="margin-top:18px;">
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/associate-degree-certificate.jpg" alt="Associate in Science Certificate" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🎓</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">Associate in Science</div>
+            <div class="cert-issuer">Midlands Technical College</div>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/usc-comptia-certificate.jpg" alt="USC CompTIA Certification Program Certificate of Completion" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🎓</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA Certification Program</div>
+            <div class="cert-issuer">University of South Carolina — Certificate of Completion</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="content-section" id="ab-certs">
+        <h2><span class="h2-icon">🏅</span> Certifications</h2>
+        <p class="section-sub">
+          Click the badge image to view the full certificate. Click <strong>View PDF</strong> to open the official certificate document.
+        </p>
+
+        <!-- ══════════════════════════════════════════════════════════════
+             HOW TO UPDATE: cert images and PDFs live in the images/ folder.
+             Current files:
+               images/A+-png.png                                  (badge)
+               images/Network+-png.png                            (badge)
+               images/Security+-png.png                           (badge)
+               CIOS / CSIS — add badge PNGs to images/ when available
+             PDFs:
+               images/CompTIA A+ ce certificate.pdf
+               images/CompTIA Network+ ce certificate.pdf
+               images/CompTIA Security+ ce certificate.pdf
+               images/CompTIA IT Operations Specialist – CIOS certificate.pdf
+               images/CompTIA Secure Infrastructure Specialist – CSIS certificate.pdf
+             ══════════════════════════════════════════════════════════════ -->
+
+        <div class="cert-grid">
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/A+-png.png" alt="CompTIA A+" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🏅</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA A+ ce</div>
+            <div class="cert-issuer">CompTIA</div>
+            <div class="cert-desc">Hardware, endpoint support, OS troubleshooting, mobile devices, printers</div>
+            <a class="cert-pdf-btn" href="images/CompTIA A+ ce certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/Network+-png.png" alt="CompTIA Network+" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🏅</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA Network+ ce</div>
+            <div class="cert-issuer">CompTIA</div>
+            <div class="cert-desc">Networking fundamentals, switching, routing, wireless, VPN, DNS, infrastructure</div>
+            <a class="cert-pdf-btn" href="images/CompTIA Network+ ce certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/Security+-png.png" alt="CompTIA Security+" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🏅</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA Security+ ce (SY0-701)</div>
+            <div class="cert-issuer">CompTIA</div>
+            <div class="cert-desc">Scored 772/900. Covers SIEM, incident response, vulnerability management, IAM, HIPAA, and risk analysis.</div>
+            <a class="cert-pdf-btn" href="images/CompTIA Security+ ce certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-pdf-embed-wrap" onclick="window.open('images/CIOS_Certified.pdf','_blank')">
+              <iframe src="images/CIOS_Certified.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" tabindex="-1" title="CIOS Certificate"></iframe>
+              <div class="cert-img-hint">Open PDF</div>
+            </div>
+            <div class="cert-name">IT Operations Specialist (CIOS)</div>
+            <div class="cert-issuer">CompTIA</div>
+            <div class="cert-desc">Stackable credential: A+ + Network+</div>
+            <a class="cert-pdf-btn" href="images/CompTIA IT Operations Specialist – CIOS certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-pdf-embed-wrap" onclick="window.open('images/CSIS_Certified.pdf','_blank')">
+              <iframe src="images/CSIS_Certified.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" tabindex="-1" title="CSIS Certificate"></iframe>
+              <div class="cert-img-hint">Open PDF</div>
+            </div>
+            <div class="cert-name">Secure Infrastructure Specialist (CSIS)</div>
+            <div class="cert-issuer">CompTIA</div>
+            <div class="cert-desc">Stackable credential: A+ + Network+ + Security+</div>
+            <a class="cert-pdf-btn" href="images/CompTIA Secure Infrastructure Specialist – CSIS certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="page-updated">
+        Last updated: May 2026 &bull; CompTIA Candidate ID: COMP001022901850
+      </p>
+
+    </div><!-- /tab-about -->
+
+  </main>
+</div><!-- /shell -->
+
+<!-- ── Lightbox ── -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+/* ── Missing-image fallback helpers ──────────────────────────────────
+   Called via onerror on every <img> in the page.
+   When a file is dropped into the right folder with the right name,
+   the browser reloads it automatically — no HTML changes needed.
+   ─────────────────────────────────────────────────────────────────── */
+function missingImg(icon, path, ratio) {
+  const d = document.createElement('div');
+  d.className = 'img-missing';
+  if (ratio) d.style.aspectRatio = ratio;
+  d.innerHTML = `<span class="ph-icon">${icon}</span><span>Drop file here:<br><code>${path}</code></span>`;
+  return d;
+}
+function missingImgSm(path) {
+  const d = document.createElement('div');
+  d.className = 'img-missing-sm';
+  d.innerHTML = `<span>Drop:<br><code style="font-size:.6rem">${path.split('/').pop()}</code></span>`;
+  return d;
+}
+
+/* ── Tab switching ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-panel').forEach(n => n.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('nav-' + tab).classList.add('active');
+  });
+});
+
+/* ── Mobile nav toggle ── */
+function toggleNav() {
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.getElementById('nav-overlay').classList.toggle('open');
+}
+
+/* ── Sidebar nav ── */
+document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+  link.addEventListener('click', () => {
+    const sectionId = link.dataset.section;
+    // Check if it's a project card anchor (proj-*) or a content-section (hl-*, ab-*)
+    const target = document.getElementById(sectionId);
+    if (target) {
+      // If it's a project card inside hl-projects, first scroll the section into view
+      const parentSection = target.closest('.content-section');
+      if (parentSection && parentSection.id !== sectionId) {
+        // Small delay so section renders before we scroll to the card
+        setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      } else {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    link.closest('.nav-panel').querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    // Close mobile nav after selection
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('nav-overlay').classList.remove('open');
+  });
+});
+
+/* ── Scroll spy ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.nav-link[data-section]').forEach(l => {
+        l.classList.toggle('active', l.dataset.section === id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+document.querySelectorAll('.content-section').forEach(s => observer.observe(s));
+document.querySelectorAll('[id^="proj-"]').forEach(s => observer.observe(s));
+
+/* ── Lightbox ── */
+function openLightbox(el) {
+  const img = el.tagName === 'IMG' ? el : el.querySelector('img');
+  if (!img || img.style.display === 'none') return;
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function openLightboxImg(img) {
+  if (!img || !img.src) return;
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox').classList.add('open');
+}
+// Global delegation — makes ALL project strip imgs and service imgs lightbox-able
+document.addEventListener('click', function(e) {
+  const img = e.target;
+  if (img.tagName !== 'IMG') return;
+  if (img.id === 'lightbox-img') return;
+  if (img.closest('.cert-img-wrap')) return;   // cert badges have own handler
+  if (img.closest('.portrait-wrap')) return;    // skip portrait
+  if (img.closest('.project-img-strip') || img.classList.contains('service-img')) {
+    if (!img.src || img.style.display === 'none') return;
+    document.getElementById('lightbox-img').src = img.src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+});
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* Prevent PDF buttons from triggering lightbox */
+document.querySelectorAll('.cert-pdf-btn').forEach(btn => {
+  btn.addEventListener('click', e => e.stopPropagation());
+});
+
+/* ── Copy to clipboard ── */
+function copyToClipboard(text, message) {
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('copy-toast');
+    toast.textContent = '✓ ' + message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }).catch(() => {
+    // Fallback for older browsers
+    const el = document.createElement('textarea');
+    el.value = text; el.style.position = 'fixed'; el.style.opacity = '0';
+    document.body.appendChild(el); el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    const toast = document.getElementById('copy-toast');
+    toast.textContent = '✓ ' + message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  });
+}
+</script>
+
+<!-- Copy toast -->
+<div id="copy-toast"></div>
+
+</body>
+</html>

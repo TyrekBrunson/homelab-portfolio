@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║       TYREK BRUNSON — HOME LAB DOCS + PORTFOLIO              ║
+  ║  ── HOW TO UPDATE ──────────────────────────────────────── ║
+  ║  • Search "HOW TO UPDATE" to jump to any editable section  ║
+  ║  • Cert images:  images/A+-png.png, Network+-png.png, etc  ║
+  ║  • Cert PDFs:    images/CompTIA *.pdf                      ║
+  ║  • Lab photos:   images/homelab/                           ║
+  ║  • Project imgs: images/projects/                          ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<title>Tyrek Brunson // Home Lab & Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:          #0d1117;
+  --bg-2:        #161b22;
+  --bg-3:        #1c2333;
+  --sidebar-bg:  #0d1117;
+  --border:      rgba(255,255,255,.08);
+  --border-hi:   rgba(255,255,255,.14);
+  --accent:      #39d353;
+  --accent-2:    #f0c040;
+  --accent-3:    #58a6ff;
+  --red:         #f85149;
+  --orange:      #e3b341;
+  --text:        #e6edf3;
+  --text-2:      #8b949e;
+  --text-3:      #6e7681;
+  --font-mono:   'JetBrains Mono', monospace;
+  --font-display:'Syne', sans-serif;
+  --sidebar-w:   240px;
+  --top-h:       52px;
+  --radius:      6px;
+  --transition:  .18s ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--top-h);
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  z-index: 100; backdrop-filter: blur(8px);
+}
+.topbar-logo {
+  width: var(--sidebar-w); flex-shrink: 0;
+  padding: 0 20px;
+  font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+  letter-spacing: .03em; color: var(--text);
+  display: flex; align-items: center; gap: 8px; text-decoration: none;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(.7); }
+}
+.tab-switcher {
+  display: flex; align-items: stretch; height: 100%;
+  padding-left: 8px; border-left: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 0 22px;
+  font-family: var(--font-mono); font-size: .78rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--text-2); background: transparent; border: none;
+  cursor: pointer; position: relative; transition: color var(--transition);
+}
+.tab-btn::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--accent);
+  transform: scaleX(0); transition: transform var(--transition);
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); }
+.tab-btn.active::after { transform: scaleX(1); }
+.topbar-right {
+  margin-left: auto; padding: 0 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.topbar-tag {
+  font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--text-3);
+}
+
+/* ── LAYOUT ── */
+.shell { display: flex; margin-top: var(--top-h); min-height: calc(100vh - var(--top-h)); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--sidebar-bg); border-right: 1px solid var(--border);
+  position: sticky; top: var(--top-h); height: calc(100vh - var(--top-h));
+  overflow-y: auto; overflow-x: hidden;
+  padding: 20px 0 40px;
+  scrollbar-width: thin; scrollbar-color: var(--bg-3) transparent;
+}
+.nav-panel { display: none; }
+.nav-panel.active { display: block; }
+.nav-group-label {
+  display: block; padding: 6px 16px 4px;
+  font-size: .65rem; font-weight: 600; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-3); margin-top: 14px;
+}
+.nav-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 16px 6px 24px;
+  font-size: .78rem; color: var(--text-2); text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+  cursor: pointer;
+}
+.nav-link:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.nav-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(57,211,83,.06); }
+.nav-link .nav-icon { font-size: .8em; opacity: .7; }
+.nav-link-top { padding-left: 16px; font-weight: 500; font-size: .8rem; color: var(--text); }
+
+/* ── CONTENT ── */
+.content { flex: 1; min-width: 0; padding: 40px 48px 80px; max-width: 860px; }
+.page-panel { display: none; animation: fadeIn .25s ease both; }
+.page-panel.active { display: block; }
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.section-title { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; color: var(--text); margin-bottom: 6px; line-height: 1.15; }
+.section-sub { font-size: .8rem; color: var(--text-2); margin-bottom: 28px; line-height: 1.7; }
+.content-section { margin-bottom: 52px; scroll-margin-top: calc(var(--top-h) + 20px); }
+.content-section h2 {
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;
+  color: var(--text); margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.content-section h2 .h2-icon { font-size: .9rem; color: var(--accent); }
+.content-section h3 { font-family: var(--font-display); font-size: .95rem; font-weight: 600; color: var(--text); margin: 20px 0 10px; }
+.content-section p { font-size: .83rem; line-height: 1.8; color: #c1cad4; margin-bottom: 10px; }
+
+/* ── CALLOUTS ── */
+.callout {
+  border-radius: var(--radius); padding: 14px 18px;
+  margin: 16px 0 24px; font-size: .8rem; line-height: 1.7; border-left: 3px solid;
+}
+.callout-note { background: rgba(58,160,250,.08); border-color: var(--accent-3); color: #a0c4f0; }
+.callout-warn { background: rgba(243,177,65,.08);  border-color: var(--orange);   color: #e8c87c; }
+.callout-tip  { background: rgba(57,211,83,.08);   border-color: var(--accent);   color: #7ee89a; }
+.callout strong { display: block; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; font-size: .7rem; letter-spacing: .12em; }
+
+/* ── IMAGE GRIDS / LIGHTBOX ── */
+.img-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+.img-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+  cursor: pointer;
+}
+.img-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
+.img-card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
+/* Broken/missing image fallback — shown automatically when src file is absent */
+.img-card img[src], .project-img-strip img[src] { display: block; }
+.img-card img::before,
+.img-card img:not([src]), .img-card img[src=""] {
+  content: ''; display: block;
+}
+/* Universal missing-image shell — applied via JS onerror */
+.img-missing {
+  width: 100%; aspect-ratio: 16/10;
+  background: var(--bg-3); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+  color: var(--text-3); font-size: .72rem; text-align: center; padding: 8px;
+}
+.img-missing-sm {
+  width: 140px; height: 80px; flex-shrink: 0;
+  background: var(--bg-3); border: 1px solid var(--border); border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3); font-size: .65rem; text-align: center; padding: 4px;
+}
+.img-missing .ph-icon { font-size: 1.4rem; }
+.img-card-caption { padding: 8px 12px; font-size: .72rem; color: var(--text-2); border-top: 1px solid var(--border); }
+
+/* ── CERT GRID ── */
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; margin: 16px 0; }
+.cert-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  text-align: center; position: relative;
+}
+.cert-card:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(57,211,83,.08); }
+.cert-img-wrap {
+  position: relative; cursor: zoom-in;
+  width: 90px; height: 90px;
+  display: flex; align-items: center; justify-content: center;
+}
+.cert-img-wrap img { width: 90px; height: 90px; object-fit: contain; border-radius: 4px; display: block; }
+.cert-badge-placeholder {
+  width: 80px; height: 80px;
+  background: var(--bg-3); border: 1px dashed var(--border-hi);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+.cert-img-hint {
+  position: absolute; inset: 0; border-radius: 4px;
+  background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; color: #fff; opacity: 0;
+  transition: opacity .18s; pointer-events: none; text-align: center; padding: 4px;
+}
+.cert-img-wrap:hover .cert-img-hint { opacity: 1; }
+.cert-pdf-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .68rem; color: var(--accent-3); text-decoration: none;
+  border: 1px solid rgba(88,166,255,.25); border-radius: 3px;
+  padding: 3px 9px; background: rgba(88,166,255,.06);
+  transition: background var(--transition), color var(--transition);
+  cursor: pointer;
+}
+.cert-pdf-btn:hover { background: rgba(88,166,255,.14); color: #fff; }
+.cert-name { font-size: .75rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+.cert-issuer { font-size: .68rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+
+/* ── PROJECT CARDS ── */
+.project-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 22px; margin-bottom: 16px;
+  transition: border-color var(--transition);
+}
+.project-card:hover { border-color: var(--border-hi); }
+.project-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.project-title { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--text); }
+.project-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: .65rem; font-weight: 500; padding: 2px 8px; border-radius: 20px; letter-spacing: .06em; text-transform: uppercase; }
+.tag-green  { background: rgba(57,211,83,.12);  color: var(--accent);   border: 1px solid rgba(57,211,83,.25); }
+.tag-blue   { background: rgba(88,166,255,.12); color: var(--accent-3); border: 1px solid rgba(88,166,255,.25); }
+.tag-amber  { background: rgba(240,192,64,.12); color: var(--accent-2); border: 1px solid rgba(240,192,64,.25); }
+.tag-red    { background: rgba(248,81,73,.12);  color: var(--red);      border: 1px solid rgba(248,81,73,.25); }
+.tag-purple { background: rgba(163,113,247,.12);color: #c084fc;         border: 1px solid rgba(163,113,247,.25); }
+.project-desc { font-size: .8rem; line-height: 1.75; color: var(--text-2); margin-bottom: 12px; }
+.project-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.proj-link { font-size: .72rem; color: var(--accent-3); text-decoration: none; display: flex; align-items: center; gap: 4px; transition: color var(--transition); }
+.proj-link:hover { color: var(--text); }
+.project-img-strip { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 4px; }
+.project-img-strip img, .project-img-strip .img-placeholder-sm {
+  width: 140px; height: 80px; object-fit: cover;
+  border-radius: 4px; flex-shrink: 0; border: 1px solid var(--border);
+}
+
+
+/* ── SPEC TABLE ── */
+.spec-table { width: 100%; border-collapse: collapse; font-size: .8rem; margin: 12px 0 20px; }
+.spec-table tr { border-bottom: 1px solid var(--border); }
+.spec-table tr:last-child { border-bottom: none; }
+.spec-table td { padding: 9px 12px; color: var(--text-2); vertical-align: top; line-height: 1.5; }
+.spec-table td:first-child { color: var(--accent); font-weight: 500; white-space: nowrap; width: 200px; }
+.spec-table tr:hover td { background: rgba(255,255,255,.02); }
+code { font-family: var(--font-mono); font-size: .85em; background: var(--bg-3); padding: 1px 5px; border-radius: 3px; color: var(--accent-2); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 20px; }
+.timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--border); }
+.tl-item { position: relative; margin-bottom: 28px; padding-left: 18px; }
+.tl-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+.tl-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+.tl-title { font-family: var(--font-display); font-weight: 700; font-size: .92rem; color: var(--text); }
+.tl-dates { font-size: .72rem; color: var(--text-3); white-space: nowrap; }
+.tl-org { font-size: .74rem; color: var(--accent); margin-bottom: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.tl-bullets { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.tl-bullets li { font-size: .79rem; line-height: 1.7; color: var(--text-2); padding-left: 14px; position: relative; }
+.tl-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: .7rem; }
+
+/* ── SKILLS ── */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.skill-group { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+.skill-group-title { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 10px; }
+.skill-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.skill-chip { font-size: .7rem; background: var(--bg-3); border: 1px solid var(--border); color: var(--text-2); padding: 3px 8px; border-radius: 3px; }
+
+/* ── PORTRAIT ── */
+.about-hero {
+  display: flex; align-items: flex-start; gap: 28px; margin-bottom: 28px; flex-wrap: wrap;
+}
+.portrait-wrap {
+  flex-shrink: 0; width: 130px; height: 155px;
+  border-radius: var(--radius);
+  border: 2px solid var(--accent);
+  overflow: hidden;
+  box-shadow: 0 0 0 4px rgba(57,211,83,.12), 0 8px 28px rgba(0,0,0,.4);
+}
+.portrait-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.about-hero-text { flex: 1; min-width: 220px; }
+
+/* ── PDF CERT EMBED ── */
+.cert-pdf-embed-wrap {
+  width: 90px; height: 90px; border-radius: 4px;
+  overflow: hidden; border: 1px solid var(--border);
+  cursor: pointer; position: relative;
+}
+.cert-pdf-embed-wrap iframe {
+  width: 500%; height: 500%;
+  transform: scale(0.2); transform-origin: top left;
+  pointer-events: none; border: none;
+}
+.cert-pdf-embed-wrap .cert-img-hint {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; color: #fff; opacity: 0;
+  transition: opacity .18s; text-align: center; padding: 4px;
+}
+.cert-pdf-embed-wrap:hover .cert-img-hint { opacity: 1; }
+
+/* ── SUMMARY CARD ── */
+.summary-card {
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent); border-radius: var(--radius);
+  padding: 20px 22px; font-size: .83rem; line-height: 1.8; color: #c1cad4; margin-bottom: 32px;
+}
+
+/* ── HW CARD ── */
+.hw-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 14px; }
+.hw-card-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: .9rem; color: var(--text); margin-bottom: 12px; flex-wrap: wrap; }
+.hw-badge { font-size: .65rem; padding: 2px 7px; border-radius: 3px; font-weight: 500; }
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.88); z-index: 9999;
+  align-items: center; justify-content: center; cursor: zoom-out;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 4px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.lightbox-close {
+  position: fixed; top: 20px; right: 24px;
+  font-size: 1.4rem; color: #fff; cursor: pointer;
+  background: rgba(255,255,255,.1); border: none;
+  border-radius: 50%; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.2); }
+
+/* ── MISC ── */
+a { color: var(--accent-3); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.page-updated { font-size: .7rem; color: var(--text-3); margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+@media (max-width: 720px) {
+  .sidebar { display: none; }
+  .content { padding: 28px 18px 60px; }
+  .topbar-logo { width: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<header class="topbar">
+  <a class="topbar-logo" href="#">
+    <span class="logo-dot"></span>
+    Tyrek Brunson
+  </a>
+  <nav class="tab-switcher">
+    <button class="tab-btn active" data-tab="homelab">⚙ Home Lab &amp; Projects</button>
+    <button class="tab-btn"        data-tab="about">  ◈ About Me</button>
+  </nav>
+  <div class="topbar-right">
+    <!-- ══ HOW TO UPDATE: Add your GitHub URL ══ -->
+    <a class="topbar-tag" href="https://github.com/" target="_blank">github ↗</a>
+  </div>
+</header>
+
+<!-- ═══════════ SHELL ═══════════ -->
+<div class="shell">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <nav class="sidebar">
+
+    <!-- HOME LAB NAV -->
+    <div class="nav-panel active" id="nav-homelab">
+      <a class="nav-link nav-link-top" data-section="hl-overview">Home</a>
+
+      <span class="nav-group-label">Hardware</span>
+      <a class="nav-link" data-section="hl-main-pc">    <span class="nav-icon">▸</span> Main PC</a>
+      <a class="nav-link" data-section="hl-alienware">  <span class="nav-icon">▸</span> Alienware Alpha R1</a>
+      <a class="nav-link" data-section="hl-network">    <span class="nav-icon">▸</span> Network</a>
+      <a class="nav-link" data-section="hl-photos">     <span class="nav-icon">▸</span> Lab Photos</a>
+
+      <span class="nav-group-label">Self-Hosted</span>
+      <a class="nav-link" data-section="hl-services">   <span class="nav-icon">▸</span> Services</a>
+      <a class="nav-link" data-section="hl-ai-stack">   <span class="nav-icon">▸</span> AI Stack</a>
+
+      <span class="nav-group-label">Projects</span>
+      <a class="nav-link" data-section="hl-projects">   <span class="nav-icon">▸</span> All Projects</a>
+    </div>
+
+    <!-- ABOUT NAV -->
+    <div class="nav-panel" id="nav-about">
+      <a class="nav-link nav-link-top" data-section="ab-top">Overview</a>
+
+      <span class="nav-group-label">Background</span>
+      <a class="nav-link" data-section="ab-experience"><span class="nav-icon">▸</span> Experience</a>
+      <a class="nav-link" data-section="ab-skills">    <span class="nav-icon">▸</span> Skills</a>
+      <a class="nav-link" data-section="ab-education"> <span class="nav-icon">▸</span> Education</a>
+      <a class="nav-link" data-section="ab-certs">     <span class="nav-icon">▸</span> Certifications</a>
+    </div>
+
+  </nav>
+
+  <!-- ════════ CONTENT ════════ -->
+  <main class="content">
+
+    <!-- ══════════════════════════════════
+         TAB 1: HOME LAB & PROJECTS
+         ══════════════════════════════════ -->
+    <div class="page-panel active" id="tab-homelab">
+
+      <!-- Overview -->
+      <div class="content-section" id="hl-overview">
+        <h1 class="section-title">Home Lab Documentation</h1>
+        <!-- ══ HOW TO UPDATE: Edit intro blurb ══ -->
+        <p class="section-sub">
+          A living document of my self-hosted infrastructure, virtualization environment, AI stack, and personal projects.
+          Built for reference and to demonstrate hands-on technical skills to anyone reviewing this portfolio.
+        </p>
+        <div class="callout callout-note">
+          <strong>📌 Note</strong>
+          This is a living document. Pages may be incomplete or evolving as the lab grows.
+        </div>
+        <div class="callout callout-warn">
+          <strong>⚠ Disclaimer</strong>
+          Configurations shown are my personal setup. Security and safety is your own responsibility when referencing these docs.
+        </div>
+      </div>
+
+      <!-- Main PC -->
+      <div class="content-section" id="hl-main-pc">
+        <h2><span class="h2-icon">🖥</span> Main PC — CachyOS</h2>
+        <!-- ══ HOW TO UPDATE: Edit hardware rows ══ -->
+        <div class="hw-card">
+          <div class="hw-card-title">
+            Primary Workstation
+            <span class="tag tag-green hw-badge">Primary</span>
+            <span class="tag tag-blue hw-badge">CachyOS</span>
+          </div>
+          <table class="spec-table">
+            <tr><td>CPU</td>        <td>AMD Ryzen 7 9800X3D</td></tr>
+            <tr><td>GPU</td>        <td>AMD RX 9070 XT — 16GB VRAM — ROCm enabled</td></tr>
+            <tr><td>OS</td>         <td>CachyOS (Arch-based)</td></tr>
+            <tr><td>Ollama</td>     <td>Port 11434 — ROCm GPU inference</td></tr>
+            <tr><td>Open WebUI</td> <td>Port 8080</td></tr>
+            <tr><td>SearXNG</td>    <td>Port 8081</td></tr>
+            <tr><td>Storage</td>    <td>Samsung 4TB — model storage at <code>/run/media/Samsung 4TB/</code></td></tr>
+          </table>
+        </div>
+
+        <h3>Photos</h3>
+        <div class="img-grid">
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/pc-front.jpg" alt="PC — Front View"
+                 onerror="this.replaceWith(missingImg('🖥', 'images/homelab/pc-front.jpg'))">
+            <div class="img-card-caption">PC — Front View</div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/pc-inside.jpg" alt="PC — Internal Build"
+                 onerror="this.replaceWith(missingImg('💡', 'images/homelab/pc-inside.jpg'))">
+            <div class="img-card-caption">PC — Internal Build</div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/desk-setup.jpg" alt="Desk Setup"
+                 onerror="this.replaceWith(missingImg('🖱', 'images/homelab/desk-setup.jpg'))">
+            <div class="img-card-caption">Desk Setup</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alienware Alpha R1 -->
+      <div class="content-section" id="hl-alienware">
+        <h2><span class="h2-icon">🖧</span> Alienware Alpha R1 — Proxmox Server</h2>
+        <div class="hw-card">
+          <div class="hw-card-title">
+            Homelab Virtualization &amp; Network Services Server
+            <span class="tag tag-amber hw-badge">Proxmox VE</span>
+            <span class="tag tag-purple hw-badge">Hypervisor</span>
+          </div>
+          <table class="spec-table">
+            <tr><td>OS</td>          <td>Proxmox VE (Debian-based Hypervisor)</td></tr>
+            <tr><td>CPU</td>         <td>Intel Core i3-4130T — Dual-Core / 4 Threads @ 2.90GHz — 35W TDP</td></tr>
+            <tr><td>GPU</td>         <td>NVIDIA GeForce GTX 860M — 2GB GDDR5 — Proprietary driver passthrough enabled</td></tr>
+            <tr><td>RAM</td>         <td>16GB DDR3L Dual-Channel @ 1600MHz (Upgraded)</td></tr>
+            <tr><td>Storage</td>     <td>2.5" SATA III SSD — Local VM/Container storage pool</td></tr>
+            <tr><td>Network</td>     <td>Gigabit Ethernet (RJ-45) / Integrated Intel Dual-Band Wireless</td></tr>
+            <tr><td>Proxmox WebUI</td><td>Port 8006 — HTTPS management dashboard</td></tr>
+            <tr><td>Primary Function</td><td>Homelab virtualization host — VMs and LXC containers for network services, AD lab, and testing</td></tr>
+          </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <strong>💡 Use Case</strong>
+          This machine serves as the dedicated virtualization host for spinning up Windows Server VMs (Active Directory lab),
+          network service containers, and isolated test environments — keeping all lab workloads off the main workstation.
+        </div>
+
+        <h3>Photos</h3>
+        <div class="img-grid">
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/alienware-front.jpg" alt="Alienware Alpha R1"
+                 onerror="this.replaceWith(missingImg('🖥', 'images/homelab/alienware-front.jpg'))">
+            <div class="img-card-caption">Alienware Alpha R1</div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/proxmox-ui.png" alt="Proxmox Dashboard"
+                 onerror="this.replaceWith(missingImg('⚙', 'images/homelab/proxmox-ui.png'))">
+            <div class="img-card-caption">Proxmox Dashboard</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Network -->
+      <div class="content-section" id="hl-network">
+        <h2><span class="h2-icon">🌐</span> Network</h2>
+
+        <div class="img-card" style="max-width:560px; margin-bottom:20px;" onclick="openLightbox(this)">
+          <img src="images/homelab/network-diagram.png" alt="Network Topology Diagram"
+               style="aspect-ratio:16/9; object-fit:contain; background:var(--bg-3);"
+               onerror="this.replaceWith(missingImg('🗺', 'images/homelab/network-diagram.png', '16/9'))">
+          <div class="img-card-caption">Network Topology Diagram</div>
+        </div>
+
+        <!-- ══ HOW TO UPDATE: Fill in your network details ══ -->
+        <div class="hw-card">
+          <div class="hw-card-title">Network Overview</div>
+          <table class="spec-table">
+            <tr><td>Router / FW</td> <td><!-- e.g. OPNsense, pfSense, TP-Link --></td></tr>
+            <tr><td>Switch</td>      <td><!-- Add your switch model --></td></tr>
+            <tr><td>ISP Speed</td>   <td><!-- e.g. 500Mbps down / 100Mbps up --></td></tr>
+            <tr><td>VLANs</td>       <td><!-- e.g. VLAN 10 — LAN, VLAN 20 — Lab, VLAN 30 — IoT --></td></tr>
+            <tr><td>DNS</td>         <td><!-- e.g. Pi-hole / Unbound --></td></tr>
+            <tr><td>Proxmox Host</td><td>Alienware Alpha R1 — Gigabit Ethernet</td></tr>
+          </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <strong>💡 Fix Script</strong>
+          A startup script <code>~/fix-ollama.sh</code> re-applies drive permissions and iptables rules that reset on reboot on the main workstation.
+        </div>
+      </div>
+
+      <!-- Lab Photos -->
+      <div class="content-section" id="hl-photos">
+        <h2><span class="h2-icon">📸</span> Lab Photos</h2>
+        <p class="section-sub">Drop any photo named <code>photo1.jpg</code> – <code>photo4.jpg</code> into <code>images/homelab/</code> and it will appear here automatically.</p>
+        <div class="img-grid">
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo1.jpg" alt="Lab Photo 1"
+                 onerror="this.replaceWith(missingImg('🖥', 'images/homelab/photo1.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo2.jpg" alt="Lab Photo 2"
+                 onerror="this.replaceWith(missingImg('📡', 'images/homelab/photo2.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo3.jpg" alt="Lab Photo 3"
+                 onerror="this.replaceWith(missingImg('🔌', 'images/homelab/photo3.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+          <div class="img-card" onclick="openLightbox(this)">
+            <img src="images/homelab/photo4.jpg" alt="Lab Photo 4"
+                 onerror="this.replaceWith(missingImg('💾', 'images/homelab/photo4.jpg'))">
+            <div class="img-card-caption"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div class="content-section" id="hl-services">
+        <h2><span class="h2-icon">⚡</span> Self-Hosted Services</h2>
+        <!-- ══ HOW TO UPDATE: Add/edit service rows ══ -->
+        <table class="spec-table" style="margin-top:0">
+          <tr><td>Ollama</td>        <td>:11434 — Local LLM inference (ROCm / RX 9070 XT) — Main PC</td></tr>
+          <tr><td>Open WebUI</td>    <td>:8080  — Browser-based chat UI for Ollama — Main PC</td></tr>
+          <tr><td>SearXNG</td>       <td>:8081  — Self-hosted search engine — Main PC</td></tr>
+          <tr><td>Proxmox VE</td>    <td>:8006  — Virtualization management dashboard — Alienware Alpha R1</td></tr>
+          <tr><td>OpenClaw</td>      <td>Burner laptop (AnduinOS) — connected to main Ollama instance</td></tr>
+          <!-- ══ Add more rows here ══ -->
+        </table>
+      </div>
+
+      <!-- AI Stack -->
+      <div class="content-section" id="hl-ai-stack">
+        <h2><span class="h2-icon">🤖</span> AI Stack</h2>
+        <p>Fully local AI inference stack running on the RX 9070 XT via ROCm. All models stored on the Samsung 4TB drive. A secondary client on AnduinOS connects remotely to the main Ollama instance.</p>
+        <div class="callout callout-tip">
+          <strong>✓ Stack Overview</strong>
+          ROCm-enabled Ollama handles GPU inference. Open WebUI provides a browser chat interface. SearXNG enables search-augmented generation locally.
+        </div>
+        <!-- ══ HOW TO UPDATE: List the models you're running ══ -->
+        <h3>Active Models</h3>
+        <table class="spec-table">
+          <tr><td>Model Storage</td><td><code>/run/media/Samsung 4TB/</code></td></tr>
+          <!-- Example rows — replace with your models:
+          <tr><td>mistral:7b</td>   <td>General purpose chat</td></tr>
+          <tr><td>codellama:13b</td><td>Code generation / review</td></tr>
+          -->
+          <tr><td><!-- model --></td><td><!-- description --></td></tr>
+        </table>
+      </div>
+
+      <!-- Projects -->
+      <div class="content-section" id="hl-projects">
+        <h2><span class="h2-icon">🛠</span> Projects</h2>
+
+        <!-- ══════════════════════════════════════════════════
+             HOW TO UPDATE: Copy a project-card block below
+             to add a new project entry.
+             ══════════════════════════════════════════════════ -->
+
+        <!-- PROJECT: Computer Repair Report Generator -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="project-title">Computer Repair Report Generator</span>
+            <div class="project-tags">
+              <span class="tag tag-green">HTML / JS</span>
+              <span class="tag tag-blue">Internal Tool</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            A single-file web-based diagnostic and quality assurance tool built for eBryIT Inc. to standardize
+            repair ticket documentation across all technicians. Features ADP/NON-ADP checkbox sections, on-hold
+            status tracking, copy buttons with prefix-stripping logic, a hamburger menu with feature toggles,
+            and a full clear-all function. Significantly reduced reporting inconsistencies and improved QA
+            review workflow across all service records.
+          </p>
+          <div class="project-links">
+            <!-- ══ HOW TO UPDATE: Add repo/demo links ══ -->
+            <a class="proj-link" href="#">↗ GitHub Repo</a>
+            <a class="proj-link" href="#">↗ Live Demo</a>
+          </div>
+          <div class="project-img-strip">
+            <img src="images/projects/report-gen-1.png" alt="Report Generator UI"
+                 onerror="this.replaceWith(missingImgSm('images/projects/report-gen-1.png'))">
+            <img src="images/projects/report-gen-2.png" alt="Report Generator View 2"
+                 onerror="this.replaceWith(missingImgSm('images/projects/report-gen-2.png'))">
+          </div>
+        </div>
+
+        <!-- PROJECT: Active Directory Home Lab -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="project-title">Active Directory Home Lab — Windows Server 2022</span>
+            <div class="project-tags">
+              <span class="tag tag-amber">Proxmox VE</span>
+              <span class="tag tag-blue">Windows Server</span>
+              <span class="tag tag-purple">Active Directory</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Deployed a full Active Directory environment from scratch on a Windows Server 2022 VM hosted on the
+            Proxmox VE hypervisor (Alienware Alpha R1). Installed and configured Active Directory Domain Services (AD DS),
+            promoted the server to a Domain Controller, and established a local domain. Built out a realistic
+            organizational structure with multiple Organizational Units (OUs) modeled after enterprise environments —
+            including geographic containers (USA, Europe, Asia) with nested OUs for Users, Computers, and Servers.
+            Created Security Groups (both built-in and custom) with appropriate group scopes (Global/Universal/Domain Local)
+            and group types (Security and Distribution) to reflect real-world IAM practices. Created and managed
+            user accounts and assigned group memberships. Applied Group Policy concepts and explored role-based
+            access control across departments (IT, Finance, HR). This lab directly mirrors the Active Directory
+            workflows used in enterprise IT environments on a daily basis.
+          </p>
+          <div class="project-links">
+            <a class="proj-link" href="#">↗ GitHub Repo</a>
+            <a class="proj-link" href="#">↗ Documentation</a>
+          </div>
+          <div class="project-img-strip">
+            <img src="images/projects/ad-lab-1.png" alt="AD Lab — OU Structure"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ad-lab-1.png'))">
+            <img src="images/projects/ad-lab-2.png" alt="AD Lab — User Management"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ad-lab-2.png'))">
+            <img src="images/projects/ad-lab-3.png" alt="AD Lab — Domain Controller"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ad-lab-3.png'))">
+          </div>
+        </div>
+
+        <!-- PROJECT: Self-Hosted AI Infrastructure -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="project-title">Self-Hosted AI Inference Stack</span>
+            <div class="project-tags">
+              <span class="tag tag-amber">Linux</span>
+              <span class="tag tag-red">ROCm</span>
+              <span class="tag tag-blue">Self-Hosted</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Full local AI inference stack on CachyOS using ROCm-enabled Ollama with an AMD RX 9070 XT (16GB VRAM).
+            Paired with Open WebUI for a browser chat interface and SearXNG for local search augmentation.
+            Includes a remote client configuration on a secondary machine (AnduinOS + OpenClaw) connected
+            to the main Ollama instance over the local network.
+          </p>
+          <div class="project-links">
+            <a class="proj-link" href="#">↗ Docs</a>
+          </div>
+          <div class="project-img-strip">
+            <img src="images/projects/ai-stack-1.png" alt="AI Stack — Open WebUI"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ai-stack-1.png'))">
+            <img src="images/projects/ai-stack-2.png" alt="AI Stack — Ollama/ROCm"
+                 onerror="this.replaceWith(missingImgSm('images/projects/ai-stack-2.png'))">
+          </div>
+        </div>
+
+        <!-- TEMPLATE — copy this block to add a new project -->
+        <div class="project-card">
+          <div class="project-card-header">
+            <span class="project-title"><!-- Project Title --></span>
+            <div class="project-tags">
+              <span class="tag tag-green"><!-- Tag --></span>
+            </div>
+          </div>
+          <p class="project-desc">
+            <!-- What did you build? What problem did it solve? What services/tools? What did you learn? -->
+          </p>
+          <div class="project-links">
+            <a class="proj-link" href="#">↗ GitHub</a>
+          </div>
+          <div class="project-img-strip">
+            <!-- Add: <img src="images/projects/your-screenshot.png" alt="Description"
+                          onerror="this.replaceWith(missingImgSm('images/projects/your-screenshot.png'))"> -->
+          </div>
+        </div>
+
+      </div><!-- /projects -->
+
+      <!-- ══ HOW TO UPDATE: Change last-updated date ══ -->
+      <p class="page-updated">Last updated: May 2026</p>
+
+    </div><!-- /tab-homelab -->
+
+
+    <!-- ══════════════════════════════════
+         TAB 2: ABOUT ME (MINI RESUME)
+         ══════════════════════════════════ -->
+    <div class="page-panel" id="tab-about">
+
+      <!-- Top / Summary -->
+      <div class="content-section" id="ab-top">
+
+        <div class="about-hero">
+          <!-- Portrait — file: images/Picture of me.jpg -->
+          <div class="portrait-wrap">
+            <img src="images/Picture of me.jpg" alt="Tyrek Brunson">
+          </div>
+          <div class="about-hero-text">
+            <h1 class="section-title">Tyrek Brunson</h1>
+            <p class="section-sub" style="margin-bottom:14px;">IT Professional &bull; Self-Hosted Infrastructure &bull; CompTIA Certified</p>
+            <!-- ══ HOW TO UPDATE: Update contact links ══ -->
+            <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:.78rem;">
+              <a href="mailto:tyrekbrunson@aol.com">✉ tyrekbrunson@aol.com</a>
+              <a href="https://www.linkedin.com/in/tyrek-brunson-03813d287/" target="_blank">⟐ LinkedIn ↗</a>
+              <a href="https://github.com/" target="_blank">⌥ GitHub ↗</a>
+              <a href="tyrek_brunson_resume.html" target="_blank">↓ Full Resume</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ HOW TO UPDATE: Edit your professional summary ══ -->
+        <div class="summary-card">
+          Detail-oriented IT professional with hands-on experience in computer repair, diagnostics, data recovery,
+          and self-hosted infrastructure. Holds CompTIA A+, Network+, and Security+ certifications, as well as
+          the CIOS and CSIS stackable credentials. Built internal web-based QA tooling deployed in a professional
+          repair environment, and maintains a personal home lab running Proxmox VE for virtualization, a full
+          Active Directory domain on Windows Server 2022, and a local AI inference stack on Linux.
+          Proficient in network configuration, Linux administration, and hardware troubleshooting at both the
+          component and infrastructure level.
+        </div>
+
+      </div>
+
+      <!-- Experience -->
+      <div class="content-section" id="ab-experience">
+        <h2><span class="h2-icon">💼</span> Work Experience</h2>
+        <div class="timeline">
+
+          <!-- ══ HOW TO UPDATE: Edit/add tl-item blocks ══ -->
+
+          <div class="tl-item">
+            <div class="tl-header">
+              <span class="tl-title">BreakFix Technician</span>
+              <span class="tl-dates">01/2025 – Present</span>
+            </div>
+            <div class="tl-org">eBryIT Inc. &bull; Columbia, SC</div>
+            <ul class="tl-bullets">
+              <li>Documented electronic malfunctions and repair procedures for internal knowledge base.</li>
+              <li>Executed component repairs and comprehensive functional testing to ensure device integrity.</li>
+              <li>Inputted part and equipment details into the company database for efficient reordering.</li>
+              <li>Transferred identification numbers and system data between repaired and refurbished computers.</li>
+              <li>Engineered and deployed an internal web-based QA diagnostic tool (HTML/CSS/JS), standardizing repair ticket documentation and significantly reducing reporting inconsistencies across all service records.</li>
+              <li>Resolved intermittent network connectivity issue — traced root cause to damaged cabling between WAP and main server; executed full cable replacement, re-termination, and server reconnection.</li>
+            </ul>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-header">
+              <span class="tl-title">IT Assistant</span>
+              <span class="tl-dates"><!-- Add dates --></span>
+            </div>
+            <div class="tl-org">Richland County Recreation Commission &bull; Columbia, SC</div>
+            <ul class="tl-bullets">
+              <li>Provided IT technical support to staff members across departmental locations.</li>
+              <li>Diagnosed and resolved hardware-related technical issues and software malfunctions.</li>
+              <li>Restored data from damaged electronic devices.</li>
+              <li>Prepared and deployed new computing devices via re-imaging and software installation.</li>
+              <li>Installed networking equipment at a satellite branch department.</li>
+              <li>Set up and configured new server and network infrastructure.</li>
+              <li>Installed comprehensive camera systems across various departmental locations.</li>
+            </ul>
+          </div>
+
+          <div class="tl-item">
+            <div class="tl-header">
+              <span class="tl-title">Administrative Assistant</span>
+              <span class="tl-dates">01/2020 – 03/2020</span>
+            </div>
+            <div class="tl-org">Midlands Technical College &bull; Columbia, SC</div>
+            <ul class="tl-bullets">
+              <li>Processed student applications and provided administrative support.</li>
+              <li>Classified sensitive applicant data including identification and enrollment records.</li>
+              <li>Updated student personal information and application statuses for official college records.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="content-section" id="ab-skills">
+        <h2><span class="h2-icon">⚙</span> Technical Skills</h2>
+        <!-- ══ HOW TO UPDATE: Add/remove skill chips ══ -->
+        <div class="skills-grid">
+          <div class="skill-group">
+            <div class="skill-group-title">Operating Systems</div>
+            <div class="skill-chips">
+              <span class="skill-chip">CachyOS</span>
+              <span class="skill-chip">Linux</span>
+              <span class="skill-chip">Windows 10/11</span>
+              <span class="skill-chip">Windows Server 2022</span>
+              <span class="skill-chip">Proxmox VE</span>
+              <span class="skill-chip">AnduinOS</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Networking</div>
+            <div class="skill-chips">
+              <span class="skill-chip">TCP/IP</span>
+              <span class="skill-chip">DNS</span>
+              <span class="skill-chip">VPNs</span>
+              <span class="skill-chip">VLANs</span>
+              <span class="skill-chip">iptables</span>
+              <span class="skill-chip">802.1X</span>
+              <span class="skill-chip">RADIUS</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Development</div>
+            <div class="skill-chips">
+              <span class="skill-chip">HTML</span>
+              <span class="skill-chip">CSS</span>
+              <span class="skill-chip">JavaScript</span>
+              <span class="skill-chip">Java</span>
+              <span class="skill-chip">Assembly</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Infrastructure &amp; Virtualization</div>
+            <div class="skill-chips">
+              <span class="skill-chip">Proxmox VE</span>
+              <span class="skill-chip">VMware</span>
+              <span class="skill-chip">VirtualBox</span>
+              <span class="skill-chip">Docker</span>
+              <span class="skill-chip">Linux Servers</span>
+              <span class="skill-chip">Ollama</span>
+              <span class="skill-chip">ROCm</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Active Directory &amp; IAM</div>
+            <div class="skill-chips">
+              <span class="skill-chip">AD DS</span>
+              <span class="skill-chip">Group Policy (GPO)</span>
+              <span class="skill-chip">OUs &amp; Group Scopes</span>
+              <span class="skill-chip">Security Groups</span>
+              <span class="skill-chip">Domain Controller</span>
+              <span class="skill-chip">LDAP</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Security</div>
+            <div class="skill-chips">
+              <span class="skill-chip">PKI / TLS</span>
+              <span class="skill-chip">IAM</span>
+              <span class="skill-chip">Incident Response</span>
+              <span class="skill-chip">Vulnerability Mgmt</span>
+              <span class="skill-chip">SIEM Concepts</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <div class="skill-group-title">Hardware</div>
+            <div class="skill-chips">
+              <span class="skill-chip">PC Repair</span>
+              <span class="skill-chip">Component Replacement</span>
+              <span class="skill-chip">Camera Systems</span>
+              <span class="skill-chip">Cable Termination</span>
+              <span class="skill-chip">Data Recovery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="content-section" id="ab-education">
+        <h2><span class="h2-icon">🎓</span> Education</h2>
+        <!-- ══ HOW TO UPDATE: Edit degree / school ══ -->
+        <div class="hw-card">
+          <div class="hw-card-title">Associate in Science</div>
+          <table class="spec-table">
+            <tr><td>Institution</td><td>Midlands Technical College — Columbia, SC</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Certifications -->
+      <div class="content-section" id="ab-certs">
+        <h2><span class="h2-icon">🏅</span> Certifications</h2>
+        <p class="section-sub">
+          Click the badge image to view the full certificate. Click <strong>View PDF</strong> to open the official certificate document.
+        </p>
+
+        <!-- ══════════════════════════════════════════════════════════════
+             HOW TO UPDATE: cert images and PDFs live in the images/ folder.
+             Current files:
+               images/A+-png.png                                  (badge)
+               images/Network+-png.png                            (badge)
+               images/Security+-png.png                           (badge)
+               CIOS / CSIS — add badge PNGs to images/ when available
+             PDFs:
+               images/CompTIA A+ ce certificate.pdf
+               images/CompTIA Network+ ce certificate.pdf
+               images/CompTIA Security+ ce certificate.pdf
+               images/CompTIA IT Operations Specialist – CIOS certificate.pdf
+               images/CompTIA Secure Infrastructure Specialist – CSIS certificate.pdf
+             ══════════════════════════════════════════════════════════════ -->
+
+        <div class="cert-grid">
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/A+-png.png" alt="CompTIA A+" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🏅</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA A+ ce</div>
+            <div class="cert-issuer">CompTIA</div>
+            <a class="cert-pdf-btn" href="images/CompTIA A+ ce certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/Network+-png.png" alt="CompTIA Network+" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🏅</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA Network+ ce</div>
+            <div class="cert-issuer">CompTIA</div>
+            <a class="cert-pdf-btn" href="images/CompTIA Network+ ce certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-img-wrap" onclick="openLightbox(this)">
+              <img src="images/Security+-png.png" alt="CompTIA Security+" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="cert-badge-placeholder" style="display:none">🏅</div>
+              <div class="cert-img-hint">View Full Image</div>
+            </div>
+            <div class="cert-name">CompTIA Security+ ce</div>
+            <div class="cert-issuer">CompTIA</div>
+            <a class="cert-pdf-btn" href="images/CompTIA Security+ ce certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-pdf-embed-wrap" onclick="window.open('images/CIOS_Certified.pdf','_blank')">
+              <iframe src="images/CIOS_Certified.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" tabindex="-1" title="CIOS Certificate"></iframe>
+              <div class="cert-img-hint">Open PDF</div>
+            </div>
+            <div class="cert-name">IT Operations Specialist (CIOS)</div>
+            <div class="cert-issuer">CompTIA</div>
+            <a class="cert-pdf-btn" href="images/CompTIA IT Operations Specialist – CIOS certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+          <div class="cert-card">
+            <div class="cert-pdf-embed-wrap" onclick="window.open('images/CSIS_Certified.pdf','_blank')">
+              <iframe src="images/CSIS_Certified.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" tabindex="-1" title="CSIS Certificate"></iframe>
+              <div class="cert-img-hint">Open PDF</div>
+            </div>
+            <div class="cert-name">Secure Infrastructure Specialist (CSIS)</div>
+            <div class="cert-issuer">CompTIA</div>
+            <a class="cert-pdf-btn" href="images/CompTIA Secure Infrastructure Specialist – CSIS certificate.pdf" target="_blank">📄 View PDF</a>
+          </div>
+
+        </div>
+      </div>
+
+      <p class="page-updated">
+        Last updated: May 2026 &bull; CompTIA Candidate ID: COMP001022901850
+      </p>
+
+    </div><!-- /tab-about -->
+
+  </main>
+</div><!-- /shell -->
+
+<!-- ── Lightbox ── -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+/* ── Missing-image fallback helpers ──────────────────────────────────
+   Called via onerror on every <img> in the page.
+   When a file is dropped into the right folder with the right name,
+   the browser reloads it automatically — no HTML changes needed.
+   ─────────────────────────────────────────────────────────────────── */
+function missingImg(icon, path, ratio) {
+  const d = document.createElement('div');
+  d.className = 'img-missing';
+  if (ratio) d.style.aspectRatio = ratio;
+  d.innerHTML = `<span class="ph-icon">${icon}</span><span>Drop file here:<br><code>${path}</code></span>`;
+  return d;
+}
+function missingImgSm(path) {
+  const d = document.createElement('div');
+  d.className = 'img-missing-sm';
+  d.innerHTML = `<span>Drop:<br><code style="font-size:.6rem">${path.split('/').pop()}</code></span>`;
+  return d;
+}
+
+/* ── Tab switching ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-panel').forEach(n => n.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('nav-' + tab).classList.add('active');
+  });
+});
+
+/* ── Sidebar nav ── */
+document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+  link.addEventListener('click', () => {
+    const target = document.getElementById(link.dataset.section);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    link.closest('.nav-panel').querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+/* ── Scroll spy ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.nav-link[data-section]').forEach(l => {
+        l.classList.toggle('active', l.dataset.section === id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+document.querySelectorAll('.content-section').forEach(s => observer.observe(s));
+
+/* ── Lightbox ── */
+function openLightbox(el) {
+  const img = el.querySelector('img');
+  if (!img || img.style.display === 'none') return;
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* Prevent PDF buttons from triggering lightbox */
+document.querySelectorAll('.cert-pdf-btn').forEach(btn => {
+  btn.addEventListener('click', e => e.stopPropagation());
+});
+</script>
+
+</body>
+</html>
