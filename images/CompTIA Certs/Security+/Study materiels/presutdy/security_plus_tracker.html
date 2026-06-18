@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA Security+ SY0-701 Master Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0c0f;
+            --bg-panel: #111318;
+            --bg-card: #161a22;
+            --border: #1e2530;
+            --border-glow: #c0392b;
+            --red: #c0392b;
+            --red-bright: #e74c3c;
+            --red-glow: rgba(192, 57, 43, 0.15);
+            --green: #27ae60;
+            --green-bright: #2ecc71;
+            --green-glow: rgba(46, 204, 113, 0.12);
+            --text-primary: #e8ecf0;
+            --text-secondary: #8a9bb0;
+            --text-muted: #4a5568;
+            --accent-blue: #2980b9;
+            --gold: #f39c12;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 0 0 60px 0;
+            background-image: 
+                radial-gradient(ellipse at 20% 20%, rgba(192,57,43,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(41,128,185,0.04) 0%, transparent 50%);
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, #0d0f14 0%, #161a22 50%, #0d0f14 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 30px 40px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--red), var(--red-bright), var(--red), transparent);
+        }
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .badge {
+            background: var(--red);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            padding: 6px 14px;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+        }
+        .header h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+        }
+        .header h1 span { color: var(--red-bright); }
+        .header-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* ── STICKY PROGRESS ── */
+        .progress-bar-wrap {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 40px;
+        }
+        .progress-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .progress-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            min-width: 220px;
+        }
+        .progress-label span {
+            color: var(--green-bright);
+            font-weight: bold;
+        }
+        .bar-bg {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-card);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--green), var(--green-bright));
+            border-radius: 4px;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+        }
+        .pct-text {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--green-bright);
+            min-width: 48px;
+            text-align: right;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 40px;
+        }
+
+        /* ── SECTION HEADERS ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 40px 0 18px;
+        }
+        .section-header:first-child { margin-top: 0; }
+        .section-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--red-glow);
+            border: 1px solid var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+        }
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            text-transform: uppercase;
+        }
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+        .section-count {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ── GRID ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px 24px;
+        }
+        .grid-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── CHECKLIST ITEM ── */
+        .item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .item::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: var(--border);
+            transition: background 0.2s;
+        }
+        .item:hover {
+            border-color: rgba(192,57,43,0.4);
+            background: rgba(22,26,34,0.9);
+        }
+        .item:hover::before { background: var(--red); }
+        .item.checked {
+            border-color: rgba(46, 204, 113, 0.25);
+            background: var(--green-glow);
+        }
+        .item.checked::before { background: var(--green-bright); }
+        .item.checked .item-label { color: var(--text-muted); text-decoration: line-through; }
+
+        .item input[type="checkbox"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            border: 1px solid var(--text-muted);
+            border-radius: 2px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+        .item input[type="checkbox"]:checked {
+            background: var(--green);
+            border-color: var(--green-bright);
+        }
+        .item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .item-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            line-height: 1.3;
+        }
+
+        /* ── WEAK AREAS PANEL ── */
+        .weak-panel {
+            background: linear-gradient(135deg, rgba(192,57,43,0.08), rgba(192,57,43,0.03));
+            border: 1px solid rgba(192,57,43,0.3);
+            border-radius: 6px;
+            padding: 18px 22px;
+            margin-bottom: 36px;
+        }
+        .weak-panel h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--red-bright);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .weak-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .weak-tag {
+            background: rgba(192,57,43,0.1);
+            border: 1px solid rgba(192,57,43,0.3);
+            color: #e0897f;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 2px;
+        }
+
+        /* ── DOMAIN BADGES ── */
+        .domain-wrap {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 36px;
+        }
+        .domain-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 14px 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .domain-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+        }
+        .domain-card:nth-child(1)::after { background: #e74c3c; }
+        .domain-card:nth-child(2)::after { background: #e67e22; }
+        .domain-card:nth-child(3)::after { background: #f1c40f; }
+        .domain-card:nth-child(4)::after { background: #2ecc71; }
+        .domain-card:nth-child(5)::after { background: #3498db; }
+        .domain-pct {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+        .domain-name {
+            font-family: 'Exo 2', sans-serif;
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        /* ── RESET BUTTON ── */
+        .reset-wrap {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 12px;
+            padding: 8px 20px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            border-radius: 2px;
+        }
+        .reset-btn:hover {
+            border-color: var(--red);
+            color: var(--red-bright);
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 36px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main { padding: 20px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .domain-wrap { grid-template-columns: repeat(2, 1fr); }
+            .header { padding: 20px; }
+            .progress-bar-wrap { padding: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-inner">
+        <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+                <div class="badge">Security+</div>
+                <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:2px;">SY0-701</div>
+            </div>
+            <h1>CompTIA <span>Security+</span> Certification Exam Master Tracker</h1>
+            <div class="header-sub">// track your progress · check off completed tasks · dominate the exam</div>
+        </div>
+    </div>
+</div>
+
+<div class="progress-bar-wrap">
+    <div class="progress-inner">
+        <div class="progress-label">OVERALL PROGRESS — <span id="prog-text">0 / 0 completed</span></div>
+        <div class="bar-bg"><div class="bar-fill" id="bar-fill"></div></div>
+        <div class="pct-text" id="pct-text">0%</div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- WEAK AREAS ALERT -->
+    <div class="weak-panel">
+        <h3>⚠ Priority Focus Areas — Based on Practice Exam History</h3>
+        <div class="weak-tags">
+            <span class="weak-tag">Threat Actor Classification</span>
+            <span class="weak-tag">PKI Trust Models</span>
+            <span class="weak-tag">SDN vs SDV</span>
+            <span class="weak-tag">Incident Response Phases</span>
+            <span class="weak-tag">Data Governance Roles</span>
+            <span class="weak-tag">Unauthentication Mode</span>
+            <span class="weak-tag">Evil Twin vs Rogue AP</span>
+            <span class="weak-tag">IoT Technologies (SIM/NB-IoT)</span>
+        </div>
+    </div>
+
+    <!-- DOMAIN OVERVIEW -->
+    <div class="domain-wrap">
+        <div class="domain-card"><div class="domain-pct">12%</div><div class="domain-name">General Security Concepts</div></div>
+        <div class="domain-card"><div class="domain-pct">22%</div><div class="domain-name">Threats, Vulnerabilities & Mitigations</div></div>
+        <div class="domain-card"><div class="domain-pct">18%</div><div class="domain-name">Security Architecture</div></div>
+        <div class="domain-card"><div class="domain-pct">28%</div><div class="domain-name">Security Operations</div></div>
+        <div class="domain-card"><div class="domain-pct">20%</div><div class="domain-name">Security Program Management</div></div>
+    </div>
+
+    <!-- PRACTICE TESTS -->
+    <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div class="section-title">Practice Tests</div>
+        <div class="section-line"></div>
+        <div class="section-count" id="count-tests">0/24</div>
+    </div>
+    <div class="grid-2" id="practice-tests"></div>
+
+    <!-- ACRONYM QUIZZES -->
+    <div class="section-header">
+        <div class="section-icon">🔤</div>
+        <div class="section-title">Acronym Quizzes</div>
+        <div class="section-line"></div>
+        <div class="section-count" id="count-acro">0/10</div>
+    </div>
+    <div class="grid-2" id="acronym-tests"></div>
+
+    <div class="divider"></div>
+
+    <!-- TOPIC QUIZZES -->
+    <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div class="section-title">Topic Quizzes — By Exam Domain</div>
+        <div class="section-line"></div>
+        <div class="section-count" id="count-topics">0/27</div>
+    </div>
+    <div class="grid-3" id="topic-tests"></div>
+
+    <div class="divider"></div>
+
+    <!-- ADDITIONAL STUDY RESOURCES -->
+    <div class="section-header">
+        <div class="section-icon">📚</div>
+        <div class="section-title">Study Resources & Review</div>
+        <div class="section-line"></div>
+        <div class="section-count" id="count-resources">0/8</div>
+    </div>
+    <div class="grid-2" id="resource-tests"></div>
+
+    <div class="divider"></div>
+
+    <!-- WEAK AREA DRILLING -->
+    <div class="section-header">
+        <div class="section-icon">⚡</div>
+        <div class="section-title">Weak Area Deep Dives</div>
+        <div class="section-line"></div>
+        <div class="section-count" id="count-weak">0/8</div>
+    </div>
+    <div class="grid-2" id="weak-drills"></div>
+
+    <div class="divider"></div>
+
+    <!-- FINAL PREP -->
+    <div class="section-header">
+        <div class="section-icon">🏆</div>
+        <div class="section-title">Final Exam Preparation</div>
+        <div class="section-line"></div>
+        <div class="section-count" id="count-final">0/6</div>
+    </div>
+    <div class="grid-2" id="final-prep"></div>
+
+    <div class="reset-wrap">
+        <button class="reset-btn" onclick="resetAll()">[ RESET ALL PROGRESS ]</button>
+    </div>
+
+</div>
+
+<script>
+    const STORAGE_KEY = 'secplus_tracker_v1';
+
+    const sections = {
+        'practice-tests': {
+            countId: 'count-tests',
+            items: Array.from({length: 24}, (_, i) => `Security+ Practice Test ${i + 1}`)
+        },
+        'acronym-tests': {
+            countId: 'count-acro',
+            items: Array.from({length: 10}, (_, i) => `SY0-701 Exam Acronyms Quiz pt. ${i + 1}`)
+        },
+        'topic-tests': {
+            countId: 'count-topics',
+            items: [
+                'Security Controls Quiz',
+                'Encryption Quiz',
+                'Hashing Quiz',
+                'Digital Signatures Quiz',
+                'Digital Certificates Quiz',
+                'Threat Actor Types Quiz',
+                'Threat Vectors & Attack Surfaces Quiz',
+                'Social Engineering Quiz',
+                'Security Vulnerabilities Quiz',
+                'Malware Attacks Quiz',
+                'Network Attacks Quiz',
+                'Application Attacks Quiz',
+                'Indicators of Malicious Activity Quiz',
+                'Data Protection Concepts Quiz',
+                'Resilience & Recovery Quiz',
+                'Wireless Security Settings Quiz',
+                'Application Security Quiz',
+                'Vulnerability Management Quiz',
+                'Secure Network Protocols Quiz',
+                'Access Controls Quiz',
+                'Password Concepts Quiz',
+                'Incident Response Activities Quiz',
+                'Risk Management Concepts Quiz',
+                'Agreement Types Quiz',
+                'Penetration Testing Quiz',
+                'Cloud Security Concepts Quiz',
+                'Identity & Access Management Quiz'
+            ]
+        },
+        'resource-tests': {
+            countId: 'count-resources',
+            items: [
+                'Malware Glossary',
+                'Cryptography Glossary',
+                'Network Security Glossary',
+                'CompTIA Security+ SY0-701 Exam Objectives Review',
+                'Security+ Official Study Guide — Ch. 1–5',
+                'Security+ Official Study Guide — Ch. 6–10',
+                'Security+ Official Study Guide — Ch. 11–15',
+                'Security+ Official Study Guide — Ch. 16–20'
+            ]
+        },
+        'weak-drills': {
+            countId: 'count-weak',
+            items: [
+                'Threat Actor Classification Deep Dive (Insider vs Hacktivist)',
+                'PKI Trust Models Deep Dive (Distributed / Bridge / Hierarchical)',
+                'SDN vs SDV — Automation & Visibility Distinction',
+                'Incident Response Phases — Action Mapping Drill',
+                'Data Governance Roles — Owner / Custodian / Controller / DPO',
+                'Cryptographic Modes — Unauthentication / GCM / IPsec / CBC',
+                'Wireless Attacks — Evil Twin vs Rogue AP vs Jamming',
+                'IoT Technologies — SIM / NB-IoT / Zigbee / Baseband'
+            ]
+        },
+        'final-prep': {
+            countId: 'count-final',
+            items: [
+                'Full-Length Timed Practice Exam (90 min / 90 Q)',
+                'Full-Length Timed Practice Exam #2 (90 min / 90 Q)',
+                'Performance-Based Questions (PBQ) Practice Set',
+                'Review All Flagged/Wrong Answers from Practice Tests',
+                'Final Acronyms Speed Review',
+                'Pre-Exam Readiness Check — All Domains ≥ 85%'
+            ]
+        }
+    };
+
+    function getSaved() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } 
+        catch { return {}; }
+    }
+
+    function save(key, val) {
+        const data = getSaved();
+        data[key] = val;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function buildItem(sectionId, index, text) {
+        const key = `${sectionId}_${index}`;
+        const saved = getSaved();
+        const checked = !!saved[key];
+
+        const div = document.createElement('div');
+        div.className = 'item' + (checked ? ' checked' : '');
+        div.innerHTML = `
+            <input type="checkbox" id="${key}" ${checked ? 'checked' : ''}>
+            <label class="item-label" for="${key}">${text}</label>
+        `;
+        div.querySelector('input').addEventListener('change', function() {
+            save(key, this.checked);
+            div.classList.toggle('checked', this.checked);
+            updateAll();
+        });
+        div.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                const cb = this.querySelector('input');
+                cb.checked = !cb.checked;
+                cb.dispatchEvent(new Event('change'));
+            }
+        });
+        return div;
+    }
+
+    function updateAll() {
+        const saved = getSaved();
+        let total = 0, done = 0;
+
+        Object.entries(sections).forEach(([sectionId, section]) => {
+            let sTotal = 0, sDone = 0;
+            section.items.forEach((_, i) => {
+                const key = `${sectionId}_${i}`;
+                sTotal++;
+                if (saved[key]) sDone++;
+            });
+            total += sTotal;
+            done += sDone;
+            const countEl = document.getElementById(section.countId);
+            if (countEl) countEl.textContent = `${sDone}/${sTotal}`;
+        });
+
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        document.getElementById('bar-fill').style.width = pct + '%';
+        document.getElementById('pct-text').textContent = pct + '%';
+        document.getElementById('prog-text').textContent = `${done} / ${total} completed`;
+
+        // Color shift as progress increases
+        const fill = document.getElementById('bar-fill');
+        if (pct >= 80) fill.style.background = 'linear-gradient(90deg, #27ae60, #2ecc71, #f39c12)';
+        else if (pct >= 50) fill.style.background = 'linear-gradient(90deg, #27ae60, #2ecc71)';
+        else fill.style.background = 'linear-gradient(90deg, #27ae60, #2ecc71)';
+    }
+
+    function buildAll() {
+        Object.entries(sections).forEach(([sectionId, section]) => {
+            const container = document.getElementById(sectionId);
+            if (!container) return;
+            container.innerHTML = '';
+            section.items.forEach((text, i) => {
+                container.appendChild(buildItem(sectionId, i, text));
+            });
+        });
+        updateAll();
+    }
+
+    function resetAll() {
+        if (!confirm('Reset all progress? This cannot be undone.')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        document.querySelectorAll('.item input[type="checkbox"]').forEach(cb => {
+            cb.checked = false;
+            cb.closest('.item').classList.remove('checked');
+            cb.closest('.item .item-label') && (cb.closest('.item').querySelector('.item-label').style.textDecoration = '');
+        });
+        document.querySelectorAll('.item').forEach(el => el.classList.remove('checked'));
+        updateAll();
+        buildAll();
+    }
+
+    buildAll();
+</script>
+</body>
+</html>

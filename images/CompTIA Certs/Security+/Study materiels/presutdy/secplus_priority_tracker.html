@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ SY0-701 Priority Study Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #09090c;
+            --bg-panel: #0f1015;
+            --bg-card: #14151c;
+            --border: #1c1e28;
+            --text-primary: #dde2ea;
+            --text-secondary: #7a8899;
+            --text-muted: #3d4455;
+
+            --high: #c0392b;
+            --high-bg: rgba(192,57,43,0.1);
+            --high-border: rgba(192,57,43,0.3);
+            --high-glow: rgba(192,57,43,0.06);
+
+            --med: #d68910;
+            --med-bg: rgba(214,137,16,0.1);
+            --med-border: rgba(214,137,16,0.3);
+            --med-glow: rgba(214,137,16,0.06);
+
+            --low: #2471a3;
+            --low-bg: rgba(36,113,163,0.1);
+            --low-border: rgba(36,113,163,0.3);
+            --low-glow: rgba(36,113,163,0.06);
+
+            --green: #1e8449;
+            --green-bright: #27ae60;
+            --green-dim: rgba(39,174,96,0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background-image:
+                radial-gradient(ellipse at 15% 10%, rgba(192,57,43,0.03) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 90%, rgba(36,113,163,0.03) 0%, transparent 40%);
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 28px 40px 22px;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--high), var(--med), var(--low));
+        }
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        .badge-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .badge {
+            background: var(--high);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            padding: 4px 12px;
+            clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+        }
+        .exam-code {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+        h1 {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+        }
+        h1 em { font-style: normal; color: var(--high); }
+        .sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+        .legend {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-top: 6px;
+        }
+        .leg {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .leg-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+
+        /* ── STICKY PROGRESS ── */
+        .prog-bar-wrap {
+            position: sticky; top: 0; z-index: 200;
+            background: rgba(9,9,12,0.97);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 40px;
+        }
+        .prog-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .prog-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            min-width: 180px;
+        }
+        .prog-label strong { color: var(--green-bright); }
+        .bar-bg {
+            flex: 1; height: 6px;
+            background: var(--bg-card);
+            border-radius: 3px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        #bar-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--green), var(--green-bright));
+            border-radius: 3px;
+            transition: width 0.35s ease;
+        }
+        #pct { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 17px; color: var(--green-bright); min-width: 40px; text-align: right; }
+
+        /* ── MINI DOMAIN BARS ── */
+        .domain-strip {
+            display: flex;
+            gap: 1px;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            flex: 1;
+        }
+        .domain-seg { height: 100%; transition: opacity 0.3s; }
+
+        /* ── MAIN ── */
+        .main { max-width: 1080px; margin: 0 auto; padding: 28px 40px; }
+
+        /* ── SCORE SNAPSHOT ── */
+        .score-row {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .score-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .score-num {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 1;
+        }
+        .score-num.red { color: var(--high); }
+        .score-num.orange { color: var(--med); }
+        .score-num.green { color: var(--green-bright); }
+        .score-label { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+        .score-label strong { display: block; font-size: 13px; color: var(--text-primary); margin-bottom: 2px; }
+
+        /* ── SECTION HEADERS ── */
+        .sec-head {
+            display: flex; align-items: center; gap: 10px;
+            margin: 32px 0 14px;
+        }
+        .sec-head:first-child { margin-top: 0; }
+        .sec-icon {
+            width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px;
+            border-radius: 3px;
+        }
+        .sec-icon.high { background: var(--high-bg); border: 1px solid var(--high-border); }
+        .sec-icon.med { background: var(--med-bg); border: 1px solid var(--med-border); }
+        .sec-icon.low { background: var(--low-bg); border: 1px solid var(--low-border); }
+        .sec-icon.neutral { background: var(--bg-card); border: 1px solid var(--border); }
+
+        .sec-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .sec-title.high { color: #e57373; }
+        .sec-title.med { color: #ffb74d; }
+        .sec-title.low { color: #64b5f6; }
+        .sec-title.neutral { color: var(--text-secondary); }
+
+        .sec-sub { font-size: 11px; color: var(--text-muted); font-family: 'Share Tech Mono', monospace; }
+        .sec-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+        .sec-count { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-muted); }
+
+        /* ── PRIORITY REASON TAG ── */
+        .reason {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+        .reason.high { background: var(--high-bg); color: #e57373; border: 1px solid var(--high-border); }
+        .reason.med { background: var(--med-bg); color: #ffb74d; border: 1px solid var(--med-border); }
+        .reason.low { background: var(--low-bg); color: #64b5f6; border: 1px solid var(--low-border); }
+
+        /* ── ITEMS ── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+        .grid-1 { display: grid; grid-template-columns: 1fr; gap: 6px; }
+
+        .item {
+            display: flex; align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.18s;
+            position: relative;
+            overflow: hidden;
+        }
+        .item::before {
+            content: ''; position: absolute;
+            left: 0; top: 0; bottom: 0; width: 2px;
+            transition: background 0.18s;
+        }
+        .item.pri-high::before { background: var(--high); opacity: 0.5; }
+        .item.pri-med::before { background: var(--med); opacity: 0.5; }
+        .item.pri-low::before { background: var(--low); opacity: 0.4; }
+        .item.pri-neutral::before { background: var(--border); }
+
+        .item:hover { border-color: rgba(255,255,255,0.08); }
+        .item.pri-high:hover { background: var(--high-glow); border-color: var(--high-border); }
+        .item.pri-high:hover::before { opacity: 1; }
+        .item.pri-med:hover { background: var(--med-glow); border-color: var(--med-border); }
+        .item.pri-med:hover::before { opacity: 1; }
+        .item.pri-low:hover { background: var(--low-glow); border-color: var(--low-border); }
+        .item.pri-low:hover::before { opacity: 1; }
+
+        .item.done { border-color: rgba(39,174,96,0.2); background: var(--green-dim); }
+        .item.done::before { background: var(--green-bright) !important; opacity: 1 !important; }
+        .item.done .item-text { color: var(--text-muted); text-decoration: line-through; }
+        .item.done .item-obj { opacity: 0.4; }
+
+        .item input[type="checkbox"] {
+            appearance: none;
+            width: 14px; height: 14px; min-width: 14px;
+            border: 1px solid var(--text-muted);
+            border-radius: 2px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.18s;
+            flex-shrink: 0;
+        }
+        .item input[type="checkbox"]:checked {
+            background: var(--green);
+            border-color: var(--green-bright);
+        }
+        .item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            color: white; font-size: 9px; font-weight: bold;
+        }
+        .item-content { flex: 1; min-width: 0; }
+        .item-text { font-size: 12.5px; color: var(--text-secondary); line-height: 1.3; transition: all 0.18s; }
+        .item-obj { font-family: 'Share Tech Mono', monospace; font-size: 9.5px; color: var(--text-muted); margin-top: 1px; }
+        .item-tag { margin-left: auto; flex-shrink: 0; }
+
+        /* ── EXAM WRONG CALLOUT ── */
+        .callout {
+            background: linear-gradient(135deg, rgba(192,57,43,0.07), rgba(192,57,43,0.03));
+            border: 1px solid rgba(192,57,43,0.25);
+            border-radius: 4px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+        }
+        .callout-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700; font-size: 13px;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: #e57373; margin-bottom: 10px;
+        }
+        .callout-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+        .callout-item {
+            background: rgba(192,57,43,0.08);
+            border: 1px solid rgba(192,57,43,0.2);
+            border-radius: 3px;
+            padding: 8px 10px;
+        }
+        .callout-topic { font-size: 11px; color: #e57373; font-weight: 600; margin-bottom: 2px; }
+        .callout-obj { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text-muted); }
+        .callout-exams { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+
+        /* ── DIVIDER ── */
+        .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 28px 0; }
+
+        /* ── RESET ── */
+        .footer { text-align: center; margin-top: 48px; }
+        .reset-btn {
+            background: transparent; border: 1px solid var(--border);
+            color: var(--text-muted); font-family: 'Share Tech Mono', monospace;
+            font-size: 11px; padding: 7px 18px; cursor: pointer;
+            letter-spacing: 1px; border-radius: 2px; transition: all 0.2s;
+        }
+        .reset-btn:hover { border-color: var(--high); color: #e57373; }
+
+        @media (max-width: 700px) {
+            .main, .header, .prog-bar-wrap { padding-left: 16px; padding-right: 16px; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .score-row { grid-template-columns: 1fr; }
+            .callout-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-top">
+        <div>
+            <div class="badge-row">
+                <div class="badge">Security+</div>
+                <div class="exam-code">SY0-701 · PRIORITY STUDY TRACKER</div>
+            </div>
+            <h1>CompTIA <em>Security+</em> Exam Prep — Personalized Priority Plan</h1>
+            <div class="sub">// generated from 3 practice exam attempts · optimized for your weak areas</div>
+        </div>
+        <div style="text-align:right;margin-top:6px;">
+            <div class="legend">
+                <div class="leg"><div class="leg-dot" style="background:var(--high)"></div>HIGH — Wrong 2–3 exams</div>
+                <div class="leg"><div class="leg-dot" style="background:var(--med)"></div>MED — Needs reinforcement</div>
+                <div class="leg"><div class="leg-dot" style="background:var(--low)"></div>LOW — Mostly solid</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="prog-bar-wrap">
+    <div class="prog-inner">
+        <div class="prog-label">OVERALL — <strong id="prog-text">0 / 0</strong></div>
+        <div class="bar-bg"><div id="bar-fill"></div></div>
+        <div id="pct">0%</div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- SCORE SNAPSHOT -->
+    <div class="score-row">
+        <div class="score-card">
+            <div class="score-num red">70%</div>
+            <div class="score-label"><strong>Practice Exam 1</strong>63/90 · Solo score baseline</div>
+        </div>
+        <div class="score-card">
+            <div class="score-num orange">74.4%</div>
+            <div class="score-label"><strong>Practice Exam 2</strong>67/90 · +4 point improvement</div>
+        </div>
+        <div class="score-card">
+            <div class="score-num green">93.3%</div>
+            <div class="score-label"><strong>Final Practice Exam</strong>84/90 · +23 point jump 🏆</div>
+        </div>
+    </div>
+
+    <!-- PERSISTENT WRONG ANSWERS CALLOUT -->
+    <div class="callout">
+        <div class="callout-title">⚠ Still Wrong on Final Exam — Must Memorize Before Test Day</div>
+        <div class="callout-grid">
+            <div class="callout-item">
+                <div class="callout-topic">Threat Actor Classification</div>
+                <div class="callout-obj">Domain 2.1</div>
+                <div class="callout-exams">❌ Wrong all 3 exams · Motivation ≠ Role</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">PKI / Distributed Trust Model</div>
+                <div class="callout-obj">Domain 1.4</div>
+                <div class="callout-exams">❌ Wrong exams 2 & final · Bridge vs Distributed</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">SDN vs SDV Automation</div>
+                <div class="callout-obj">Domain 3.1</div>
+                <div class="callout-exams">❌ Wrong on final · SDV = security automation</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">Incident Response Phases</div>
+                <div class="callout-obj">Domain 4.8</div>
+                <div class="callout-exams">❌ Config changes = IR phase (not after)</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">Unauthentication Mode</div>
+                <div class="callout-obj">Domain 1.4</div>
+                <div class="callout-exams">❌ Wrong both exams · = Confidentiality</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">Evil Twin vs Rogue AP</div>
+                <div class="callout-obj">Domain 2.4</div>
+                <div class="callout-exams">❌ Wrong exams 2 & final · Intent distinction</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">Data Governance Roles</div>
+                <div class="callout-obj">Domain 5.1</div>
+                <div class="callout-exams">❌ Custodian vs DPO vs Owner</div>
+            </div>
+            <div class="callout-item">
+                <div class="callout-topic">IoT Tech: SIM/NB-IoT/Zigbee</div>
+                <div class="callout-obj">Domain 3.1</div>
+                <div class="callout-exams">❌ Wrong both questions on exam 2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- HIGH PRIORITY                               -->
+    <!-- ════════════════════════════════════════════ -->
+
+    <div class="sec-head">
+        <div class="sec-icon high">🔴</div>
+        <div>
+            <div class="sec-title high">HIGH PRIORITY — Master These First</div>
+            <div class="sec-sub">Wrong on 2–3 practice exams · Flagged by exam system · Exam domains: 1.4, 2.1, 2.4, 3.1, 4.8, 5.1</div>
+        </div>
+        <div class="sec-line"></div>
+        <div class="sec-count" id="cnt-high">0/0</div>
+    </div>
+
+    <div class="grid-2" id="sec-high"></div>
+
+    <div class="divider"></div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- MEDIUM PRIORITY                             -->
+    <!-- ════════════════════════════════════════════ -->
+
+    <div class="sec-head">
+        <div class="sec-icon med">🟡</div>
+        <div>
+            <div class="sec-title med">MEDIUM PRIORITY — Strengthen Your Foundation</div>
+            <div class="sec-sub">Got some right, some wrong · Needs consistent reinforcement · Exam domains: 1.1, 2.3, 3.2, 4.4, 4.6, 4.9, 5.2</div>
+        </div>
+        <div class="sec-line"></div>
+        <div class="sec-count" id="cnt-med">0/0</div>
+    </div>
+
+    <div class="grid-2" id="sec-med"></div>
+
+    <div class="divider"></div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- LOW PRIORITY                                -->
+    <!-- ════════════════════════════════════════════ -->
+
+    <div class="sec-head">
+        <div class="sec-icon low">🔵</div>
+        <div>
+            <div class="sec-title low">LOW PRIORITY — Light Review Only</div>
+            <div class="sec-sub">Consistently correct on exams · Just keep sharp · Exam domains: 1.2, 2.2, 3.3, 3.4, 4.1, 4.3, 5.6</div>
+        </div>
+        <div class="sec-line"></div>
+        <div class="sec-count" id="cnt-low">0/0</div>
+    </div>
+
+    <div class="grid-2" id="sec-low"></div>
+
+    <div class="divider"></div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- PRACTICE TESTS                              -->
+    <!-- ════════════════════════════════════════════ -->
+
+    <div class="sec-head">
+        <div class="sec-icon neutral">📋</div>
+        <div>
+            <div class="sec-title neutral">Practice Tests — SY0-701</div>
+            <div class="sec-sub">Complete all 24 · Target 85%+ per test before sitting the exam</div>
+        </div>
+        <div class="sec-line"></div>
+        <div class="sec-count" id="cnt-tests">0/0</div>
+    </div>
+
+    <div class="grid-2" id="sec-tests"></div>
+
+    <div class="divider"></div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- ACRONYM QUIZZES                             -->
+    <!-- ════════════════════════════════════════════ -->
+
+    <div class="sec-head">
+        <div class="sec-icon neutral">🔤</div>
+        <div>
+            <div class="sec-title neutral">Acronym Quizzes — SY0-701</div>
+            <div class="sec-sub">All 10 parts · 200+ acronyms on the exam · Know them cold</div>
+        </div>
+        <div class="sec-line"></div>
+        <div class="sec-count" id="cnt-acro">0/0</div>
+    </div>
+
+    <div class="grid-2" id="sec-acro"></div>
+
+    <div class="divider"></div>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- FINAL PREP                                  -->
+    <!-- ════════════════════════════════════════════ -->
+
+    <div class="sec-head">
+        <div class="sec-icon neutral">🏆</div>
+        <div>
+            <div class="sec-title neutral">Final Exam Preparation</div>
+            <div class="sec-sub">Complete last · Only when priority topics are green</div>
+        </div>
+        <div class="sec-line"></div>
+        <div class="sec-count" id="cnt-final">0/0</div>
+    </div>
+
+    <div class="grid-2" id="sec-final"></div>
+
+    <div class="footer">
+        <button class="reset-btn" onclick="resetAll()">[ RESET ALL PROGRESS ]</button>
+    </div>
+
+</div>
+
+<script>
+const STORE = 'secplus_priority_v2';
+
+const data = {
+    'sec-high': {
+        countId: 'cnt-high',
+        priority: 'high',
+        items: [
+            // 2.1 Threat Actors
+            { text: 'Hacktivist vs Insider Threat — motivation vs role distinction', obj: '2.1 · Threat Actors & Motivations', tag: '❌ WRONG ALL 3 EXAMS' },
+            { text: 'Nation-state, Organized Crime, Shadow IT — attributes deep dive', obj: '2.1 · Threat Actors & Motivations', tag: 'HIGH' },
+            { text: 'Broker vs Criminal Syndicate — sell knowledge vs direct attacks', obj: '2.1 · Threat Actors & Motivations', tag: 'HIGH' },
+            { text: 'Internal vs External threat actors + sophistication levels', obj: '2.1 · Attributes of Actors', tag: 'HIGH' },
+            // 1.4 PKI / Cryptography
+            { text: 'PKI Trust Models — Hierarchical vs Bridge vs Distributed vs Web of Trust', obj: '1.4 · Public Key Infrastructure', tag: '❌ WRONG EXAM 2 & FINAL' },
+            { text: 'Key Escrow vs Key Recovery — split halves vs restoring lost key', obj: '1.4 · PKI / Key Management', tag: 'HIGH' },
+            { text: 'Unauthentication Mode = Confidentiality (NOT stream cipher)', obj: '1.4 · Cryptographic Protocols', tag: '❌ WRONG BOTH EXAMS' },
+            { text: 'GCM mode — synchronous counter + AAD + authentication', obj: '1.4 · Cipher Modes', tag: 'HIGH' },
+            { text: 'OCSP vs CRL — real-time lookup vs downloadable list', obj: '1.4 · Certificate Revocation', tag: 'HIGH' },
+            { text: 'Cipher suites — encryption + authentication + MAC algorithm combo', obj: '1.4 · Cryptographic Protocols', tag: 'HIGH' },
+            // 2.4 Wireless Attacks
+            { text: 'Evil Twin vs Rogue AP — deception/capture vs unauthorized backdoor', obj: '2.4 · Wireless Attacks', tag: '❌ WRONG EXAM 2 & FINAL' },
+            { text: 'Bluesnarfing vs Bluejacking — data theft vs spam/annoyance', obj: '2.4 · Wireless Attacks', tag: 'HIGH' },
+            { text: 'Disassociation vs Jamming — Wi-Fi only vs all RF signals', obj: '2.4 · Wireless Attacks', tag: 'HIGH' },
+            // 3.1 Architecture / SDN vs SDV
+            { text: 'SDN vs SDV — network routing automation vs security response automation', obj: '3.1 · Software-Defined Architecture', tag: '❌ WRONG ON FINAL' },
+            { text: 'IoT tech — SIM (identity/auth) vs NB-IoT (wide-range LPWAN) vs Zigbee (short-range)', obj: '3.1 · IoT Architecture', tag: '❌ WRONG BOTH Q EXAM 2' },
+            { text: 'VDI — centralized server + employee own devices = no data on device', obj: '3.1 · Virtualization Architecture', tag: 'HIGH' },
+            { text: 'Container virtualization — OS components (namespaces/cgroups) not hypervisor', obj: '3.1 · Containerization', tag: 'HIGH' },
+            // 4.8 Incident Response
+            { text: 'IR Phases order — Prep→Detect→Analyze→Contain→Eradicate→Recover→Lessons', obj: '4.8 · Incident Response Activities', tag: 'HIGH' },
+            { text: 'Config changes = part of IR containment phase (NOT after IR)', obj: '4.8 · Incident Response', tag: '❌ WRONG ON FINAL' },
+            { text: 'Digital forensics — collect/preserve evidence DURING investigation phase', obj: '4.8 / 4.9 · Forensics & IR', tag: 'HIGH' },
+            // 5.1 Governance / Data Roles
+            { text: 'Data owner vs Custodian vs DPO vs Controller vs Processor', obj: '5.1 · Roles & Responsibilities', tag: '❌ WRONG EXAM 2 & FINAL' },
+            { text: 'Custodian implements access control · Owner decides · DPO = legal compliance', obj: '5.1 · Data Governance Roles', tag: 'HIGH' },
+            { text: 'NDA vs AUP vs Data Protection Agreement — misuse vs usage rules vs handling', obj: '5.1 · Agreement Types', tag: 'HIGH' },
+        ]
+    },
+
+    'sec-med': {
+        countId: 'cnt-med',
+        priority: 'med',
+        items: [
+            // 1.1 Security Controls
+            { text: 'Control types — Deterrent (discourage) vs Preventive (block) vs Detective (identify)', obj: '1.1 · Security Control Types', tag: 'MEDIUM' },
+            { text: 'Corrective vs Compensating controls — fix vs alternative workaround', obj: '1.1 · Security Controls', tag: 'MEDIUM' },
+            { text: 'Technical vs Operational vs Managerial vs Physical control categories', obj: '1.1 · Control Categories', tag: 'MEDIUM' },
+            // 2.3 Vulnerabilities
+            { text: 'CSRF vs SQL injection vs XSS — request forgery vs DB injection vs script injection', obj: '2.3 · Application Vulnerabilities', tag: 'MEDIUM' },
+            { text: 'VM escape vs Resource reuse — virtualization vulnerabilities', obj: '2.3 · Virtualization Vulnerabilities', tag: 'MEDIUM' },
+            { text: 'Zero-day vs Legacy vs End-of-life vulnerabilities', obj: '2.3 · Vulnerability Types', tag: 'MEDIUM' },
+            // 3.2 Infrastructure Security
+            { text: 'Firewall log first during investigation → then NIDS → then routers/switches', obj: '3.2 / 4.9 · Network Device Investigation', tag: 'MEDIUM' },
+            { text: 'Load balancer — traffic distribution + protocol attack detection', obj: '3.2 · Network Appliances', tag: 'MEDIUM' },
+            { text: 'VLAN tagging — 802.1Q tags used between switches (trunking), NOT within same switch', obj: '3.2 · Switching Technologies', tag: 'MEDIUM' },
+            { text: 'IDS monitoring types — Signature vs Behavior vs Anomaly vs Heuristic', obj: '3.2 · IDS/IPS', tag: 'MEDIUM' },
+            // 4.4 Monitoring
+            { text: 'SIEM features — aggregation, correlation, deduplication, time sync, alerting', obj: '4.4 · Security Monitoring Tools', tag: 'MEDIUM' },
+            { text: 'SIEM vs SOAR — collect/analyze vs automate response', obj: '4.4 · Security Tools', tag: 'MEDIUM' },
+            { text: 'syslog-ng vs rsyslog vs nxlog — content filtering vs performance vs cross-platform', obj: '4.4 · Log Management', tag: 'MEDIUM' },
+            // 4.6 IAM
+            { text: 'SAML vs Kerberos vs RADIUS — cross-domain SSO vs single-domain vs network access', obj: '4.6 · Identity Federation', tag: 'MEDIUM' },
+            { text: 'MFA factors — know vs have vs are vs somewhere you are', obj: '4.6 · Multifactor Authentication', tag: 'MEDIUM' },
+            { text: 'Rule attack vs Brute force vs Spraying — known policy vs all combos vs one-many', obj: '4.6 · Password Attacks', tag: 'MEDIUM' },
+            // 4.9 Investigation Data Sources
+            { text: 'Firewall logs → most important · Routers/switches → least important in investigation', obj: '4.9 · Data Sources for Investigation', tag: 'MEDIUM' },
+            { text: 'Faraday bags — block all EM signals to prevent remote wipe of forensic evidence', obj: '4.9 · Digital Forensics', tag: 'MEDIUM' },
+            // 5.2 Risk Management
+            { text: 'BCP vs DRP — alternative operations vs IT system restoration', obj: '5.2 · Risk Management', tag: 'MEDIUM' },
+            { text: 'Multiparty risk — one org vulnerability impacts connected organizations', obj: '5.2 · Risk Types', tag: 'MEDIUM' },
+            { text: 'RAID levels — 0=striping, 1=mirroring, 5=parity, 6=double parity', obj: '5.2 · Resilience', tag: 'MEDIUM' },
+        ]
+    },
+
+    'sec-low': {
+        countId: 'cnt-low',
+        priority: 'low',
+        items: [
+            // Mostly correct — just keep sharp
+            { text: 'CIA triad + Non-repudiation + AAA concepts', obj: '1.2 · Fundamental Security Concepts', tag: 'LOW' },
+            { text: 'Social engineering types — phishing, vishing, smishing, spear, whaling, spimming', obj: '2.2 · Human Vectors', tag: 'LOW' },
+            { text: 'Typosquatting vs Pharming — misspelling vs DNS manipulation', obj: '2.2 · Threat Vectors', tag: 'LOW' },
+            { text: 'Malware types — RAT, virus, worm, ransomware, keylogger, spyware, rootkit', obj: '2.4 · Malware Attacks', tag: 'LOW' },
+            { text: 'OSINT — passive recon using public sources only', obj: '4.3 · Vulnerability Identification', tag: 'LOW' },
+            { text: 'Vulnerability scanning — Nessus Essentials = 16 IPs free', obj: '4.3 · Vulnerability Scanning', tag: 'LOW' },
+            { text: 'Data states — at rest vs in transit vs in processing', obj: '3.3 · Data Protection', tag: 'LOW' },
+            { text: 'Encryption — AES strongest symmetric · ECC faster than RSA', obj: '3.3 · Cryptographic Solutions', tag: 'LOW' },
+            { text: 'Hashing — one-way, fixed-length, avalanche effect · Salting prevents same-hash', obj: '3.3 · Hashing', tag: 'LOW' },
+            { text: 'SED cryptographic erase — destroy encryption key = data gone permanently', obj: '3.3 · Data Destruction', tag: 'LOW' },
+            { text: 'Availability zones — fault tolerance, not cost savings or less redundancy', obj: '3.4 · Resilience & Recovery', tag: 'LOW' },
+            { text: 'BAN — body area network for patient health alerts to physicians', obj: '4.1 · Specialized Devices', tag: 'LOW' },
+            { text: 'WPA3 — strongest wireless, IoT support, SAE handshake', obj: '4.1 · Wireless Security', tag: 'LOW' },
+            { text: 'STP — prevents switch loops · VLAN — logical grouping across switches', obj: '4.1 · Network Hardening', tag: 'LOW' },
+            { text: 'Physical security layers — barriers (external) → locks → mantraps → safes', obj: '1.2 · Physical Security', tag: 'LOW' },
+            { text: 'Penetration testing phases — footprinting → scanning → exploit → post-exploit → report', obj: '5.5 · Penetration Testing', tag: 'LOW' },
+            { text: 'Phishing simulations — train employees to recognize, not prevent all attacks', obj: '5.6 · Security Awareness', tag: 'LOW' },
+            { text: 'HIPAA = health data · PCI DSS = card data · GDPR = EU personal data', obj: '5.4 · Compliance Standards', tag: 'LOW' },
+        ]
+    },
+
+    'sec-tests': {
+        countId: 'cnt-tests',
+        priority: 'neutral',
+        items: Array.from({length: 24}, (_, i) => ({
+            text: `Security+ Practice Test ${i + 1}`,
+            obj: 'SY0-701 · Full 90-question practice exam',
+            tag: i < 8 ? 'HIGH' : i < 16 ? 'MED' : 'LOW'
+        }))
+    },
+
+    'sec-acro': {
+        countId: 'cnt-acro',
+        priority: 'neutral',
+        items: Array.from({length: 10}, (_, i) => ({
+            text: `SY0-701 Exam Acronyms Quiz pt. ${i + 1}`,
+            obj: `200+ acronyms on the exam · Part ${i + 1} of 10`,
+            tag: i < 4 ? 'HIGH' : 'MED'
+        }))
+    },
+
+    'sec-final': {
+        countId: 'cnt-final',
+        priority: 'neutral',
+        items: [
+            { text: 'Full-Length Timed Exam #1 — 90 questions / 90 minutes, no pausing', obj: 'Final Prep · Simulate real test conditions', tag: 'FINAL' },
+            { text: 'Full-Length Timed Exam #2 — review every wrong answer immediately after', obj: 'Final Prep · Focus on wrong answer analysis', tag: 'FINAL' },
+            { text: 'Performance-Based Questions (PBQ) practice set', obj: 'Final Prep · Drag-and-drop, matching, scenario tasks', tag: 'FINAL' },
+            { text: 'HIGH PRIORITY topic speed review — all 23 items in under 30 minutes', obj: 'Final Prep · Flashcard style rapid review', tag: 'FINAL' },
+            { text: 'Acronym final speed drill — all 10 quizzes back to back', obj: 'Final Prep · 200+ acronyms cold recall', tag: 'FINAL' },
+            { text: 'Pre-exam readiness check — score 85%+ on a fresh practice test', obj: 'Final Prep · Go/No-go decision point', tag: 'FINAL' },
+        ]
+    }
+};
+
+const STORE_KEY = STORE;
+
+function getSaved() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+    catch { return {}; }
+}
+
+function save(key, val) {
+    const d = getSaved(); d[key] = val;
+    localStorage.setItem(STORE_KEY, JSON.stringify(d));
+}
+
+function tagClass(tag) {
+    if (!tag) return '';
+    if (tag.includes('HIGH') || tag.includes('WRONG')) return 'high';
+    if (tag.includes('MED') || tag.includes('MEDIUM')) return 'med';
+    if (tag.includes('LOW')) return 'low';
+    return '';
+}
+
+function buildItem(sectionId, idx, item, priority) {
+    const key = `${sectionId}_${idx}`;
+    const saved = getSaved();
+    const checked = !!saved[key];
+
+    const div = document.createElement('div');
+    div.className = `item pri-${priority}${checked ? ' done' : ''}`;
+
+    const tc = tagClass(item.tag);
+    const tagHtml = item.tag
+        ? `<div class="item-tag"><span class="reason ${tc}">${item.tag}</span></div>`
+        : '';
+
+    div.innerHTML = `
+        <input type="checkbox" id="${key}" ${checked ? 'checked' : ''}>
+        <div class="item-content">
+            <div class="item-text">${item.text}</div>
+            <div class="item-obj">${item.obj}</div>
+        </div>
+        ${tagHtml}
+    `;
+
+    div.querySelector('input').addEventListener('change', function() {
+        save(key, this.checked);
+        div.classList.toggle('done', this.checked);
+        updateProgress();
+    });
+
+    div.addEventListener('click', function(e) {
+        if (e.target.tagName !== 'INPUT') {
+            const cb = this.querySelector('input');
+            cb.checked = !cb.checked;
+            cb.dispatchEvent(new Event('change'));
+        }
+    });
+
+    return div;
+}
+
+function buildAll() {
+    Object.entries(data).forEach(([sectionId, section]) => {
+        const container = document.getElementById(sectionId);
+        if (!container) return;
+        container.innerHTML = '';
+        section.items.forEach((item, idx) => {
+            container.appendChild(buildItem(sectionId, idx, item, section.priority));
+        });
+    });
+    updateProgress();
+}
+
+function updateProgress() {
+    const saved = getSaved();
+    let total = 0, done = 0;
+
+    Object.entries(data).forEach(([sectionId, section]) => {
+        let st = 0, sd = 0;
+        section.items.forEach((_, i) => {
+            const key = `${sectionId}_${i}`;
+            st++; if (saved[key]) sd++;
+        });
+        total += st; done += sd;
+        const el = document.getElementById(section.countId);
+        if (el) el.textContent = `${sd}/${st}`;
+    });
+
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('bar-fill').style.width = pct + '%';
+    document.getElementById('pct').textContent = pct + '%';
+    document.getElementById('prog-text').innerHTML = `<strong>${done} / ${total}</strong>`;
+}
+
+function resetAll() {
+    if (!confirm('Reset all progress?')) return;
+    localStorage.removeItem(STORE_KEY);
+    buildAll();
+}
+
+buildAll();
+</script>
+</body>
+</html>

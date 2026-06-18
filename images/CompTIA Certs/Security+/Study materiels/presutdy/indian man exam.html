@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompTIA Security+ (SY0-701) Practice Exam</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; background: var(--bg); color: #1e293b; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        h1 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; color: var(--primary); }
+        .question-block { margin-bottom: 30px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; }
+        .question-text { font-weight: 600; margin-bottom: 15px; display: block; }
+        .option { display: block; margin: 10px 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .option:hover { background: #f1f5f9; }
+        input[type="radio"] { margin-right: 10px; }
+        #submit-btn { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 6px; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 20px; }
+        #results { margin-top: 30px; display: none; padding: 20px; border-radius: 8px; text-align: center; }
+        .pass { background: #dcfce7; color: #14532d; border: 2px solid var(--success); }
+        .fail { background: #fee2e2; color: #7f1d1d; border: 2px solid var(--danger); }
+        .explanation { font-size: 0.9rem; margin-top: 10px; color: #64748b; font-style: italic; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Security+ SY0-701 Practice Quiz (50 Qs)</h1>
+    <p>Target Score: 80% (40/50 correct)</p>
+    <form id="quiz-form">
+        <div id="quiz-container"></div>
+        <button type="button" id="submit-btn" onclick="calculateScore()">Submit Exam</button>
+    </form>
+
+    <div id="results">
+        <h2 id="score-text"></h2>
+        <p id="status-text"></p>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { q: "A security technician observes data center racks are accessible to all employees. What is the most appropriate physical control?", options: ["Implement a Network IDS", "Install locks on the server rack", "Update antivirus software", "Conduct a risk assessment"], a: 1 },
+    { q: "A professional notices unusual outgoing traffic suggesting data exfiltration. What technical control should be implemented immediately?", options: ["Install a firewall", "Conduct security awareness training", "Implement biometric access to server room", "Update security policy"], a: 0 },
+    { q: "A company faces tailgating issues. Which deterrent control would be effective?", options: ["Install more surveillance cameras", "Implement stricter password policies", "Conduct regular security audits", "Set up a software-based IPS"], a: 0 },
+    { q: "A smartphone user wants to access features not available in the standard OS. What method enables this?", options: ["Exploiting database vulnerabilities", "Utilizing scripting vulnerabilities", "Jailbreaking", "Direct software installation"], a: 2 },
+    { q: "Which action best ensures adherence to Confidentiality and Integrity (C&I) of the CIA triad?", options: ["Encrypting stored data", "Implementing a firewall", "Regularly updating software", "Conducting background checks"], a: 0 },
+    { q: "Which process identifies discrepancies between current security posture and the desired state?", options: ["Risk analysis", "Gap analysis", "Penetration testing", "Compliance auditing"], a: 1 },
+    { q: "Which physical measure protects against vehicle ramming while allowing pedestrian access?", options: ["Video surveillance", "Access control vestibule", "Erecting bollards", "Enhancing lighting"], a: 2 },
+    { q: "Before implementing a new firewall that changes infrastructure, what is the FIRST step?", options: ["Conduct impact analysis", "Obtain formal approval from Senior Management", "Schedule a maintenance window", "Prepare a backout plan"], a: 1 },
+    { q: "Which team combines both offensive and defensive testing?", options: ["Red team", "White team", "Blue team", "Purple team"], a: 3 },
+    { q: "To ensure evidence is handled correctly from collection to storage, use:", options: ["Chain of custody", "Collection logs", "Handover protocols", "Secure storage"], a: 0 },
+    { q: "What method should be used to securely exchange a symmetric key?", options: ["Public Key Infrastructure", "Digital email signature", "Asymmetric algorithm (Diffie-Hellman)", "Encrypting with another symmetric key"], a: 2 },
+    { q: "What technique safeguards user passwords in a database from exposure during a breach?", options: ["Digital signatures", "Hashing", "File permissions", "Blockchain"], a: 1 },
+    { q: "What technology maintains a list of compromised certificates that can be checked by clients?", options: ["Certificate Revocation List (CRL)", "Self-signed certificate", "Certificate Signing Request (CSR)", "Third-party certificate"], a: 0 },
+    { q: "An employee with malicious intent steals data. What category of threat actor is this?", options: ["Organized crime", "Nation state", "Hacktivist", "Insider threat"], a: 3 },
+    { q: "Employees are tricked by a fake website that looks legitimate to many of them. This is a:", options: ["Identity theft", "Misinformation", "Watering hole attack", "Spear phishing"], a: 2 },
+    { q: "What is the most effective action to address a security vulnerability in IoT firmware?", options: ["Conduct risk analysis", "Patching", "Network restructuring", "Device upgrade"], a: 1 },
+    { q: "An attacker calls an employee pretending to be IT support to request credentials. This is:", options: ["Typo squatting", "Watering hole", "Whaling", "Vishing"], a: 3 },
+    { q: "To identify the creator and creation date of a suspicious file, check the:", options: ["Hash value", "Network activity log", "Server access log", "File metadata"], a: 3 },
+    { q: "What does 'Virtual Machine Escape' refer to?", options: ["Migrating a VM between hosts", "Attacker gains control of the host from within a VM", "Cloning VMs for backup", "Deploying VMs across multiple hosts"], a: 1 },
+    { q: "Strategy to prevent employees from inadvertently installing harmful applications?", options: ["Regular malware scans", "VPN implementation", "Application allow list", "User Access Control"], a: 2 },
+    { q: "Malware that rapidly spreads through a network by creating copies of itself is a:", options: ["Virus", "Worm", "Trojan", "Logic Bomb"], a: 1 },
+    { q: "Critical network logs are missing for several hours. The engineer should:", options: ["Assume no data was generated", "Investigate the cause of the missing logs", "Assume log rotation happened", "Take no action if documents are accurate"], a: 1 },
+    { q: "Which hardening technique controls traffic on EACH server individually?", options: ["Default password changes", "Host-based firewall", "Encryption", "Removing unnecessary software"], a: 1 },
+    { q: "Primary characteristic of an 'on-premises' architectural model?", options: ["Relies on 3rd party providers", "Distributed data centers", "Hosting on servers within a physical facility", "Serverless computing"], a: 2 },
+    { q: "Essential detection mechanism for monitoring suspicious activity in an ICS (Water Plant)?", options: ["Email filtering", "Antivirus", "IDS (Intrusion Detection System)", "MDM"], a: 2 },
+    { q: "System implemented to monitor CHANGES in a network environment?", options: ["Firewall", "IPS", "NAC", "File Integrity Monitoring"], a: 3 },
+    { q: "If RDP is accessible from the internet, what should a security analyst recommend?", options: ["Stronger encryption", "Set up a VPN", "Change the default port", "Complex passwords"], a: 1 },
+    { q: "How to ensure uninterrupted service during peak shopping seasons (High Availability)?", options: ["Load balancing", "Hot site", "Geographic spreading", "Continuity of operations"], a: 0 },
+    { q: "Ensure only authorized devices connect to physical switch ports?", options: ["IDS", "Network Access Control (NAC)", "SSL", "VLAN"], a: 1 },
+    { q: "Technique to identify vulnerabilities in application source code?", options: ["Input validation", "Cross-site scripting", "Secure cookies", "Static code analysis"], a: 3 },
+    { q: "Action to take when software licenses in use have expired?", options: ["Data retention policy", "Schedule software destruction", "Initiate acquisition/procurement process", "Disable software immediately"], a: 2 },
+    { q: "Pentest document outlining estimated time required for the test?", options: ["NDA", "SLA", "BPA", "SOW (Statement of Work)"], a: 3 },
+    { q: "Technology to receive real-time security alerts from across all systems?", options: ["SCAP", "Antivirus", "SIEM system", "Archiving tool"], a: 2 },
+    { q: "Two ways to ensure only authorized personnel access a secure facility (Select 2 - using logic for best pair):", options: ["Fencing/Cameras", "Motion detectors/Logs", "Badge access/Access Control Vestibule", "Guards/Lighting"], a: 2 },
+    { q: "Tool granting privileged users temporary and limited access when needed?", options: ["Tokenization", "Biometrics", "Password managers", "Just-In-Time (JIT) permissions"], a: 3 },
+    { q: "Primary benefit of automation/orchestration during peak periods?", options: ["Standard configuration", "Cost reduction", "Secure scaling", "Employee reduction"], a: 1 },
+    { q: "Log source containing info about user actions, errors, and events in a web app?", options: ["Application log", "Endpoint log", "Dashboard", "Vulnerability scan"], a: 0 },
+    { q: "Used to document risk, assign responsibility, and define thresholds?", options: ["Risk tolerance", "Risk transfer", "Risk register", "Risk analysis"], a: 2 },
+    { q: "Physical attack involving copying signals from legitimate RFID tags?", options: ["Environmental attack", "Brute force", "Cloning attack", "Social engineering"], a: 2 },
+    { q: "Attacker intercepts and manipulates traffic between two parties?", options: ["On-path attack", "Malicious code", "Rootkit", "Pentest"], a: 0 },
+    { q: "Primary goal of enforcing MDM on employee-owned smartphones?", options: ["Data destruction", "Data encryption", "Endpoint security", "Risk acceptance"], a: 2 },
+    { q: "Gathering info from job postings/message boards without engaging the target?", options: ["Passive reconnaissance", "Active reconnaissance", "Defensive testing", "Environmental testing"], a: 0 },
+    { q: "Security measure providing authentication using multiple factors?", options: ["Threat analysis", "MFA", "Security training", "Access control"], a: 1 },
+    { q: "Proactively analyzing logs to find patterns of potential threats (like DDoS)?", options: ["Intrusion prevention", "Threat hunting", "Risk analysis", "Risk mitigation"], a: 1 },
+    { q: "Encryption on smartphones ensures which CIA component if lost/stolen?", options: ["Integrity", "Confidentiality", "Availability", "Authentication"], a: 1 },
+    { q: "Technique to achieve physical isolation of a secure network?", options: ["Logical segmentation", "SDN", "Virtualization", "Air Gapping"], a: 3 },
+    { q: "Strategy to prevent data loss on a stolen bank laptop?", options: ["Disk encryption", "Data permission", "Categorization", "Access rights"], a: 0 },
+    { q: "Method to ensure software code authenticity and integrity?", options: ["Code signing", "Regular review", "Dynamic testing", "Agile methodology"], a: 0 },
+    { q: "Mitigation technique that divides the network based on security requirements?", options: ["Least privilege", "Patching", "Segmentation", "Encryption"], a: 2 },
+    { q: "Which control should fail OPEN for human safety?", options: ["User authentication", "External gateway", "Fire safety mechanism", "Data access logs"], a: 2 }
+];
+
+const container = document.getElementById('quiz-container');
+questions.forEach((item, index) => {
+    const div = document.createElement('div');
+    div.className = 'question-block';
+    div.innerHTML = `
+        <span class="question-text">${index + 1}. ${item.q}</span>
+        ${item.options.map((opt, i) => `
+            <label class="option">
+                <input type="radio" name="q${index}" value="${i}"> ${opt}
+            </label>
+        `).join('')}
+    `;
+    container.appendChild(div);
+});
+
+function calculateScore() {
+    let score = 0;
+    questions.forEach((item, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected && parseInt(selected.value) === item.a) {
+            score++;
+        }
+    });
+
+    const percent = (score / questions.length) * 100;
+    const resultsDiv = document.getElementById('results');
+    const scoreText = document.getElementById('score-text');
+    const statusText = document.getElementById('status-text');
+
+    resultsDiv.style.display = 'block';
+    scoreText.innerText = `Final Score: ${score} / ${questions.length} (${percent}%)`;
+    
+    if (percent >= 80) {
+        resultsDiv.className = 'pass';
+        statusText.innerText = "PASS - You are ready for the Security+ Exam!";
+    } else {
+        resultsDiv.className = 'fail';
+        statusText.innerText = "FAIL - You need more study. Focus on the sections where you missed questions.";
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+}
+</script>
+</body>
+</html>

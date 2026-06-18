@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security+ SY0-701 Practice Exam — Prof. Messer Study Group</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090d;
+            --panel: #0f1018;
+            --card: #13141d;
+            --card2: #181a26;
+            --border: #1e2030;
+            --accent: #c0392b;
+            --accent2: #e74c3c;
+            --green: #27ae60;
+            --green2: #2ecc71;
+            --yellow: #f39c12;
+            --blue: #2980b9;
+            --text: #dde3ee;
+            --muted: #6b7a99;
+            --dim: #3a4060;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: radial-gradient(ellipse at 20% 0%, rgba(192,57,43,0.04), transparent 50%);
+        }
+
+        /* ── HEADER ── */
+        .header {
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            padding: 22px 36px;
+            position: relative;
+        }
+        .header::after {
+            content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent 60%);
+        }
+        .header-inner { max-width: 860px; margin: 0 auto; }
+        .badge-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .badge {
+            background: var(--accent); color: white;
+            font-family: 'Rajdhani', sans-serif; font-weight: 700;
+            font-size: 11px; letter-spacing: 2px; padding: 3px 12px;
+            clip-path: polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+        }
+        .source-tag {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--muted); letter-spacing: 1px;
+        }
+        h1 {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700;
+            font-size: 22px; color: var(--text);
+        }
+        h1 span { color: var(--accent2); }
+        .header-sub {
+            font-family: 'Share Tech Mono', monospace; font-size: 11px;
+            color: var(--muted); margin-top: 4px; letter-spacing: 1px;
+        }
+
+        /* ── PROGRESS BAR ── */
+        .prog-wrap {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(9,9,13,0.96); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 9px 36px;
+        }
+        .prog-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+        .prog-label { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted); white-space: nowrap; min-width: 140px; }
+        .prog-label strong { color: var(--green2); }
+        .bar-bg { flex: 1; height: 5px; background: var(--card); border-radius: 3px; overflow: hidden; }
+        .bar-fg { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--green2)); border-radius: 3px; transition: width 0.3s; }
+        .prog-pct { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; color: var(--blue); min-width: 36px; text-align: right; }
+
+        /* ── MAIN ── */
+        .main { max-width: 860px; margin: 0 auto; padding: 28px 36px 80px; }
+
+        /* ── QUESTION CARD ── */
+        .q-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .q-card.answered-correct { border-color: rgba(39,174,96,0.4); }
+        .q-card.answered-wrong { border-color: rgba(192,57,43,0.4); }
+
+        .q-header {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .q-num {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700;
+            font-size: 22px; color: var(--dim); min-width: 32px; line-height: 1;
+            padding-top: 2px;
+        }
+        .q-meta { flex: 1; }
+        .q-type {
+            font-family: 'Share Tech Mono', monospace; font-size: 10px;
+            color: var(--muted); letter-spacing: 1px; margin-bottom: 6px;
+        }
+        .q-type span {
+            display: inline-block; background: rgba(41,128,185,0.12);
+            border: 1px solid rgba(41,128,185,0.3); color: #64b5f6;
+            padding: 1px 8px; border-radius: 2px; margin-right: 6px;
+        }
+        .q-type span.pbq { background: rgba(243,156,18,0.12); border-color: rgba(243,156,18,0.3); color: #ffb74d; }
+        .q-text { font-size: 14px; color: var(--text); line-height: 1.55; font-weight: 600; }
+        .q-domain {
+            font-family: 'Share Tech Mono', monospace; font-size: 10px;
+            color: var(--muted); margin-top: 6px;
+        }
+
+        /* ── MULTIPLE CHOICE ── */
+        .options { padding: 14px 20px; display: flex; flex-direction: column; gap: 8px; }
+        .opt {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 14px;
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative; overflow: hidden;
+        }
+        .opt:hover { border-color: rgba(41,128,185,0.4); background: rgba(24,26,38,0.9); }
+        .opt.selected { border-color: rgba(41,128,185,0.6); background: rgba(41,128,185,0.08); }
+        .opt.correct { border-color: rgba(39,174,96,0.6); background: rgba(39,174,96,0.08) !important; }
+        .opt.wrong { border-color: rgba(192,57,43,0.6); background: rgba(192,57,43,0.08) !important; }
+        .opt.revealed-correct { border-color: rgba(39,174,96,0.4); background: rgba(39,174,96,0.05); }
+        .opt input[type="radio"] {
+            appearance: none; width: 16px; height: 16px; min-width: 16px;
+            border: 1px solid var(--muted); border-radius: 50%; background: transparent;
+            cursor: pointer; position: relative; transition: all 0.15s; margin-top: 1px;
+        }
+        .opt input[type="radio"]:checked { border-color: var(--blue); }
+        .opt input[type="radio"]:checked::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 8px; height: 8px; border-radius: 50%; background: var(--blue);
+        }
+        .opt.correct input[type="radio"] { border-color: var(--green); }
+        .opt.correct input[type="radio"]:checked::after { background: var(--green); }
+        .opt.wrong input[type="radio"] { border-color: var(--accent); }
+        .opt-letter {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px;
+            color: var(--muted); min-width: 18px; margin-top: 0;
+        }
+        .opt-text { font-size: 13px; color: var(--muted); line-height: 1.4; }
+        .opt.selected .opt-text { color: var(--text); }
+        .opt.correct .opt-text, .opt.revealed-correct .opt-text { color: var(--green2); }
+        .opt.wrong .opt-text { color: #e57373; }
+        .result-icon {
+            margin-left: auto; font-size: 16px; opacity: 0;
+            transition: opacity 0.2s; align-self: center;
+        }
+        .opt.correct .result-icon, .opt.wrong .result-icon,
+        .opt.revealed-correct .result-icon { opacity: 1; }
+
+        /* ── MATCHING QUESTION ── */
+        .matching-wrap { padding: 14px 20px; }
+        .matching-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+        .match-item { display: contents; }
+        .match-prompt {
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 4px; padding: 10px 14px;
+            font-size: 12.5px; color: var(--text); line-height: 1.4;
+        }
+        .match-arrow { color: var(--muted); font-size: 16px; text-align: center; }
+        .match-select {
+            appearance: none;
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 4px; padding: 10px 32px 10px 14px;
+            color: var(--text); font-family: 'Exo 2', sans-serif; font-size: 12.5px;
+            cursor: pointer; width: 100%; outline: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 12px center;
+            transition: border-color 0.15s;
+        }
+        .match-select:focus { border-color: var(--blue); }
+        .match-select.correct { border-color: var(--green); color: var(--green2); }
+        .match-select.wrong { border-color: var(--accent); color: #e57373; }
+        .match-select option { background: #1a1d2a; }
+        .matching-options-bank {
+            background: rgba(41,128,185,0.05);
+            border: 1px solid rgba(41,128,185,0.15);
+            border-radius: 4px; padding: 12px 14px; margin-top: 12px;
+        }
+        .bank-title { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 8px; letter-spacing: 1px; }
+        .bank-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .bank-tag {
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 3px; padding: 3px 10px;
+            font-size: 12px; color: var(--muted);
+        }
+
+        /* ── SUBMIT BTN ── */
+        .q-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .submit-btn {
+            background: transparent; border: 1px solid var(--blue);
+            color: var(--blue); font-family: 'Rajdhani', sans-serif;
+            font-weight: 600; font-size: 13px; letter-spacing: 1px;
+            padding: 7px 20px; cursor: pointer; border-radius: 3px;
+            transition: all 0.15s;
+        }
+        .submit-btn:hover { background: rgba(41,128,185,0.1); }
+        .submit-btn:disabled { border-color: var(--dim); color: var(--dim); cursor: not-allowed; }
+        .feedback {
+            font-size: 12px; font-family: 'Share Tech Mono', monospace;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .feedback.show { opacity: 1; }
+        .feedback.correct { color: var(--green2); }
+        .feedback.wrong { color: #e57373; }
+
+        /* ── EXPLANATION ── */
+        .explanation {
+            margin: 0 20px 14px;
+            background: rgba(39,174,96,0.06); border: 1px solid rgba(39,174,96,0.2);
+            border-radius: 4px; padding: 12px 14px;
+            font-size: 12.5px; color: #90c4a5; line-height: 1.6;
+            display: none;
+        }
+        .explanation.show { display: block; }
+        .explanation.wrong-exp { background: rgba(192,57,43,0.06); border-color: rgba(192,57,43,0.2); color: #d4a5a5; }
+        .exp-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+        .exp-title.correct { color: var(--green2); }
+        .exp-title.wrong { color: #e57373; }
+
+        /* ── RESULTS PANEL ── */
+        .results {
+            display: none;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 6px; overflow: hidden; margin-top: 8px;
+        }
+        .results.show { display: block; }
+        .results-header {
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(39,174,96,0.06), transparent);
+        }
+        .results-header.fail { background: linear-gradient(135deg, rgba(192,57,43,0.06), transparent); }
+        .results-score {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700;
+            font-size: 56px; line-height: 1; color: var(--green2);
+        }
+        .results-score.fail { color: #e57373; }
+        .results-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+        .results-label strong { color: var(--text); }
+        .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px 24px; }
+        .r-stat {
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 16px;
+        }
+        .r-stat-num { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 28px; line-height: 1; margin-bottom: 4px; }
+        .r-stat-num.green { color: var(--green2); }
+        .r-stat-num.red { color: #e57373; }
+        .r-stat-label { font-size: 11px; color: var(--muted); }
+
+        /* ── BREAKDOWN TABLE ── */
+        .breakdown { padding: 0 24px 20px; }
+        .breakdown-title {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px;
+            letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+        .breakdown-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 8px 0; border-bottom: 1px solid var(--border);
+        }
+        .breakdown-row:last-child { border-bottom: none; }
+        .br-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0; }
+        .br-icon.c { background: rgba(39,174,96,0.15); color: var(--green2); border: 1px solid rgba(39,174,96,0.3); }
+        .br-icon.w { background: rgba(192,57,43,0.15); color: #e57373; border: 1px solid rgba(192,57,43,0.3); }
+        .br-q { font-size: 12.5px; color: var(--text); flex: 1; line-height: 1.3; }
+        .br-domain { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--muted); white-space: nowrap; }
+
+        /* ── COPY REPORT ── */
+        .copy-section { padding: 0 24px 24px; }
+        .copy-title {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px;
+            letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .copy-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+        .copy-box {
+            background: #0a0c12; border: 1px solid var(--border);
+            border-radius: 4px; padding: 14px 16px;
+            font-family: 'Share Tech Mono', monospace; font-size: 11.5px;
+            color: #8899bb; line-height: 1.7; white-space: pre-wrap;
+            max-height: 240px; overflow-y: auto;
+        }
+        .copy-btn {
+            margin-top: 10px; background: transparent;
+            border: 1px solid var(--blue); color: var(--blue);
+            font-family: 'Rajdhani', sans-serif; font-weight: 600;
+            font-size: 13px; letter-spacing: 1px; padding: 8px 22px;
+            cursor: pointer; border-radius: 3px; transition: all 0.15s;
+        }
+        .copy-btn:hover { background: rgba(41,128,185,0.1); }
+        .copy-btn.copied { border-color: var(--green); color: var(--green2); }
+        .retry-btn {
+            margin-top: 10px; margin-left: 10px;
+            background: transparent; border: 1px solid var(--dim);
+            color: var(--muted); font-family: 'Rajdhani', sans-serif;
+            font-weight: 600; font-size: 13px; letter-spacing: 1px;
+            padding: 8px 22px; cursor: pointer; border-radius: 3px; transition: all 0.15s;
+        }
+        .retry-btn:hover { border-color: var(--accent); color: #e57373; }
+
+        @media (max-width: 640px) {
+            .main, .header, .prog-wrap { padding-left: 16px; padding-right: 16px; }
+            .matching-grid { grid-template-columns: 1fr; }
+            .match-arrow { display: none; }
+            .results-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-inner">
+        <div class="badge-row">
+            <div class="badge">Security+</div>
+            <div class="source-tag">SY0-701 · Prof. Messer Study Group · March 2024</div>
+        </div>
+        <h1>Security+ <span>Practice Exam</span> — Study Group Questions</h1>
+        <div class="header-sub">// 7 questions · multiple choice + performance-based · answer all to see results</div>
+    </div>
+</div>
+
+<div class="prog-wrap">
+    <div class="prog-inner">
+        <div class="prog-label">ANSWERED <strong id="prog-text">0 / 7</strong></div>
+        <div class="bar-bg"><div class="bar-fg" id="bar-fg"></div></div>
+        <div class="prog-pct" id="prog-pct">0%</div>
+    </div>
+</div>
+
+<div class="main" id="exam-main">
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q1 -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-0">
+    <div class="q-header">
+        <div class="q-num">01</div>
+        <div class="q-meta">
+            <div class="q-type"><span>Multiple Choice</span></div>
+            <div class="q-text">A company is assigning administrator rights to IT technicians on a temporary basis. Which of the following would describe this system?</div>
+            <div class="q-domain">Domain 4.6 · Identity & Access Management · Privileged Access Management</div>
+        </div>
+    </div>
+    <div class="options" id="opts-0">
+        <div class="opt" onclick="selectOpt(0,0,this)">
+            <input type="radio" name="q0" id="q0a"><div class="opt-letter">A</div>
+            <div class="opt-text">Just in time permissions</div>
+            <div class="result-icon" id="ri-0-0"></div>
+        </div>
+        <div class="opt" onclick="selectOpt(0,1,this)">
+            <input type="radio" name="q0" id="q0b"><div class="opt-letter">B</div>
+            <div class="opt-text">Password vaulting</div>
+            <div class="result-icon" id="ri-0-1"></div>
+        </div>
+        <div class="opt" onclick="selectOpt(0,2,this)">
+            <input type="radio" name="q0" id="q0c"><div class="opt-letter">C</div>
+            <div class="opt-text">Salting</div>
+            <div class="result-icon" id="ri-0-2"></div>
+        </div>
+        <div class="opt" onclick="selectOpt(0,3,this)">
+            <input type="radio" name="q0" id="q0d"><div class="opt-letter">D</div>
+            <div class="opt-text">Hashing</div>
+            <div class="result-icon" id="ri-0-3"></div>
+        </div>
+        <div class="opt" onclick="selectOpt(0,4,this)">
+            <input type="radio" name="q0" id="q0e"><div class="opt-letter">E</div>
+            <div class="opt-text">Passwordless access</div>
+            <div class="result-icon" id="ri-0-4"></div>
+        </div>
+    </div>
+    <div class="explanation" id="exp-0"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-0" onclick="submitQ(0)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-0"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q2 — MATCHING (Performance-Based) -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-1">
+    <div class="q-header">
+        <div class="q-num">02</div>
+        <div class="q-meta">
+            <div class="q-type"><span class="pbq">Performance-Based · Matching</span></div>
+            <div class="q-text">Match each description to the correct security technology. (3 options in the bank will not be used.)</div>
+            <div class="q-domain">Domain 1.4 · Cryptographic Solutions · Domain 1.2 · Deception Technology</div>
+        </div>
+    </div>
+    <div class="matching-wrap">
+        <div class="matching-grid">
+            <div class="match-prompt">Verify the status of a web server certificate</div>
+            <div class="match-arrow">→</div>
+            <select class="match-select" id="m1-0" onchange="matchChanged(1)">
+                <option value="">— select —</option>
+                <option value="False Negative">False Negative</option>
+                <option value="Honey File">Honey File</option>
+                <option value="Federation">Federation</option>
+                <option value="OCSP">OCSP</option>
+                <option value="Salting">Salting</option>
+                <option value="Tokenization">Tokenization</option>
+                <option value="Blockchain">Blockchain</option>
+            </select>
+
+            <div class="match-prompt">Credit card numbers are replaced with temporary values</div>
+            <div class="match-arrow">→</div>
+            <select class="match-select" id="m1-1" onchange="matchChanged(1)">
+                <option value="">— select —</option>
+                <option value="False Negative">False Negative</option>
+                <option value="Honey File">Honey File</option>
+                <option value="Federation">Federation</option>
+                <option value="OCSP">OCSP</option>
+                <option value="Salting">Salting</option>
+                <option value="Tokenization">Tokenization</option>
+                <option value="Blockchain">Blockchain</option>
+            </select>
+
+            <div class="match-prompt">Add randomization to a hash</div>
+            <div class="match-arrow">→</div>
+            <select class="match-select" id="m1-2" onchange="matchChanged(1)">
+                <option value="">— select —</option>
+                <option value="False Negative">False Negative</option>
+                <option value="Honey File">Honey File</option>
+                <option value="Federation">Federation</option>
+                <option value="OCSP">OCSP</option>
+                <option value="Salting">Salting</option>
+                <option value="Tokenization">Tokenization</option>
+                <option value="Blockchain">Blockchain</option>
+            </select>
+
+            <div class="match-prompt">Create a document with invalid authentication information</div>
+            <div class="match-arrow">→</div>
+            <select class="match-select" id="m1-3" onchange="matchChanged(1)">
+                <option value="">— select —</option>
+                <option value="False Negative">False Negative</option>
+                <option value="Honey File">Honey File</option>
+                <option value="Federation">Federation</option>
+                <option value="OCSP">OCSP</option>
+                <option value="Salting">Salting</option>
+                <option value="Tokenization">Tokenization</option>
+                <option value="Blockchain">Blockchain</option>
+            </select>
+        </div>
+        <div class="matching-options-bank">
+            <div class="bank-title">// ANSWER BANK — choose from these 7 (3 will not be used)</div>
+            <div class="bank-tags">
+                <div class="bank-tag">False Negative</div>
+                <div class="bank-tag">Honey File</div>
+                <div class="bank-tag">Federation</div>
+                <div class="bank-tag">OCSP</div>
+                <div class="bank-tag">Salting</div>
+                <div class="bank-tag">Tokenization</div>
+                <div class="bank-tag">Blockchain</div>
+            </div>
+        </div>
+    </div>
+    <div class="explanation" id="exp-1"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-1" onclick="submitMatch(1)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-1"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q3 -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-2">
+    <div class="q-header">
+        <div class="q-num">03</div>
+        <div class="q-meta">
+            <div class="q-type"><span>Multiple Choice</span></div>
+            <div class="q-text">A user is asymmetrically encrypting an outgoing email message. Which of the following is used to encrypt this information?</div>
+            <div class="q-domain">Domain 1.4 · Cryptographic Solutions · Asymmetric Encryption</div>
+        </div>
+    </div>
+    <div class="options" id="opts-2">
+        <div class="opt" onclick="selectOpt(2,0,this)"><input type="radio" name="q2"><div class="opt-letter">A</div><div class="opt-text">Sender's public key</div><div class="result-icon" id="ri-2-0"></div></div>
+        <div class="opt" onclick="selectOpt(2,1,this)"><input type="radio" name="q2"><div class="opt-letter">B</div><div class="opt-text">Recipient's private key</div><div class="result-icon" id="ri-2-1"></div></div>
+        <div class="opt" onclick="selectOpt(2,2,this)"><input type="radio" name="q2"><div class="opt-letter">C</div><div class="opt-text">Sender's private key</div><div class="result-icon" id="ri-2-2"></div></div>
+        <div class="opt" onclick="selectOpt(2,3,this)"><input type="radio" name="q2"><div class="opt-letter">D</div><div class="opt-text">Recipient's public key</div><div class="result-icon" id="ri-2-3"></div></div>
+        <div class="opt" onclick="selectOpt(2,4,this)"><input type="radio" name="q2"><div class="opt-letter">E</div><div class="opt-text">Recipient's public key and sender's private key</div><div class="result-icon" id="ri-2-4"></div></div>
+    </div>
+    <div class="explanation" id="exp-2"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-2" onclick="submitQ(2)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-2"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q4 -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-3">
+    <div class="q-header">
+        <div class="q-num">04</div>
+        <div class="q-meta">
+            <div class="q-type"><span>Multiple Choice</span></div>
+            <div class="q-text">Which of the following external threat actors commonly has limited resources and relatively low attack sophistication?</div>
+            <div class="q-domain">Domain 2.1 · Threat Actors & Motivations · Attributes of Actors</div>
+        </div>
+    </div>
+    <div class="options" id="opts-3">
+        <div class="opt" onclick="selectOpt(3,0,this)"><input type="radio" name="q3"><div class="opt-letter">A</div><div class="opt-text">Unskilled attacker</div><div class="result-icon" id="ri-3-0"></div></div>
+        <div class="opt" onclick="selectOpt(3,1,this)"><input type="radio" name="q3"><div class="opt-letter">B</div><div class="opt-text">Shadow IT</div><div class="result-icon" id="ri-3-1"></div></div>
+        <div class="opt" onclick="selectOpt(3,2,this)"><input type="radio" name="q3"><div class="opt-letter">C</div><div class="opt-text">Organized crime</div><div class="result-icon" id="ri-3-2"></div></div>
+        <div class="opt" onclick="selectOpt(3,3,this)"><input type="radio" name="q3"><div class="opt-letter">D</div><div class="opt-text">Nation state</div><div class="result-icon" id="ri-3-3"></div></div>
+        <div class="opt" onclick="selectOpt(3,4,this)"><input type="radio" name="q3"><div class="opt-letter">E</div><div class="opt-text">Activist (Hacktivist)</div><div class="result-icon" id="ri-3-4"></div></div>
+    </div>
+    <div class="explanation" id="exp-3"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-3" onclick="submitQ(3)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-3"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q5 -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-4">
+    <div class="q-header">
+        <div class="q-num">05</div>
+        <div class="q-meta">
+            <div class="q-type"><span>Multiple Choice</span></div>
+            <div class="q-text">An administrator is configuring the security rules in a firewall. Which of the following SDN planes would be most associated with this task?</div>
+            <div class="q-domain">Domain 3.1 · Security Architecture · Software-Defined Networking</div>
+        </div>
+    </div>
+    <div class="options" id="opts-4">
+        <div class="opt" onclick="selectOpt(4,0,this)"><input type="radio" name="q4"><div class="opt-letter">A</div><div class="opt-text">Data plane</div><div class="result-icon" id="ri-4-0"></div></div>
+        <div class="opt" onclick="selectOpt(4,1,this)"><input type="radio" name="q4"><div class="opt-letter">B</div><div class="opt-text">Active plane</div><div class="result-icon" id="ri-4-1"></div></div>
+        <div class="opt" onclick="selectOpt(4,2,this)"><input type="radio" name="q4"><div class="opt-letter">C</div><div class="opt-text">Control plane</div><div class="result-icon" id="ri-4-2"></div></div>
+        <div class="opt" onclick="selectOpt(4,3,this)"><input type="radio" name="q4"><div class="opt-letter">D</div><div class="opt-text">Infrastructure plane</div><div class="result-icon" id="ri-4-3"></div></div>
+        <div class="opt" onclick="selectOpt(4,4,this)"><input type="radio" name="q4"><div class="opt-letter">E</div><div class="opt-text">Management plane</div><div class="result-icon" id="ri-4-4"></div></div>
+    </div>
+    <div class="explanation" id="exp-4"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-4" onclick="submitQ(4)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-4"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q6 -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-5">
+    <div class="q-header">
+        <div class="q-num">06</div>
+        <div class="q-meta">
+            <div class="q-type"><span>Multiple Choice</span></div>
+            <div class="q-text">A security analyst would like to be informed if any core operating system files are modified. Which of the following would provide this functionality?</div>
+            <div class="q-domain">Domain 4.4 · Security Alerting & Monitoring · File Integrity Monitoring</div>
+        </div>
+    </div>
+    <div class="options" id="opts-5">
+        <div class="opt" onclick="selectOpt(5,0,this)"><input type="radio" name="q5"><div class="opt-letter">A</div><div class="opt-text">SIEM (Security Information and Event Management)</div><div class="result-icon" id="ri-5-0"></div></div>
+        <div class="opt" onclick="selectOpt(5,1,this)"><input type="radio" name="q5"><div class="opt-letter">B</div><div class="opt-text">SNMP (Simple Network Management Protocol)</div><div class="result-icon" id="ri-5-1"></div></div>
+        <div class="opt" onclick="selectOpt(5,2,this)"><input type="radio" name="q5"><div class="opt-letter">C</div><div class="opt-text">FIM (File Integrity Monitoring)</div><div class="result-icon" id="ri-5-2"></div></div>
+        <div class="opt" onclick="selectOpt(5,3,this)"><input type="radio" name="q5"><div class="opt-letter">D</div><div class="opt-text">NetFlow</div><div class="result-icon" id="ri-5-3"></div></div>
+        <div class="opt" onclick="selectOpt(5,4,this)"><input type="radio" name="q5"><div class="opt-letter">E</div><div class="opt-text">DLP (Data Loss Prevention)</div><div class="result-icon" id="ri-5-4"></div></div>
+    </div>
+    <div class="explanation" id="exp-5"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-5" onclick="submitQ(5)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-5"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- Q7 -->
+<!-- ══════════════════════════════════════ -->
+<div class="q-card" id="qcard-6">
+    <div class="q-header">
+        <div class="q-num">07</div>
+        <div class="q-meta">
+            <div class="q-type"><span>Multiple Choice</span></div>
+            <div class="q-text">A security administrator has copied a suspected malware executable from a user's computer and is running the program in a sandbox. Which of the following would describe this part of the incident response process?</div>
+            <div class="q-domain">Domain 4.8 · Incident Response Activities · IR Process Phases</div>
+        </div>
+    </div>
+    <div class="options" id="opts-6">
+        <div class="opt" onclick="selectOpt(6,0,this)"><input type="radio" name="q6"><div class="opt-letter">A</div><div class="opt-text">Eradication</div><div class="result-icon" id="ri-6-0"></div></div>
+        <div class="opt" onclick="selectOpt(6,1,this)"><input type="radio" name="q6"><div class="opt-letter">B</div><div class="opt-text">Preparation</div><div class="result-icon" id="ri-6-1"></div></div>
+        <div class="opt" onclick="selectOpt(6,2,this)"><input type="radio" name="q6"><div class="opt-letter">C</div><div class="opt-text">Recovery</div><div class="result-icon" id="ri-6-2"></div></div>
+        <div class="opt" onclick="selectOpt(6,3,this)"><input type="radio" name="q6"><div class="opt-letter">D</div><div class="opt-text">Containment</div><div class="result-icon" id="ri-6-3"></div></div>
+    </div>
+    <div class="explanation" id="exp-6"></div>
+    <div class="q-footer">
+        <button class="submit-btn" id="btn-6" onclick="submitQ(6)" disabled>SUBMIT</button>
+        <div class="feedback" id="fb-6"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- RESULTS -->
+<!-- ══════════════════════════════════════ -->
+<div class="results" id="results-panel">
+    <div class="results-header" id="results-header">
+        <div class="results-score" id="results-score"></div>
+        <div class="results-label" id="results-label"></div>
+    </div>
+    <div class="results-grid">
+        <div class="r-stat">
+            <div class="r-stat-num green" id="rs-correct">—</div>
+            <div class="r-stat-label">Correct answers</div>
+        </div>
+        <div class="r-stat">
+            <div class="r-stat-num red" id="rs-wrong">—</div>
+            <div class="r-stat-label">Wrong answers</div>
+        </div>
+        <div class="r-stat">
+            <div class="r-stat-num" style="color:var(--blue)" id="rs-total">7</div>
+            <div class="r-stat-label">Total questions</div>
+        </div>
+        <div class="r-stat">
+            <div class="r-stat-num" style="color:var(--yellow)" id="rs-source">Messer SG</div>
+            <div class="r-stat-label">Source · March 2024</div>
+        </div>
+    </div>
+    <div class="breakdown">
+        <div class="breakdown-title">// Question Breakdown</div>
+        <div id="breakdown-rows"></div>
+    </div>
+    <div class="copy-section">
+        <div class="copy-title">// Feed Results to Claude</div>
+        <div class="copy-desc">Copy the report below and paste it to Claude to update your study profile and get personalized recommendations for what to study next.</div>
+        <div class="copy-box" id="copy-box"></div>
+        <button class="copy-btn" id="copy-btn" onclick="copyReport()">[ COPY REPORT ]</button>
+        <button class="retry-btn" onclick="retryExam()">[ RETRY EXAM ]</button>
+    </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════
+// QUESTION DATA
+// ══════════════════════════════════════
+const QUESTIONS = [
+    {
+        id: 0, type: 'mc', correct: 0,
+        title: 'Just-in-time permissions (temporary admin rights)',
+        domain: '4.6 · IAM / Privileged Access Management',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — Just-In-Time Permissions</div>Just-in-time (JIT) permissions grant elevated access only when needed for a specific task, then immediately revoke it when done. This limits the window of exposure — a core principle of least privilege.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Correct Answer: Just-In-Time Permissions</div>JIT permissions grant temporary elevated access for a specific task, then revoke it automatically. Password vaulting stores passwords securely. Salting and hashing protect stored passwords. Passwordless access removes passwords entirely — none of those create temporary admin rights.'
+        }
+    },
+    {
+        id: 1, type: 'match',
+        correctMap: ['OCSP','Tokenization','Salting','Honey File'],
+        title: 'Matching: OCSP, Tokenization, Salting, Honey File',
+        domain: '1.4 · Cryptographic Solutions / 1.2 · Deception Technology',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — All 4 Matched</div>OCSP = real-time cert status. Tokenization = replace real value with temp token. Salting = randomize hashes. Honey File = decoy doc with invalid credentials. Unused: False Negative, Federation, Blockchain.',
+            partial: '<div class="exp-title wrong">⚠ PARTIAL CREDIT</div>Correct: OCSP verifies cert status · Tokenization replaces CC numbers with tokens · Salting adds randomness to hashes · Honey File = document with invalid auth info to trap attackers.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Review These Answers</div>OCSP = cert status check · Tokenization = temp value replaces card number · Salting = hash randomization · Honey File = decoy document with fake credentials.'
+        }
+    },
+    {
+        id: 2, type: 'mc', correct: 3,
+        title: 'Asymmetric encryption: encrypt with recipient\'s public key',
+        domain: '1.4 · Cryptographic Solutions · Asymmetric Encryption',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — Recipient\'s Public Key</div>To encrypt for Alice, Bob uses Alice\'s PUBLIC key. Alice is the only one who can decrypt it — using her private key. The public key encrypts; the paired private key decrypts. Never encrypt with a private key if you want to keep data secret.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Correct Answer: Recipient\'s Public Key</div>In asymmetric encryption: encrypt with the RECIPIENT\'s public key (anyone can encrypt), decrypt with the recipient\'s PRIVATE key (only they can read it). If you encrypt with a sender\'s private key, anyone with the sender\'s public key can decrypt — that\'s a digital signature, not confidential encryption.'
+        }
+    },
+    {
+        id: 3, type: 'mc', correct: 0,
+        title: 'Unskilled attacker = limited resources + low sophistication',
+        domain: '2.1 · Threat Actors & Motivations',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — Unskilled Attacker</div>The unskilled attacker (formerly "script kiddie" in 601) runs scripts they didn\'t write, with no deep knowledge of how attacks work. Limited resources, low sophistication — just enough to be dangerous. This is the 701 terminology.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Correct Answer: Unskilled Attacker</div>Unskilled attacker = 701 term for script kiddie. They have LIMITED resources and LOW sophistication. Hacktivists are sophisticated with goals. Shadow IT has company resources and technical skill. Organized crime = well-funded, sophisticated. Nation-state = highest resources and sophistication.'
+        }
+    },
+    {
+        id: 4, type: 'mc', correct: 4,
+        title: 'SDN management plane = where you configure firewall rules',
+        domain: '3.1 · Security Architecture · SDN',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — Management Plane</div>In SDN: Data plane = where data flows through. Control plane = routing/forwarding decisions (already implemented). Management plane = where YOU make changes (web UI, SSH, SNMP, API). Configuring firewall rules = management plane. "Active plane" and "infrastructure plane" are distractors — not real SDN planes.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Correct Answer: Management Plane</div>SDN has 3 real planes: Data (traffic flows), Control (routing decisions already stored), Management (where admins make changes via web UI/SSH/API). Configuring firewall security rules = Management plane. Active and Infrastructure planes don\'t exist in standard SDN terminology.'
+        }
+    },
+    {
+        id: 5, type: 'mc', correct: 2,
+        title: 'FIM (File Integrity Monitoring) detects OS file changes',
+        domain: '4.4 · Security Alerting & Monitoring · FIM',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — FIM (File Integrity Monitoring)</div>FIM monitors specific files for changes and alerts immediately if anything is modified. Core OS files almost never change — if they do, it\'s likely malicious. Tools: Windows SFC, Tripwire (Linux). SNMP monitors network performance. SIEM aggregates logs. NetFlow = network traffic analysis. DLP = prevents sensitive data exfiltration.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Correct Answer: FIM</div>FIM (File Integrity Monitoring) is the only tool specifically designed to watch individual files for unauthorized changes. SNMP = network interface stats. SIEM = log aggregation & correlation. NetFlow = network traffic flow analysis. DLP = prevents sensitive data from leaving the network. None of these monitor individual OS file changes.'
+        }
+    },
+    {
+        id: 6, type: 'mc', correct: 3,
+        title: 'Running malware in sandbox = Containment phase of IR',
+        domain: '4.8 · Incident Response Activities · IR Phases',
+        explanation: {
+            correct: '<div class="exp-title correct">✓ CORRECT — Containment</div>Copying malware to a sandbox to run and analyze it is CONTAINMENT — you\'re isolating the threat to prevent it from spreading while you study it. Sandboxing limits the malware\'s ability to cause further damage. Preparation = planning before incidents. Recovery = restoring systems. Eradication = removing the malware after analysis.',
+            wrong: '<div class="exp-title wrong">✗ WRONG — Correct Answer: Containment</div>Running malware in a sandbox = Containment. The sandbox isolates the threat so it can\'t spread. IR Phase order: Preparation → Detection → Analysis → Containment → Eradication → Recovery → Lessons Learned. Sandboxing fits Containment because you\'re limiting the damage while investigating. Eradication comes AFTER you\'ve analyzed and understand the threat.'
+        }
+    }
+];
+
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let selections = {}; // qIdx -> optIdx
+let submitted = {}; // qIdx -> {correct: bool, selected: ...}
+let matchAnswers = {}; // 'idx' -> value
+
+// ══════════════════════════════════════
+// MC LOGIC
+// ══════════════════════════════════════
+function selectOpt(qIdx, optIdx, el) {
+    if (submitted[qIdx]) return;
+    const opts = document.querySelectorAll(`#opts-${qIdx} .opt`);
+    opts.forEach(o => { o.classList.remove('selected'); o.querySelector('input').checked = false; });
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    selections[qIdx] = optIdx;
+    document.getElementById(`btn-${qIdx}`).disabled = false;
+}
+
+function submitQ(qIdx) {
+    if (submitted[qIdx]) return;
+    const q = QUESTIONS[qIdx];
+    const sel = selections[qIdx];
+    if (sel === undefined) return;
+    const isCorrect = sel === q.correct;
+    submitted[qIdx] = { correct: isCorrect, selected: sel };
+
+    const opts = document.querySelectorAll(`#opts-${qIdx} .opt`);
+    opts.forEach((o, i) => {
+        o.style.pointerEvents = 'none';
+        if (i === q.correct) {
+            o.classList.add(isCorrect && i === sel ? 'correct' : 'revealed-correct');
+            o.querySelector('.result-icon').textContent = '✓';
+            o.querySelector('.result-icon').style.color = 'var(--green2)';
+        }
+        if (i === sel && !isCorrect) {
+            o.classList.add('wrong');
+            o.querySelector('.result-icon').textContent = '✗';
+            o.querySelector('.result-icon').style.color = '#e57373';
+        }
+    });
+
+    const exp = document.getElementById(`exp-${qIdx}`);
+    exp.innerHTML = isCorrect ? q.explanation.correct : q.explanation.wrong;
+    exp.className = `explanation show${isCorrect ? '' : ' wrong-exp'}`;
+
+    const fb = document.getElementById(`fb-${qIdx}`);
+    fb.textContent = isCorrect ? '✓ CORRECT' : '✗ INCORRECT';
+    fb.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+
+    document.getElementById(`btn-${qIdx}`).disabled = true;
+    document.getElementById(`qcard-${qIdx}`).classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+    updateProgress();
+    checkAllDone();
+}
+
+// ══════════════════════════════════════
+// MATCHING LOGIC
+// ══════════════════════════════════════
+function matchChanged(qIdx) {
+    const allFilled = [0,1,2,3].every(i => document.getElementById(`m${qIdx}-${i}`).value !== '');
+    document.getElementById(`btn-${qIdx}`).disabled = !allFilled;
+}
+
+function submitMatch(qIdx) {
+    if (submitted[qIdx]) return;
+    const q = QUESTIONS[qIdx];
+    let correctCount = 0;
+    const results = [];
+
+    [0,1,2,3].forEach(i => {
+        const sel = document.getElementById(`m${qIdx}-${i}`);
+        const val = sel.value;
+        const isC = val === q.correctMap[i];
+        if (isC) correctCount++;
+        sel.disabled = true;
+        sel.classList.add(isC ? 'correct' : 'wrong');
+        results.push({ selected: val, correct: q.correctMap[i], isCorrect: isC });
+    });
+
+    const allCorrect = correctCount === 4;
+    submitted[qIdx] = { correct: allCorrect, correctCount, results };
+
+    const exp = document.getElementById(`exp-${qIdx}`);
+    let expHtml = allCorrect ? q.explanation.correct :
+        correctCount > 0 ? q.explanation.partial : q.explanation.wrong;
+    if (!allCorrect) {
+        expHtml += `<br><br><strong>Your answers:</strong><br>`;
+        const prompts = ['Verify cert status','Credit card temp values','Add randomization to hash','Invalid auth document'];
+        results.forEach((r,i) => {
+            expHtml += `<span style="color:${r.isCorrect?'var(--green2)':'#e57373'}">${r.isCorrect?'✓':'✗'} ${prompts[i]}: ${r.selected||'(blank)'} ${r.isCorrect?'':' → correct: '+r.correct}</span><br>`;
+        });
+    }
+    exp.innerHTML = expHtml;
+    exp.className = `explanation show${allCorrect ? '' : ' wrong-exp'}`;
+
+    const fb = document.getElementById(`fb-${qIdx}`);
+    fb.textContent = allCorrect ? `✓ ALL 4 CORRECT` : `${correctCount}/4 correct`;
+    fb.className = `feedback show ${allCorrect ? 'correct' : 'wrong'}`;
+
+    document.getElementById(`btn-${qIdx}`).disabled = true;
+    document.getElementById(`qcard-${qIdx}`).classList.add(allCorrect ? 'answered-correct' : 'answered-wrong');
+
+    updateProgress();
+    checkAllDone();
+}
+
+// ══════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════
+function updateProgress() {
+    const done = Object.keys(submitted).length;
+    const total = QUESTIONS.length;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('prog-text').innerHTML = `<strong>${done} / ${total}</strong>`;
+    document.getElementById('bar-fg').style.width = pct + '%';
+    document.getElementById('prog-pct').textContent = pct + '%';
+}
+
+// ══════════════════════════════════════
+// RESULTS
+// ══════════════════════════════════════
+function checkAllDone() {
+    if (Object.keys(submitted).length < QUESTIONS.length) return;
+    setTimeout(showResults, 600);
+}
+
+function showResults() {
+    let correct = 0, wrong = 0;
+    QUESTIONS.forEach(q => {
+        if (submitted[q.id] && submitted[q.id].correct) correct++;
+        else wrong++;
+    });
+
+    const pct = Math.round((correct / QUESTIONS.length) * 100);
+    const pass = pct >= 70;
+
+    const panel = document.getElementById('results-panel');
+    const header = document.getElementById('results-header');
+    panel.classList.add('show');
+    header.classList.toggle('fail', !pass);
+
+    document.getElementById('results-score').textContent = pct + '%';
+    document.getElementById('results-score').className = `results-score${pass ? '' : ' fail'}`;
+    document.getElementById('results-label').innerHTML =
+        `<strong>${correct} of ${QUESTIONS.length} correct</strong> · ${pass ? '🎯 Strong performance!' : '⚠ Needs more review — see breakdown below'}`;
+    document.getElementById('rs-correct').textContent = correct;
+    document.getElementById('rs-wrong').textContent = wrong;
+
+    // Breakdown rows
+    const rows = document.getElementById('breakdown-rows');
+    const labels = [
+        'Just-in-time permissions (Q1)',
+        'Matching: OCSP / Tokenization / Salting / Honey File (Q2)',
+        'Asymmetric encryption — recipient\'s public key (Q3)',
+        'Unskilled attacker — low resources, low sophistication (Q4)',
+        'SDN management plane — firewall configuration (Q5)',
+        'FIM — OS file change monitoring (Q6)',
+        'Sandbox = Containment phase of Incident Response (Q7)'
+    ];
+    const domains = [
+        '4.6 · IAM',
+        '1.4 · Crypto / 1.2 · Deception',
+        '1.4 · Asymmetric Encryption',
+        '2.1 · Threat Actors',
+        '3.1 · SDN Architecture',
+        '4.4 · Security Monitoring',
+        '4.8 · Incident Response'
+    ];
+    QUESTIONS.forEach((q, i) => {
+        const isC = submitted[q.id] && submitted[q.id].correct;
+        rows.innerHTML += `
+            <div class="breakdown-row">
+                <div class="br-icon ${isC ? 'c' : 'w'}">${isC ? '✓' : '✗'}</div>
+                <div class="br-q">${labels[i]}</div>
+                <div class="br-domain">${domains[i]}</div>
+            </div>`;
+    });
+
+    // Generate copy report
+    generateReport(correct, pct, labels, domains);
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function generateReport(correct, pct, labels, domains) {
+    const now = new Date().toLocaleDateString();
+    let wrong = [];
+    QUESTIONS.forEach((q, i) => {
+        if (!submitted[q.id] || !submitted[q.id].correct) wrong.push({ label: labels[i], domain: domains[i] });
+    });
+
+    let report = `=== SECURITY+ PRACTICE EXAM RESULTS ===
+Source: Professor Messer Study Group (March 2024 Transcript)
+Date: ${now}
+Score: ${correct}/${QUESTIONS.length} (${pct}%)
+Status: ${pct >= 70 ? 'PASS' : 'NEEDS REVIEW'}
+
+--- WRONG ANSWERS (need study) ---`;
+    if (wrong.length === 0) {
+        report += '\nNone — perfect score!';
+    } else {
+        wrong.forEach(w => { report += `\n• ${w.label}\n  Domain: ${w.domain}`; });
+    }
+
+    report += `\n\n--- CORRECT ANSWERS ---`;
+    QUESTIONS.forEach((q, i) => {
+        if (submitted[q.id] && submitted[q.id].correct) {
+            report += `\n• ${labels[i]} (${domains[i]})`;
+        }
+    });
+
+    report += `\n\n--- INSTRUCTIONS FOR CLAUDE ---
+Paste this report to Claude and say:
+"Update my Security+ study profile with these results
+and tell me what to prioritize next based on my wrong answers."
+
+Claude will cross-reference with your exam history
+(3 practice exams: 70%, 74.4%, 93.3%) and give
+personalized recommendations for your next study session.`;
+
+    document.getElementById('copy-box').textContent = report;
+}
+
+function copyReport() {
+    const text = document.getElementById('copy-box').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '[ ✓ COPIED! ]';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '[ COPY REPORT ]'; btn.classList.remove('copied'); }, 2000);
+    });
+}
+
+function retryExam() {
+    selections = {}; submitted = {}; matchAnswers = {};
+    location.reload();
+}
+
+updateProgress();
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Messer SY0-701 Practice Exam A (A6-A90)</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --card: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; max-width: 850px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--primary); margin-bottom: 30px; padding-bottom: 10px; }
+        .question-card { background: var(--card); padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .question-text { font-weight: 600; margin-bottom: 15px; font-size: 1.1rem; }
+        .options { display: flex; flex-direction: column; gap: 8px; }
+        .option { padding: 12px; border: 1px solid #e2e8f0; border-radius: 5px; cursor: pointer; display: flex; align-items: center; }
+        .option:hover { background-color: #f1f5f9; }
+        input { margin-right: 12px; transform: scale(1.2); }
+        #submit-btn { display: block; width: 100%; padding: 20px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.2rem; cursor: pointer; margin: 40px 0; }
+        #results { margin-top: 30px; padding: 25px; border-radius: 8px; display: none; border: 2px solid #cbd5e1; }
+        .correct { color: #16a34a; font-weight: bold; margin-top: 10px; display: block; }
+        .incorrect { color: #dc2626; font-weight: bold; margin-top: 10px; display: block; }
+        .ans-key { color: #475569; font-size: 0.9rem; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Security+ SY0-701: Practice Exam A</h1>
+    <p>Questions A6 through A90 | 1 Point per Question</p>
+</div>
+
+<form id="exam-form">
+    <div id="quiz-container"></div>
+    <button type="button" id="submit-btn" onclick="gradeExam()">Finish and Grade Exam</button>
+</form>
+
+<div id="results">
+    <h2>Final Score</h2>
+    <p id="score-text" style="font-size: 1.4rem;"></p>
+    <p id="professor-advice" style="font-weight: 500;"></p>
+    <button onclick="window.scrollTo(0,0); location.reload();" style="padding:10px; cursor:pointer;">Retake Exam</button>
+</div>
+
+<script>
+    const examData = [
+        { id: "A6", q: "A company has hired a third-party to gather information about the company’s servers and data. This third-party will not have direct access to the company's internal network, but they can gather information from any other source. Which of the following would BEST describe this approach?", options: ["Vulnerability scanning", "Passive reconnaissance", "Supply chain analysis", "Regulatory audit"], ans: [1] },
+        { id: "A7", q: "A company's email server has received an email from a third-party, but the origination server does not match the list of authorized devices. Which of the following would determine the disposition of this message?", options: ["SPF", "NAC", "DMARC", "DKIM"], ans: [2] },
+        { id: "A8", q: "Which of these threat actors would be MOST likely to attack systems for direct financial gain?", options: ["Organized crime", "Hacktivist", "Nation state", "Shadow IT"], ans: [0] },
+        { id: "A9", q: "A security administrator has determined the system was exploited due to a known operating system vulnerability. Which of the following would BEST describe this finding?", options: ["Root cause analysis", "E-discovery", "Risk appetite", "Data subject"], ans: [0] },
+        { id: "A10", q: "A city is building an ambulance service network for emergency medical dispatching. Which of the following should have the highest priority?", options: ["Integration costs", "Patch availability", "System availability", "Power usage"], ans: [2] },
+        { id: "A11", q: "A system administrator receives a text alert when access rights are changed on a database containing private customer information. Which of the following would describe this alert?", options: ["Maintenance window", "Attestation and acknowledgment", "Automation", "External audit"], ans: [2] },
+        { id: "A12", q: "A security administrator is concerned about data exfiltration using external storage drives. BEST way to prevent this?", options: ["Create an OS security policy to block removable media", "Monitor usage in host-based firewall logs", "Only allow apps that do not use removable media", "Define a removable media block rule in the UTM"], ans: [0] },
+        { id: "A13", q: "A company creates a standard set of government reports each calendar quarter. Describe this type of data:", options: ["Data in use", "Obfuscated", "Trade secrets", "Regulated"], ans: [3] },
+        { id: "A14", q: "Insurance company requirements: Save logs, report off-hours access, domestic-only access, consolidate logs to single DB. Select THREE:", options: ["Restrict login by IP and GPS", "Government-issued ID on onboarding", "Password complexity", "Monthly permission auditing", "Consolidate logs on a SIEM", "Archive encryption keys", "Enable time-of-day restrictions"], ans: [0, 4, 6], multi: true },
+        { id: "A15", q: "Firewall log: Gateway Anti-Virus Alert: XPACK.A_7854 (Trojan) blocked. What can be observed?", options: ["Victim IP is 136.127.92.171", "A download was blocked from a web server", "A botnet DDoS was blocked", "The Trojan was blocked, but file was not"], ans: [1] },
+        { id: "A16", q: "User gets: Your connection is not private. NET::ERR_CERT_INVALID. Which attack is most likely?", options: ["Brute force", "DoS", "On-path", "Deauthentication"], ans: [2] },
+        { id: "A17", q: "BEST way to provide a website login using existing credentials from a third-party site?", options: ["Federation", "802.1X", "EAP", "SSO"], ans: [0] },
+        { id: "A18", q: "Expected hardware failure time between repairs:", options: ["MTBF", "RTO", "MTTR", "RPO"], ans: [0] },
+        { id: "A19", q: "Attacker pretends to be a Director and asks for a password reset for an important meeting:", options: ["Social engineering", "Supply chain", "Watering hole", "On-path"], ans: [0] },
+        { id: "A20", q: "Broad formal agreement between two organizations to qualify partnership:", options: ["SLA", "SOW", "MOA", "NDA"], ans: [2] },
+        { id: "A21", q: "Why add a digital signature to each outgoing email?", options: ["Confidentiality", "Integrity", "Authentication", "Availability"], ans: [1] },
+        { id: "A22", q: "Embedded OS constantly reboots because of a file system error during startup:", options: ["Memory injection", "Resource consumption", "Race condition", "Malicious update"], ans: [2] },
+        { id: "A23", q: "Audit found no restrictions on attempts and no periodic changes. Correct this? Select TWO:", options: ["Complexity", "Expiration", "Reuse", "Account lockout", "Password managers"], ans: [1, 3], multi: true },
+        { id: "A24", q: "Security control associated with a login banner:", options: ["Preventive", "Deterrent", "Corrective", "Detective", "Compensating", "Directive"], ans: [1] },
+        { id: "A25", q: "Servers unpatched for a year, testing takes 2 weeks. Quickest response?", options: ["Buy insurance", "Implement exception", "Move servers to a protected segment", "Hire third-party audit"], ans: [2] },
+        { id: "A26", q: "Steps for processing orders if primary internet fails:", options: ["Platform diversity", "Continuity of operations", "Cold site recovery", "Tabletop exercise"], ans: [1] },
+        { id: "A27", q: "Examine credentials of each individual entering the data center building:", options: ["Access control vestibule", "Video surveillance", "Pressure sensors", "Bollards"], ans: [0] },
+        { id: "A28", q: "Employee info encrypted, public details plaintext. Describe strategy:", options: ["Full-disk", "Record", "Asymmetric", "Key escrow"], ans: [1] },
+        { id: "A29", q: "Minimize database corruption if power is lost:", options: ["Encryption", "Off-site backups", "Journaling", "Replication"], ans: [2] },
+        { id: "A30", q: "Policy for mobile: Auto-lock, traceable, separate user/company data:", options: ["Segmentation", "Biometrics", "COPE", "MDM"], ans: [3] },
+        { id: "A31", q: "Scan shows no vulnerabilities for Windows servers, but a known vulnerability was unpatched. Result?", options: ["Exploit", "Compensating controls", "Zero-day attack", "False negative"], ans: [3] },
+        { id: "A32", q: "IT help desk automation for security event response time:", options: ["Escalation", "Guard rails", "Continuous integration", "Resource provisioning"], ans: [0] },
+        { id: "A33", q: "Authenticate with corporate username/password on wireless:", options: ["WPA3", "802.1X", "PSK", "MFA"], ans: [1] },
+        { id: "A34", q: "VPN service performs posture assessment during login:", options: ["Encryption", "Decommissioning", "Least privilege", "Configuration enforcement"], ans: [3] },
+        { id: "A35", q: "User assigns read-only access to three individuals on a file they own:", options: ["Discretionary", "Mandatory", "Attribute-based", "Role-based"], ans: [0] },
+        { id: "A36", q: "Remote user receives text with link to login and confirm schedule:", options: ["Brute force", "Watering hole", "Typosquatting", "Smishing"], ans: [3] },
+        { id: "A37", q: "Policy for design and deployment process used by programmers:", options: ["Business continuity", "Acceptable use", "Incident response", "Development lifecycle"], ans: [3] },
+        { id: "A38", q: "Running suspected malware in a sandbox:", options: ["Eradication", "Preparation", "Recovery", "Containment"], ans: [3] },
+        { id: "A39", q: "Users directed to different IP address than bank server:", options: ["Deauthentication", "DDoS", "Buffer overflow", "DNS poisoning"], ans: [3] },
+        { id: "A40", q: "Consideration MOST associated with hybrid cloud model?", options: ["Microservice outages", "IoT support", "Network protection mismatches", "Containerization backups"], ans: [2] },
+        { id: "A41", q: "Verify that former seasonal employees cannot access systems:", options: ["Confirm no admin access", "Validate account lockout", "Validate offboarding processes", "Report 24-hr authentications"], ans: [2] },
+        { id: "A42", q: "How cautious an organization is toward a specific risk:", options: ["Risk appetite", "Risk register", "Risk transfer", "Risk reporting"], ans: [0] },
+        { id: "A43", q: "Server fails during patch window. NEXT step?", options: ["Contact stakeholders", "Follow backout plan", "Test in lab", "Evaluate impact analysis"], ans: [1] },
+        { id: "A44", q: "System crashes due to specially crafted packets from many remote devices:", options: ["Privilege escalation", "SQL injection", "Replay attack", "DDoS"], ans: [3] },
+        { id: "A45", q: "Building new servers to get financial systems back online after breach:", options: ["Lessons learned", "Containment", "Recovery", "Analysis"], ans: [2] },
+        { id: "A46", q: "New APs attacked and private info accessed in <24 hours:", options: ["Race condition", "Jailbreaking", "Impersonation", "Misconfiguration"], ans: [3] },
+        { id: "A47", q: "Firewall vulnerability with no plans for patch (product no longer for sale):", options: ["End-of-life", "Improper input", "Improper key mgmt", "Incompatible OS"], ans: [0] },
+        { id: "A48", q: "Simulated disaster where participants discuss logistics and processes:", options: ["Capacity planning", "BIA", "COOP", "Tabletop exercise"], ans: [3] },
+        { id: "A49", q: "Block users from visiting websites hosting malware:", options: ["Honeynet", "Data masking", "DNS filtering", "DLP"], ans: [2] },
+        { id: "A50", q: "Admin images OS to a known-good version after infection:", options: ["Lessons learned", "Recovery", "Detection", "Containment"], ans: [1] },
+        { id: "A51", q: "SCADA system on segmented network with limited access:", options: ["Load balancing", "Least privilege", "Data retention", "Hardening"], ans: [3] },
+        { id: "A52", q: "Log shows hundreds of failed root ssh logins from same IP:", options: ["Spraying", "Downgrade", "Brute force", "DDoS"], ans: [2] },
+        { id: "A53", q: "User laptop moved to private VLAN and updates auto-installed during login:", options: ["Account lockout", "Configuration enforcement", "Decommissioning", "Sideloading"], ans: [1] },
+        { id: "A54", q: "Two-factor authentication description:", options: ["Password and PIN", "Fingerprint scan", "Pseudo-random code", "Password and smart card"], ans: [3] },
+        { id: "A55", q: "Mobile deployment: Different devices, corporate/private use, needs management:", options: ["CYOD", "SSO", "COPE", "BYOD"], ans: [3] },
+        { id: "A56", q: "UPS for data center (control type):", options: ["Compensating", "Directive", "Deterrent", "Detective"], ans: [0] },
+        { id: "A57", q: "Track progress of parts on assembly line:", options: ["Secure enclave", "Blockchain", "Hashing", "Asymmetric encryption"], ans: [1] },
+        { id: "A58", q: "Website compromised with political message:", options: ["Insider", "Organized crime", "Shadow IT", "Hacktivist"], ans: [3] },
+        { id: "A59", q: "Use of SHA256 hash value on a Linux ISO download:", options: ["Verify file not corrupted", "Key for decrypting", "Authenticate site", "Confirm no malware"], ans: [0] },
+        { id: "A60", q: "Login access only available if physically in the same building:", options: ["USB key", "Biometric scanner", "PIN", "SMS"], ans: [1] },
+        { id: "A61", q: "Cloud database available to query without authentication:", options: ["Legacy software", "Open permissions", "Race condition", "Malicious update"], ans: [1] },
+        { id: "A62", q: "Email with link offering cash bonus for internal training:", options: ["Watering hole", "XSS", "Zero-day", "Phishing"], ans: [3] },
+        { id: "A63", q: "Risk strategy including purchase and installation of an NGFW:", options: ["Transfer", "Mitigate", "Accept", "Avoid"], ans: [1] },
+        { id: "A64", q: "Requests validated at a policy enforcement point:", options: ["PKI", "Zero trust", "DAC", "Federation"], ans: [1] },
+        { id: "A65", q: "Determines assignment of data security in public cloud:", options: ["Playbook", "Audit committee", "Responsibility matrix", "Right-to-audit"], ans: [2] },
+        { id: "A66", q: "Decommissioning: Document drive size, RAM, and cards:", options: ["Destruction", "Sanitization", "Certification", "Enumeration"], ans: [3] },
+        { id: "A67", q: "More info than expected in single API call, allowed execution of code:", options: ["Buffer overflow", "Replay", "XSS", "DDoS"], ans: [0] },
+        { id: "A68", q: "Enable key escrow for encrypted materials on central server:", options: ["Private", "CA", "Session", "Public"], ans: [0] },
+        { id: "A69", q: "Configuring host-based firewalls on all user devices:", options: ["Default credentials", "Vishing", "Instant messaging", "On-path"], ans: [3] },
+        { id: "A70", q: "Separate corporate from manufacturing on same physical switch with no new hardware:", options: ["VPN", "Air gap", "Host-firewalls", "Separate VLANs"], ans: [3] },
+        { id: "A71", q: "Remote access for cloud-based app used by mobile technicians:", options: ["RTOS", "CRL", "Zero-trust", "SASE"], ans: [3] },
+        { id: "A72", q: "Part of a quarterly security awareness campaign:", options: ["Suspicious message reports", "Statement of work", "IaC config file", "AUP document"], ans: [0] },
+        { id: "A73", q: "Recent patch reintroduced a vulnerability patched 4 months ago:", options: ["Containerization", "Data masking", "802.1X", "Change management"], ans: [3] },
+        { id: "A74", q: "Add random data when generating password hashes:", options: ["Salting", "Obfuscation", "Key stretching", "Digital signature"], ans: [0] },
+        { id: "A75", q: "Cryptographic method used to add trust to a digital certificate:", options: ["Steganography", "Hash", "Symmetric", "Digital signature"], ans: [3] },
+        { id: "A76", q: "Using SCAP as part of security monitoring:", options: ["User training", "Audit presentation", "Automate validation/patching", "Document visitors"], ans: [2] },
+        { id: "A77", q: "Responsible for managing the access rights to customer database:", options: ["Processor", "Owner", "Subject", "Custodian"], ans: [3] },
+        { id: "A78", q: "Reason for adding classification 'Private' to 'Public' and 'Restricted':", options: ["Minimize surface", "Simplified categories", "Expanded privacy compliance", "Decreased search time"], ans: [2] },
+        { id: "A79", q: "Consolidate and protect private keys across web servers:", options: ["Integrate HSM", "Full disk encryption", "Use TPM", "Upgrade BIOS"], ans: [0] },
+        { id: "A80", q: "IPS Log: Cross-Site Scripting in JSON Data from 222.43.112.74. Select TWO:", options: ["Malformed User Agent", "Embedded script generated alert", "Attacker IP is 222.43.112.74", "Attacker IP is 64.235.145.35", "Invalid client port"], ans: [1, 2], multi: true },
+        { id: "A81", q: "Monetary loss if one event occurs:", options: ["ALE", "SLE", "RTO", "ARO"], ans: [1] },
+        { id: "A82", q: "Text entered: USER77' OR '1'='1. All records displayed:", options: ["XSS", "Buffer overflow", "SQL injection", "SSL stripping"], ans: [2] },
+        { id: "A83", q: "Performance issues after opening a spreadsheet from a vendor:", options: ["On-path", "Worm", "Trojan horse", "Logic bomb"], ans: [2] },
+        { id: "A84", q: "Justification for encrypting customer credit card info:", options: ["Chain of custody", "Password vaulting", "Compliance reporting", "Sandboxing"], ans: [2] },
+        { id: "A85", q: "Intermittent random traffic from workstations to one external IP:", options: ["On-path", "Keylogger", "Replay", "Brute force"], ans: [1] },
+        { id: "A86", q: "Alert that credit card numbers were transmitted via email attachment:", options: ["IPS", "DLP", "RADIUS", "IPsec"], ans: [1] },
+        { id: "A87", q: "VM in screened subnet with guest account and no password:", options: ["Honeypot", "Cloud storage", "VPN concentrator", "Development sandbox"], ans: [0] },
+        { id: "A88", q: "Reason for DNS SPF record:", options: ["Encrypted tunnel", "List authorized servers", "Digitally sign email", "Spam instructions"], ans: [1] },
+        { id: "A89", q: "Securely deploy apps without VM overhead:", options: ["Containerization", "IoT", "Proxy", "RTOS"], ans: [0] },
+        { id: "A90", q: "Determine if a system in a test environment can be exploited before production:", options: ["Tabletop exercise", "Vulnerability scanner", "DDoS", "Penetration test"], ans: [3] }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+        examData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            let optionsHTML = '';
+            item.options.forEach((opt, i) => {
+                const type = item.multi ? 'checkbox' : 'radio';
+                optionsHTML += `<label class="option"><input type="${type}" name="q${index}" value="${i}">${opt}</label>`;
+            });
+            card.innerHTML = `<div class="question-text">${item.id}. ${item.q}</div><div class="options">${optionsHTML}</div><div id="fb-${index}"></div>`;
+            container.appendChild(card);
+        });
+    }
+
+    function gradeExam() {
+        let score = 0;
+        examData.forEach((item, index) => {
+            const selected = Array.from(document.querySelectorAll(`input[name="q${index}"]:checked`)).map(el => parseInt(el.value));
+            const isCorrect = JSON.stringify(selected.sort()) === JSON.stringify(item.ans.sort());
+            const fb = document.getElementById(`fb-${index}`);
+            if (isCorrect) { score++; fb.innerHTML = `<span class="correct">Correct</span>`; }
+            else { 
+                const correctNames = item.ans.map(i => item.options[i]).join(", ");
+                fb.innerHTML = `<span class="incorrect">Incorrect</span><div class="ans-key">Correct: ${correctNames}</div>`; 
+            }
+        });
+        const pct = Math.round((score / examData.length) * 100);
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('score-text').innerHTML = `Score: ${score} / ${examData.length} (${pct}%)`;
+        let msg = "";
+        if (pct >= 90) msg = "You're ready for the real thing! Book your exam!";
+        else if (pct >= 80) msg = "Strong showing! Getting an 85% is a passing grade.";
+        else if (pct >= 70) msg = "You're close! Keep working on the gaps.";
+        else msg = "Use the objectives to see where you need help.";
+        document.getElementById('professor-advice').innerText = msg;
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+    renderQuiz();
+</script>
+</body>
+</html>
